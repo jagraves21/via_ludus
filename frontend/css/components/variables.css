@@ -1,0 +1,273 @@
+/*
+# Component Variables
+
+## Purpose
+
+Defines the complete variable interface for reusable components.
+
+This file establishes component-specific design decisions while
+keeping component implementation isolated from the global variable
+layer.
+
+## Owns
+
+Component-specific semantic variables for colors, typography,
+spacing, sizing, borders, radii, shadows, transitions, states,
+variants, and other reusable component design decisions.
+
+Each component owns its variables within its own :root block.
+
+## Does Not Own
+
+Raw color values, site-wide semantic variables, selectors,
+component implementation, page-specific styling, or layout
+implementation.
+
+Raw colors belong in colors.css.
+
+Site-wide semantic variables belong in variables.css.
+
+Component implementation belongs in the individual component
+CSS files.
+
+## Dependencies
+
+May consume semantic variables from variables.css.
+
+Must not consume raw color variables directly from colors.css.
+
+Component CSS files must consume variables exclusively from this
+file rather than directly from variables.css or colors.css.
+
+## Architecture
+
+```text
+colors.css
+	↓
+variables.css
+	↓
+components/variables.css
+	├──→ badges.css
+	├──→ buttons.css
+	├──→ cards.css
+	├──→ feedback.css
+	├──→ forms.css
+	└──→ navigation.css
+```
+*/
+
+
+/* Badge Variables */
+
+:root {
+	/* Badge */
+	--badge-min-height: 1.5rem;
+	--badge-padding-block: 0.25rem;
+	--badge-padding-inline: 0.625rem;
+	--badge-radius: 9999px;
+	--badge-font-size: 0.875rem;
+	--badge-font-weight: 600;
+	--badge-line-height: 1;
+
+	/* Badge - Default */
+	--badge-background: var(--charcoal);
+	--badge-text: var(--white);
+
+	/* Badge - Primary Variant */
+	--badge-primary-background: var(--red);
+	--badge-primary-text: var(--white);
+
+	/* Badge - Neutral Variant */
+	--badge-neutral-background: var(--blue);
+	--badge-neutral-text: var(--white);
+}
+
+
+/* Button Variables */
+
+:root {
+	/* Button */
+	--button-min-height: 2.5rem;
+	--button-padding-block: 0.625rem;
+	--button-padding-inline: 1rem;
+	--button-border-width: 1px;
+	--button-radius: 0.375rem;
+	--button-font-weight: 600;
+	--button-line-height: 1;
+	--button-transition: 150ms ease-in-out;
+
+	/* Button - Default */
+	--button-background: var(--red);
+	--button-background-hover: var(--red-dark);
+	--button-border: var(--red);
+	--button-border-hover: var(--red-dark);
+	--button-text: var(--white);
+	--button-text-hover: var(--white);
+
+	/* Button - Secondary Variant */
+	--button-secondary-background: var(--white);
+	--button-secondary-background-hover: var(--blue-pale);
+	--button-secondary-border: var(--gray-300);
+	--button-secondary-border-hover: var(--blue);
+	--button-secondary-text: var(--gray-800);
+	--button-secondary-text-hover: var(--blue-dark);
+
+	/* Button - Text Variant */
+	--button-text-background: transparent;
+	--button-text-background-hover: var(--gray-100);
+	--button-text-border: transparent;
+	--button-text-border-hover: transparent;
+	--button-text-color: var(--blue-dark);
+	--button-text-color-hover: var(--blue-deep);
+	--button-text-min-height: auto;
+	--button-text-padding: 0.5rem;
+
+	/* Button - Large Variant */
+	--button-large-min-height: 3rem;
+	--button-large-padding-inline: 1.25rem;
+
+	/* Button - Disabled */
+	--button-disabled-background: var(--gray-200);
+	--button-disabled-border: var(--gray-200);
+	--button-disabled-text: var(--gray-500);
+}
+
+
+/* Card Variables */
+
+:root {
+	/* Card */
+	--card-border-width: 1px;
+	--card-radius: 0.5rem;
+	--card-shadow:
+		0 2px 4px rgb(0 0 0 / 0.08),
+		0 6px 16px rgb(0 0 0 / 0.06);
+	--card-padding: 1.5rem;
+	--card-title-spacing: 0.75rem;
+
+	/* Card - Default */
+	--card-background: var(--white);
+	--card-border: var(--gray-200);
+	--card-title: var(--gray-900);
+
+	/* Card - Interactive */
+	--card-border-hover: var(--blue);
+	--card-shadow-hover:
+		0 4px 8px rgb(0 0 0 / 0.10),
+		0 8px 20px rgb(0 0 0 / 0.08);
+	--card-transition: 150ms ease-in-out;
+	--card-interactive-transform: translateY(-1px);
+}
+
+
+/* Feedback Variables */
+
+:root {
+	/* Loading State */
+	--loading-gap: 0.75rem;
+	--loading-padding: 2.5rem;
+	--loading-text: var(--gray-600);
+	--loading-spinner-size: 1.25rem;
+	--loading-spinner-border-width: 2px;
+	--loading-border: var(--gray-300);
+	--loading-indicator: var(--blue);
+	--loading-animation-duration: 700ms;
+
+	/* Empty State */
+	--empty-min-height: 12rem;
+	--empty-padding: 2rem;
+	--empty-background: var(--white);
+	--empty-border: var(--gray-200);
+	--empty-radius: 0.5rem;
+	--empty-text: var(--gray-800);
+	--empty-content-gap: 0.75rem;
+	--empty-title-size: 1.125rem;
+
+	/* Feedback Actions */
+	--feedback-border-width: 1px;
+	--feedback-actions-gap: 0.75rem;
+	--feedback-actions-margin-top: 1rem;
+
+	/* Error State */
+	--error-padding: 1.5rem;
+	--error-background: var(--red-pale);
+	--error-border: var(--red-light);
+	--error-radius: 0.5rem;
+	--error-text: var(--red-deep);
+	--error-title-size: 1.125rem;
+	--error-message-spacing: 0.5rem;
+	--error-message: var(--red-dark);
+
+	/* Success State */
+	--success-background: var(--green-pale);
+	--success-border: var(--green-light);
+	--success-text: var(--green);
+}
+
+
+/* Form Variables */
+
+:root {
+	/* Search Field */
+	--search-field-gap: 0.5rem;
+
+	/* Field Label */
+	--field-label-font-weight: 600;
+
+	/* Input Group */
+	--input-group-gap: 0.75rem;
+
+	/* Input */
+	--input-min-height: 2.5rem;
+	--input-padding-block: 0.5rem;
+	--input-padding-inline: 0.75rem;
+	--input-border-width: 1px;
+	--input-radius: 0.375rem;
+
+	--input-background: var(--white);
+	--input-border: var(--gray-300);
+	--input-border-hover: var(--blue-light);
+	--input-border-focus: var(--blue);
+
+	--input-text: var(--gray-800);
+	--input-placeholder: var(--gray-500);
+
+	--input-focus-ring: var(--blue-pale);
+	--input-focus-ring-width: 3px;
+
+	/* Large Variant */
+	--input-large-min-height: 3rem;
+	--input-large-padding-inline: 1rem;
+
+	/* Search Input */
+	--input-search-max-width: 40rem;
+
+	/* Select */
+	--select-background: var(--white);
+	--select-border: var(--gray-300);
+	--select-text: var(--gray-800);
+}
+
+
+/* Navigation Variables */
+
+:root {
+	/* Navigation List */
+	--navigation-list-gap: 0.5rem;
+
+	/* Navigation Link */
+	--navigation-link-padding-block: 0.5rem;
+	--navigation-link-padding-inline: 0.75rem;
+	--navigation-link-radius: 0.375rem;
+	--navigation-link-font-weight: 500;
+	--navigation-link-transition: 150ms ease-in-out;
+
+	--navigation-background: transparent;
+	--navigation-background-hover: var(--blue);
+	--navigation-background-active: var(--blue-light);
+
+	--navigation-text: var(--white);
+	--navigation-text-hover: var(--white);
+	--navigation-text-active: var(--blue-deep);
+}
+

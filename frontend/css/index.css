@@ -1,0 +1,35 @@
+/*
+# CSS Entry Point
+
+## Purpose
+
+Defines the application's CSS entry point and establishes the
+loading order of the site's CSS architecture.
+
+## Owns
+
+CSS imports and their ordering.
+
+As additional CSS layers are created, their imports should be
+added here according to their dependency order.
+
+This file should remain limited to imports and their
+architectural ordering.
+
+## Does Not Own
+
+Design tokens, semantic variables, global styles, typography,
+layout styles, component styles, page styles, or implementation
+details.
+*/
+
+@import url("reset.css");
+@import url("colors.css");
+@import url("variables.css");
+@import url("typography.css");
+@import url("layout.css");
+@import url("base.css");
+
+@import url("components/index.css");
+@import url("custom_components/index.css");
+

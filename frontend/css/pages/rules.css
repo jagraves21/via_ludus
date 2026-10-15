@@ -1,0 +1,97 @@
+@import url("variables.css");
+
+
+/* Game Goals */
+
+.game-goals {
+	display: grid;
+	gap: var(--game-goals-gap);
+	margin: 0;
+	padding: 0;
+}
+
+.game-goal {
+	display: flex;
+	gap: var(--game-goal-gap);
+}
+
+.game-goal dt,
+.game-goal dd {
+	margin: 0;
+}
+
+.game-goal dd {
+	flex: 1;
+}
+
+
+/* Game Setup Steps */
+
+.rules-step-title {
+	display: block;
+	font-weight: var(--font-weight-bold);
+}
+
+
+/* Rules Board Examples */
+
+.rules-board-example {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	margin-block: var(--rules-board-example-spacing);
+}
+
+
+/* Board Legend */
+
+.board-legend {
+	display: grid;
+	gap: var(--board-legend-gap);
+	margin: var(--board-legend-spacing) 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.board-legend-item {
+	display: flex;
+	align-items: center;
+	gap: var(--board-legend-item-gap);
+}
+
+.board-legend-marker {
+	flex: 0 0 auto;
+	width: var(--board-legend-marker-size);
+	height: var(--board-legend-marker-size);
+	border: 1px solid var(--board-cell-border);
+	border-radius: var(--board-cell-radius);
+}
+
+.board-legend-marker-red {
+	background: var(--board-cell-red-background);
+	border-color: var(--board-cell-red-border);
+}
+
+.board-legend-marker-blue {
+	background: var(--board-cell-blue-background);
+	border-color: var(--board-cell-blue-border);
+}
+
+.board-legend-marker-open {
+	background: var(--board-cell-background);
+}
+
+.board-legend-marker-corner {
+	background: var(--board-wall-background);
+	border-color: var(--board-wall-border);
+}
+
+
+/* Play Button */
+
+#rules-game-link {
+	color: var(--rules-game-link-text);
+	background: var(--rules-game-link-background);
+	border-color: var(--rules-game-link-border);
+	border-width: var(--rules-game-link-border-width);
+}

@@ -1,0 +1,152 @@
+/*
+# Browser Reset
+
+## Purpose
+
+Establishes a predictable, minimal browser baseline for the
+application.
+
+This file removes or normalizes selected browser-default styles
+so that subsequent layers can make intentional styling decisions
+without having to account for unnecessary browser defaults.
+
+This file provides a clean starting point rather than defining
+the site's visual design system.
+
+## Owns
+
+Browser baseline normalization, including:
+
+- Box-sizing behavior
+- Default document margins
+- Default margins on common text and content elements
+- Default list spacing
+- Form-control font inheritance
+- Basic media-element behavior
+- Table spacing behavior
+- Textarea resizing behavior
+- Hidden-element behavior
+
+## Does Not Own
+
+Colors, typography, visual spacing decisions, link appearance,
+button appearance, interaction states, layout systems,
+component styling, or page-specific styling.
+
+## Defined Variables
+
+None.
+
+## Expected Variables
+
+None.
+
+## Dependencies
+
+None.
+
+This file does not consume design tokens, semantic variables,
+component variables, or values from any other CSS file.
+
+## Architecture
+
+```text
+css/
+└── reset.css
+    └── establishes browser baseline
+```
+
+`reset.css` is the foundational layer of the stylesheet
+architecture.
+
+Later layers may override the baseline established here, but
+`reset.css` should not depend on implementation details from
+those layers.
+*/
+
+
+/* Box Sizing */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+/* Document */
+
+html {
+	font-size: 100%;
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+}
+
+/* Default Block Margins */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+	margin: 0;
+}
+
+/* Lists */
+
+ul,
+ol {
+	margin: 0;
+	padding: 0;
+}
+
+/* Form Controls */
+
+button,
+input,
+select,
+textarea {
+	font: inherit;
+}
+
+/* Media */
+
+img,
+picture,
+svg,
+canvas {
+	display: block;
+	max-width: 100%;
+}
+
+img {
+	height: auto;
+}
+
+/* Tables */
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* Textareas */
+
+textarea {
+	resize: vertical;
+}
+
+/* Hidden Content */
+
+[hidden] {
+	display: none !important;
+}

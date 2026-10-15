@@ -1,0 +1,125 @@
+/* Board */
+
+.game-board {
+	display: grid;
+	grid-template-columns: repeat(var(--board-size), 1fr);
+	gap: var(--board-gap);
+	width: 100%;
+	max-width: var(--board-max-width);
+	margin-inline: auto;
+	padding: var(--board-padding);
+	background: var(--board-background);
+	border: var(--board-border-width) solid var(--board-border);
+	border-radius: var(--board-radius);
+}
+
+
+.game-board2 {
+	display: grid;
+	grid-template-columns: repeat(
+		var(--board-size),
+		var(--board-cell-size)
+	);
+	gap: var(--board-gap);
+	width: max-content;
+	margin-inline: auto;
+	padding: var(--board-padding);
+	background: var(--board-background);
+	border: var(--board-border-width) solid var(--board-border);
+	border-radius: var(--board-radius);
+}
+
+
+
+/* Cells */
+
+.board-cell {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	aspect-ratio: 1;
+	padding: 0;
+	background: var(--board-cell-background);
+	border: var(--board-cell-border-width) solid var(--board-cell-border);
+	border-radius: var(--board-cell-radius);
+	color: inherit;
+	cursor: default;
+	transition: var(--board-cell-transition);
+}
+
+
+/* Red */
+
+.board-cell--red {
+	background: var(--board-cell-red-background);
+	border-color: var(--board-cell-red-border);
+	color: var(--board-cell-red-text);
+}
+
+
+/* Blue */
+
+.board-cell--blue {
+	background: var(--board-cell-blue-background);
+	border-color: var(--board-cell-blue-border);
+	color: var(--board-cell-blue-text);
+}
+
+
+/* Wall */
+
+.board-cell--wall {
+	background: var(--board-wall-background);
+	border-color: var(--board-wall-border);
+}
+
+
+/* Red Turn */
+
+.game-board.red-turn
+	.board-cell:not(.board-cell--red):not(.board-cell--blue):not(.board-cell--wall):not(:disabled):hover {
+	background: var(--board-red-turn-playable-background);
+	border-color: var(--board-red-turn-playable-border);
+	cursor: pointer;
+}
+
+
+/* Blue Turn */
+
+.game-board.blue-turn
+	.board-cell:not(.board-cell--red):not(.board-cell--blue):not(.board-cell--wall):not(:disabled):hover {
+	background: var(--board-blue-turn-playable-background);
+	border-color: var(--board-blue-turn-playable-border);
+	cursor: pointer;
+}
+
+
+/* Winning */
+
+.board-cell--red.board-cell--winning {
+	background: var(--board-red-win-background);
+	border-color: var(--board-red-win-border);
+	color: var(--board-winning-text);
+}
+
+.board-cell--blue.board-cell--winning {
+	background: var(--board-blue-win-background);
+	border-color: var(--board-blue-win-border);
+	color: var(--board-winning-text);
+}
+
+
+/* Focus */
+
+.board-cell:focus-visible {
+	outline: var(--board-cell-focus-ring-width) solid var(--board-cell-focus-ring);
+	outline-offset: var(--board-cell-focus-ring-offset);
+}
+
+
+/* Disabled */
+
+.board-cell:disabled {
+	cursor: default;
+}
+

@@ -1,0 +1,270 @@
+/*
+# Global Typography
+
+## Purpose
+
+Defines the site's global typographic system for standard HTML
+content and text elements.
+
+This file is responsible for how text looks and flows across the
+site. It applies semantic typography variables to global HTML
+elements so that typography remains consistent and centralized.
+
+The file intentionally focuses on typography rather than general
+element styling. Rules that belong to interaction, layout,
+structural presentation, browser normalization, or other concerns
+are kept in their appropriate architectural layer.
+
+## Owns
+
+Global typographic presentation and typographic content flow,
+including:
+
+- Body text
+- Headings
+- Paragraphs
+- Links and link text presentation
+- Lists and list text
+- Small and secondary text
+- Strong and emphasized text
+- Code, keyboard, and sample text
+- Preformatted text
+- Blockquotes
+- Typographic spacing and rhythm associated with textual content
+- Text colors that are part of the semantic typography system
+- Text decoration and other typographic link presentation
+
+This file may style standard HTML elements when the styling directly
+defines how their textual content is presented.
+
+## Does Not Own
+
+This file does not own concerns outside of typography, including:
+
+- Raw color definitions
+- Semantic variable definitions
+- Browser normalization or resets
+- Global layout or structural positioning
+- General layout spacing systems
+- Component-specific styling
+- Page-specific styling
+- Interaction behavior
+- Focus indicators
+- Separators or non-typographic structural elements
+- Component-specific typography
+
+For example, link text color and text decoration belong here because
+they define the presentation of textual links. Focus-ring styling
+does not belong here because it represents keyboard interaction and
+accessibility state rather than typography.
+
+Similarly, paragraph and list spacing may be defined here when that
+spacing establishes the typographic rhythm of textual content. General
+layout spacing belongs to the appropriate layout or component layer.
+
+## Design Principle
+
+Typography is treated as a presentation concern, not as a general
+HTML-element styling layer.
+
+The presence of an HTML element in this file does not mean that this
+file owns the element itself. It only owns the typographic properties
+and typographic rhythm applied to that element.
+
+This keeps responsibility based on concern rather than selector.
+
+For example:
+
+- `body` typography belongs here; body background belongs elsewhere.
+- Link text presentation belongs here; focus-state styling belongs elsewhere.
+- Paragraph rhythm belongs here; page layout spacing belongs elsewhere.
+- Blockquote typography belongs here; non-typographic structural behavior belongs elsewhere.
+
+This separation allows multiple architectural layers to style the same
+HTML element without creating unclear ownership, provided each layer
+owns a distinct concern.
+
+## Defined Variables
+
+None.
+
+## Expected Variables
+
+Semantic typography variables from variables.css, including:
+
+- Font families
+- Font sizes
+- Font weights
+- Line heights
+- Letter spacing
+- Text colors
+- Link colors
+- Typographic spacing
+- Text decoration values
+
+Typography values must come from semantic variables rather than raw
+design tokens or hard-coded design values.
+
+## Dependencies
+
+variables.css
+
+This file consumes semantic variables from variables.css.
+
+It does not consume raw variables from colors.css and must not bypass
+the semantic variable layer.
+
+## Architecture
+
+```text
+css/
+│
+├── colors.css
+│   └── raw color palette
+│
+├── variables.css
+│   └── semantic site-wide variables
+│
+└── typography.css
+    └── global site-wide typography
+```
+*/
+
+
+body {
+	font-family: var(--font-family-body);
+	font-size: var(--font-size-body);
+	font-weight: var(--font-weight-body);
+	line-height: var(--line-height-body);
+	color: var(--color-text-primary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: var(--font-family-heading);
+	font-weight: var(--font-weight-heading);
+	color: var(--color-heading);
+}
+
+h1 {
+	font-size: var(--font-size-heading-1);
+	line-height: var(--line-height-heading);
+	letter-spacing: var(--letter-spacing-heading);
+}
+
+h2 {
+	font-size: var(--font-size-heading-2);
+	line-height: var(--line-height-heading);
+	letter-spacing: var(--letter-spacing-heading);
+}
+
+h3 {
+	font-size: var(--font-size-heading-3);
+	line-height: var(--line-height-heading);
+	letter-spacing: var(--letter-spacing-heading);
+}
+
+h4 {
+	font-size: var(--font-size-heading-4);
+	line-height: var(--line-height-heading);
+	letter-spacing: var(--letter-spacing-heading);
+}
+
+h5 {
+	font-size: var(--font-size-heading-5);
+	line-height: var(--line-height-heading);
+	letter-spacing: var(--letter-spacing-heading);
+}
+
+h6 {
+	font-size: var(--font-size-heading-6);
+	line-height: var(--line-height-heading);
+	letter-spacing: var(--letter-spacing-heading);
+}
+
+p {
+	margin-block: 0 var(--spacing-text-block);
+}
+
+a {
+	color: var(--color-link);
+	text-decoration-thickness: var(--link-decoration-thickness);
+	text-underline-offset: var(--link-underline-offset);
+}
+
+a:hover {
+	color: var(--color-link-hover);
+}
+
+strong,
+b {
+	font-weight: var(--font-weight-bold);
+}
+
+em,
+i {
+	font-style: italic;
+}
+
+small {
+	font-size: var(--font-size-small);
+	line-height: var(--line-height-small);
+	color: var(--color-text-secondary);
+}
+
+ul,
+ol {
+	padding-inline-start: var(--spacing-list-indent);
+}
+
+li + li {
+	margin-block-start: var(--spacing-list-item);
+}
+
+blockquote {
+	margin-block: var(--spacing-blockquote);
+	padding-inline-start: var(--spacing-blockquote-indent);
+	border-inline-start: var(--border-width-blockquote) solid var(--color-border);
+	color: var(--color-text-secondary);
+	font-size: var(--font-size-blockquote);
+	line-height: var(--line-height-blockquote);
+	font-style: italic;
+}
+
+code,
+kbd,
+samp {
+	font-family: var(--font-family-monospace);
+	font-size: var(--font-size-code);
+}
+
+pre {
+	margin-block: var(--spacing-code-block);
+	font-family: var(--font-family-monospace);
+	font-size: var(--font-size-code);
+	line-height: var(--line-height-code);
+	white-space: pre;
+	overflow-x: auto;
+}
+
+code {
+	color: var(--color-code);
+}
+
+.hero h1 {
+	color: var(--color-hero-heading);
+}
+
+.eyebrow {
+	color: var(--color-eyebrow-text);
+	font-variant-caps: small-caps;
+	margin-block: 0 var(--spacing-eyebrow);
+}
+
+.section-header h2 {
+	color: var(--color-section-heading);
+}

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta
+		name="description"
+		content="Learn more about Via Ludus."
+	>
+
+	<title>Via Ludus | About</title>
+	<link rel="icon" href="icons/favicon.ico" sizes="any">
+	<link rel="icon" href="icons/favicon-32x32.png" type="image/png" sizes="32x32">
+	<link rel="icon" href="icons/favicon-16x16.png" type="image/png" sizes="16x16">
+	<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+	<link rel="manifest" href="site.webmanifest">
+	<meta name="theme-color" content="#3F72C4">
+
+	<link rel="stylesheet" href="css/index.css">
+
+</head>
+
+<body class="site-page">
+
+	<header class="site-header">
+		<div class="container">
+			<a class="site-brand" href="index.html" aria-label="Via Ludus home">
+				<span class="brand-icon" aria-hidden="true">🔴</span>
+				<span class="brand-name">Via Ludus</span>
+			</a>
+
+			<nav class="site-nav" aria-label="Main navigation">
+				<ul class="navigation-list">
+					<li>
+						<a class="navigation-link" href="index.html">
+							Play
+						</a>
+					</li>
+
+					<li>
+						<a class="navigation-link" href="rules.html">
+							Rules
+						</a>
+					</li>
+
+					<!-- <li>
+						<a class="navigation-link" href="showcase.html">
+							Showcase
+						</a>
+					</li> -->
+
+					<li>
+						<a
+							class="navigation-link is-active"
+							href="about.html"
+							aria-current="page"
+						>
+							About
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</header>
+
+		<main class="main-content">
+
+		<!-- Hero -->
+		<section class="section hero" aria-labelledby="about-title">
+			<div class="container">
+				<div class="hero-content">
+					<p class="eyebrow">About Via Ludus</p>
+					<h1 id="about-title">A Game for Learning AI</h1>
+					<p class="hero-description">
+						Via Ludus is a teaching tool designed to give students a
+						practical environment for implementing and experimenting
+						with game-playing AI.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- The Idea -->
+		<section class="section" aria-labelledby="idea-title">
+			<div class="container">
+				<header class="section-header">
+					<p class="eyebrow">The Idea</p>
+					<h2 id="idea-title">Focus on the AI, Not the Interface</h2>
+				</header>
+
+				<p>
+					Via Ludus was created as a teaching tool for an artificial
+					intelligence course. The goal is to give students a working
+					game environment where they can focus on implementing
+					game-playing algorithms without first having to build a
+					graphical user interface.
+				</p>
+
+				<p>
+					The game provides a concrete problem for students to solve.
+					Instead of spending time building a board, handling user
+					interaction, and managing the visual presentation of the game,
+					students can concentrate on how an AI should evaluate positions,
+					choose moves, and play strategically.
+				</p>
+			</div>
+		</section>
+
+		<!-- AI -->
+		<section class="section" aria-labelledby="ai-title">
+			<div class="container">
+				<header class="section-header">
+					<p class="eyebrow">Artificial Intelligence</p>
+					<h2 id="ai-title">A Platform for Experimentation</h2>
+				</header>
+
+				<p>
+					The game is intended to support assignments involving a range
+					of game-playing and search techniques. Students can implement
+					algorithms such as minimax, minimax with alpha-beta pruning,
+					and Monte Carlo Tree Search. They can also experiment with
+					heuristic evaluation functions, iterative deepening, move
+					ordering, and transposition tables, giving them opportunities
+					to explore both the basic ideas behind adversarial search and
+					techniques for making those algorithms more efficient.
+				</p>
+
+				<p>
+					The game also provides a practical setting for studying how an
+					AI evaluates a board position and makes decisions when it cannot
+					simply search every possible outcome. Students can develop and
+					compare different evaluation strategies, experiment with search
+					depth and computational limits, and observe how changes to their
+					algorithms affect the way an AI plays.
+				</p>
+
+				<p>
+					The goal is not to provide students with a finished AI, but to
+					give them a consistent environment in which they can build one.
+					The game provides the problem, the rules, and the interface;
+					students provide the intelligence.
+				</p>
+
+				<p>
+					Because the game can be played through a web service, students
+					can implement their AI in the programming language of their
+					choice. The interface provides the game environment while the
+					student's program provides the intelligence.
+				</p>
+			</div>
+		</section>
+
+		<!-- Architecture -->
+		<section class="section" aria-labelledby="architecture-title">
+			<div class="container">
+				<header class="section-header">
+					<p class="eyebrow">Architecture</p>
+					<h2 id="architecture-title">A Separate Game Interface</h2>
+				</header>
+
+				<p>
+					Via Ludus uses a web interface for the game while allowing the
+					AI itself to run as a separate service. The original web service
+					was written in Python using FastAPI, but the design does not
+					require students to use Python.
+				</p>
+
+				<p>
+					This separation allows the frontend to provide a consistent
+					playing environment while students are free to build their
+					AI backend using the language and tools they are learning.
+				</p>
+			</div>
+		</section>
+
+		<!-- Origin -->
+		<section class="section" aria-labelledby="origin-title">
+			<div class="container">
+				<header class="section-header">
+					<p class="eyebrow">Origin</p>
+					<h2 id="origin-title">Where the Game Came From</h2>
+				</header>
+
+				<p>
+					The game behind Via Ludus is based on an assignment I received
+					when I was a student in an artificial intelligence course.
+					I have not been able to identify the original name or source
+					of the game, so I use the name Via Ludus for this project.
+				</p>
+
+				<p>
+					The name Via Ludus was inspired by the book
+					<em>Ready Player One</em> by Ernest Cline.
+				</p>
+			</div>
+		</section>
+
+	</main>
+
+	<footer class="site-footer">
+		<div class="container">
+			<p>🔵 2026 Via Ludus &middot;</p>
+		</div>
+	</footer>
+
+</body>
+</html>
+

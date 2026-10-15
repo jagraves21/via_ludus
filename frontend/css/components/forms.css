@@ -1,0 +1,98 @@
+/*
+# Form Components
+
+## Purpose
+
+Defines reusable form primitives, input fields, field labels,
+input groups, and search-field layouts.
+
+## Owns
+
+Form structure, input presentation, sizing, spacing, borders,
+focus states, variants, search-field layout, and responsive
+form behavior.
+
+## Does Not Own
+
+Raw color values, site-wide semantic variables, global
+typography, global layout, or page-specific styling.
+
+## Variables
+
+Consumes variables exclusively from components/variables.css.
+*/
+
+
+/* Base Search Field */
+.search-field {
+	display: flex;
+	flex-direction: column;
+	gap: var(--search-field-gap);
+}
+
+/* Field Label */
+.field__label {
+	font-weight: var(--field-label-font-weight);
+}
+
+/* Input Group */
+.input-group {
+	display: flex;
+	gap: var(--input-group-gap);
+}
+
+/* Base Input */
+.input {
+	width: 100%;
+	min-height: var(--input-min-height);
+	padding:
+		var(--input-padding-block)
+		var(--input-padding-inline);
+
+	background: var(--input-background);
+	border:
+		var(--input-border-width)
+		solid
+		var(--input-border);
+	border-radius: var(--input-radius);
+
+	color: var(--input-text);
+}
+
+/* Placeholder */
+.input::placeholder {
+	color: var(--input-placeholder);
+}
+
+/* Hover State */
+.input:hover {
+	border-color: var(--input-border-hover);
+}
+
+/* Focus State */
+.input:focus {
+	border-color: var(--input-border-focus);
+	outline: none;
+
+	box-shadow:
+		0 0 0 var(--input-focus-ring-width) var(--input-focus-ring);
+}
+
+/* Large Variant */
+.input--lg {
+	min-height: var(--input-large-min-height);
+	padding-inline: var(--input-large-padding-inline);
+}
+
+/* Search Width */
+.input-group--search {
+	max-width: var(--input-search-max-width);
+}
+
+/* Mobile Layout */
+@media (max-width: 36rem) {
+	.input-group {
+		flex-direction: column;
+	}
+}
+

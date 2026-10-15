@@ -1,0 +1,80 @@
+/*
+# Navigation Component
+
+## Purpose
+
+Defines the reusable navigation list and navigation link
+components, including their interactive states and responsive
+behavior.
+
+## Owns
+
+Navigation structure, spacing, link presentation, typography,
+interactive states, transitions, and responsive navigation
+behavior.
+
+## Does Not Own
+
+Raw color values, site-wide semantic variables, global
+typography, global layout, header and footer presentation, or
+page-specific styling.
+
+## Variables
+
+Consumes variables exclusively from components/variables.css.
+*/
+
+
+/* Base Navigation List */
+.navigation-list {
+	display: flex;
+	align-items: center;
+	gap: var(--navigation-list-gap);
+
+	margin: 0;
+	padding: 0;
+
+	list-style: none;
+}
+
+/* Navigation Link */
+.navigation-link {
+	display: inline-flex;
+	align-items: center;
+
+	padding:
+		var(--navigation-link-padding-block)
+		var(--navigation-link-padding-inline);
+
+	background: var(--navigation-background);
+	border-radius: var(--navigation-link-radius);
+
+	color: var(--navigation-text);
+	font-weight: var(--navigation-link-font-weight);
+
+	text-decoration: none;
+
+	transition:
+		background-color var(--navigation-link-transition),
+		color var(--navigation-link-transition);
+}
+
+/* Hover State */
+.navigation-link:hover {
+	background: var(--navigation-background-hover);
+	color: var(--navigation-text-hover);
+}
+
+/* Active State */
+.navigation-link.is-active {
+	background: var(--navigation-background-active);
+	color: var(--navigation-text-active);
+}
+
+/* Responsive Layout */
+@media (max-width: 40rem) {
+	.navigation-list {
+		flex-wrap: wrap;
+	}
+}
+

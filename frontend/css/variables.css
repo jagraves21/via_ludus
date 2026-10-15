@@ -1,0 +1,379 @@
+/*
+# Site-Wide Design Variables
+
+## Purpose
+
+Defines the site's semantic design variables and centralized
+configuration values.
+
+This file is the primary configuration layer for the site's visual
+design. It translates raw design tokens into meaningful site-wide
+design decisions and provides the values consumed by global styling,
+layout, and other architectural layers.
+
+Meaningful, intentionally configurable design decisions should be
+centralized here so that the site's design can generally be changed
+by modifying variables rather than editing implementation CSS.
+
+This file defines what the site looks like at a design-system level.
+Other CSS files define how those decisions are implemented.
+
+## Owns
+
+Site-wide semantic design configuration, including:
+
+- Typography
+- Text colors
+- Background colors
+- Link colors
+- Borders
+- Focus indicators
+- Text selection
+- Spacing
+- Layout dimensions
+- Container dimensions
+- Responsive layout configuration
+- Component-independent visual values
+- Other meaningful site-wide design decisions
+
+Variables should represent intentional design decisions rather than
+CSS implementation mechanics.
+
+Raw values from colors.css may be translated into semantic variables
+here when the raw value has a specific role within the site's design.
+
+## Does Not Own
+
+This file does not own:
+
+- Raw color palette definitions
+- Browser normalization or reset behavior
+- CSS selectors
+- Layout implementation
+- Typography implementation
+- Component implementation
+- Page-specific styling
+- Component-specific variables
+- Page-specific variables
+- CSS behavior that belongs directly in an implementation layer
+
+This file defines values; it does not apply those values to elements.
+
+Component-specific design decisions belong in components/variables.css
+when they should be configurable independently from the global design
+system.
+
+Page-specific design decisions belong in the appropriate page layer.
+
+## Defined Variables
+
+Semantic site-wide variables organized by design concern, including:
+
+- Typography variables
+- Color variables
+- Text and content spacing
+- Border variables
+- Layout variables
+- Responsive layout variables
+- Global presentation variables
+- Other site-wide design configuration
+
+Variables should be named according to their semantic purpose rather
+than according to the raw value they contain.
+
+For example, a variable should describe the role a value fulfills
+rather than merely describing its underlying color, size, or number.
+
+## Expected Variables
+
+Raw color variables from colors.css.
+
+This file may consume raw variables from colors.css and translate
+them into semantic site-wide design decisions.
+
+Other semantic variable layers, such as components/variables.css
+and pages/variables.css, may also consume raw variables from
+colors.css when defining component- or page-specific design
+decisions.
+
+Implementation CSS should consume semantic variables rather than
+accessing raw design tokens from colors.css directly.
+
+## Dependencies
+
+colors.css
+
+variables.css consumes raw design tokens from colors.css and translates
+them into semantic site-wide design decisions.
+
+Other semantic variable layers may also consume colors.css when
+defining component- or page-specific design decisions.
+
+## Architecture
+
+```text
+css/
+│
+├── colors.css
+│   └── raw color palette
+│
+├── variables.css
+│   └── semantic site-wide variables
+│
+├── *.css
+│   └── site-wide css
+│
+├── components/
+│   │
+│   ├── variables.css
+│   │   └── component semantic variables
+│   │
+│   └── *.css
+│       └── component css
+│
+└── pages/
+    │
+    ├── variables.css
+    │   └── page semantic variables
+    │
+    └── *.css
+        └── page css
+```
+
+Global implementation layers such as typography.css, layout.css,
+and base.css consume semantic variables directly from this file.
+
+Components and pages must not bypass their respective variables.css
+files to consume site-wide variables directly when the value represents
+a component- or page-specific decision.
+
+## Configuration Principle
+
+variables.css is the central site-wide design configuration layer.
+
+When a meaningful design value needs to change, the preferred approach
+is to change its variable here rather than modify the CSS that consumes
+it.
+
+The presence of many variables in this file is intentional. The goal
+is not to minimize the number of variables, but to centralize meaningful
+design decisions while keeping CSS implementation focused on structure
+and behavior.
+
+Not every literal CSS value requires a variable. Values that represent
+CSS implementation mechanics rather than configurable design decisions
+may remain in their implementation layer.
+*/
+
+
+/* Typography Variables */
+
+:root {
+	/* Font Families */
+
+	--font-family-body:
+		system-ui,
+		-apple-system,
+		BlinkMacSystemFont,
+		"Segoe UI",
+		sans-serif;
+
+	--font-family-heading:
+		system-ui,
+		-apple-system,
+		BlinkMacSystemFont,
+		"Segoe UI",
+		sans-serif;
+
+	--font-family-monospace:
+		"SFMono-Regular",
+		Consolas,
+		"Liberation Mono",
+		monospace;
+
+
+	/* Font Sizes */
+
+	--font-size-body: 1rem;
+	--font-size-small: 0.875rem;
+	--font-size-code: 0.875rem;
+	--font-size-blockquote: 1rem;
+
+	--font-size-heading-1: 2.5rem;
+	--font-size-heading-2: 2rem;
+	--font-size-heading-3: 1.5rem;
+	--font-size-heading-4: 1.25rem;
+	--font-size-heading-5: 1.125rem;
+	--font-size-heading-6: 1rem;
+
+
+	/* Font Weights */
+
+	--font-weight-body: 400;
+	--font-weight-heading: 700;
+	--font-weight-bold: 700;
+
+
+	/* Line Heights */
+
+	--line-height-body: 1.6;
+	--line-height-small: 1.4;
+	--line-height-heading: 1.2;
+	--line-height-blockquote: 1.6;
+	--line-height-code: 1.5;
+
+
+	/* Letter Spacing */
+
+	--letter-spacing-heading: -0.01em;
+
+
+	/* Text Colors */
+
+	--color-text-primary: var(--gray-800);
+	--color-text-secondary: var(--gray-600);
+	--color-heading: var(--gray-900);
+	--color-link: var(--blue-dark);
+	--color-link-hover: var(--blue-deep);
+	--color-code: var(--red-deep);
+	--color-border: var(--gray-300);
+	--color-hero-heading: var(--blue-dark);
+	--color-eyebrow-text: var(--red-dark);
+	--color-section-heading: var(--blue-dark);
+	--color-player-red-text: var(--red-dark);
+	--color-player-blue-text: var(--blue-dark);
+
+
+	/* Text Spacing */
+
+	--spacing-text-block: 1rem;
+	--spacing-eyebrow: 0rem;
+	--spacing-list-indent: 1.5rem;
+	--spacing-list-item: 0rem;
+	--spacing-blockquote: 1rem;
+	--spacing-blockquote-indent: 1rem;
+	--spacing-code-block: 1rem;
+
+	/* Named Players */
+
+	--color-player-red-text: var(--red-dark);
+	--color-player-blue-text: var(--blue-dark);
+
+
+	/* Text Borders */
+
+	--border-width-blockquote: 0.25rem;
+
+
+	/* Link Decoration */
+
+	--link-decoration-thickness: 0.08em;
+	--link-underline-offset: 0.15em;
+}
+
+
+/* Layout Variables */
+
+:root {
+	/* Main content */
+
+	--layout-main-gutter: 1rem;
+	--layout-main-gutter-medium: 1.5rem;
+	--layout-main-gutter-large: 2rem;
+	--layout-main-max-width: 72rem;
+
+
+	/* Header And Footer */
+
+	--layout-site-header-min-height: 4rem;
+	--layout-site-footer-min-height: 4rem;
+
+
+	/* General containers */
+
+	--layout-container-gutter: 1rem;
+	--layout-container-gutter-medium: 1.5rem;
+	--layout-container-gutter-large: 2rem;
+	--layout-container-max-width: 80rem;
+
+
+	/* Sections */
+
+	--layout-section-spacing: 4rem;
+	--layout-section-header-spacing: 2rem;
+	--layout-section-header-item-spacing: 0.5rem;
+
+
+	/* Structural dividers */
+
+	--layout-section-divider-inset: 1rem;
+	--layout-section-divider-inset-medium: 1.5rem;
+	--layout-section-divider-inset-large: 2rem;
+	--layout-section-divider: linear-gradient(
+		90deg,
+		var(--blue-dark) 0%,
+		var(--blue-light) 47%,
+		var(--red-light) 53%,
+		var(--red-dark) 100%
+	);
+	--border-width-medium: 2px;
+}
+
+
+/* Base Variables */
+
+:root {
+	/* Page */
+
+	--color-background: var(--cream);
+
+
+	/* Header */
+
+	--color-site-header-background: linear-gradient(
+		135deg,
+		var(--blue-dark) 0%,
+		var(--blue-light) 47%,
+		var(--red-light) 53%,
+		var(--red-dark) 100%
+	);
+	--color-site-header-text: var(--white);
+
+
+	/* Footer */
+
+	--color-site-footer-background: linear-gradient(
+		135deg,
+		var(--red-dark) 0%,
+		var(--red-light) 47%,
+		var(--blue-light) 53%,
+		var(--blue-dark) 100%
+	);
+	--color-site-footer-text: var(--white);
+	--font-weight-site-footer: 500;
+
+
+	/* Site Brand */
+
+	--color-site-brand-text: var(--white);
+	--font-weight-site-brand: 500;
+
+
+	/* Structural Separators */
+
+	--border-width-separator: 1px;
+
+
+	/* Focus */
+
+	--color-focus-ring: var(--blue);
+	--focus-ring-width: 2px;
+	--focus-ring-offset: 2px;
+
+
+	/* Text Selection */
+
+	--color-selection-background: var(--blue-pale);
+	--color-selection-text: var(--gray-900);
+}
+

@@ -1,0 +1,149 @@
+/*
+# Feedback Components
+
+## Purpose
+
+Defines reusable feedback states for loading, empty, and error
+conditions.
+
+## Owns
+
+Feedback state structure, presentation, sizing, spacing,
+typography, borders, radii, animation, interactive state
+presentation, and feedback-specific design decisions.
+
+## Does Not Own
+
+Raw color values, site-wide semantic variables, global
+typography, global layout, or page-specific styling.
+
+## Variables
+
+Consumes variables exclusively from components/variables.css.
+*/
+
+
+/* Base Loading State */
+.loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--loading-gap);
+
+	padding: var(--loading-padding);
+
+	color: var(--loading-text);
+}
+
+.loading__spinner {
+	width: var(--loading-spinner-size);
+	height: var(--loading-spinner-size);
+
+	border:
+		var(--loading-spinner-border-width)
+		solid
+		var(--loading-border);
+
+	border-top-color: var(--loading-indicator);
+	border-radius: 50%;
+
+	animation:
+		loading-spin
+		var(--loading-animation-duration)
+		linear
+		infinite;
+}
+
+/* Inline Loading State */
+.loading--inline {
+	display: inline-flex;
+	align-items: center;
+	justify-content: flex-start;
+
+	padding: 0;
+
+	color: inherit;
+}
+
+.loading--inline .loading__spinner {
+	width: 1em;
+	height: 1em;
+}
+
+/* Spinner Animation */
+@keyframes loading-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* Empty State */
+.empty-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	min-height: var(--empty-min-height);
+	padding: var(--empty-padding);
+
+	background: var(--empty-background);
+	border:
+		var(--loading-spinner-border-width)
+		solid
+		var(--empty-border);
+	border-radius: var(--empty-radius);
+
+	color: var(--empty-text);
+	text-align: center;
+}
+
+.empty-state__content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--empty-content-gap);
+}
+
+.empty-state__title {
+	font-size: var(--empty-title-size);
+}
+
+.empty-state__description {
+	color: var(--empty-text);
+}
+
+/* Empty And Error Actions */
+.empty-state__actions,
+.error-state__actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: var(--feedback-actions-gap);
+
+	margin-top: var(--feedback-actions-margin-top);
+}
+
+/* Error State */
+.error-state {
+	padding: var(--error-padding);
+
+	background: var(--error-background);
+	border:
+		var(--loading-spinner-border-width)
+		solid
+		var(--error-border);
+	border-radius: var(--error-radius);
+}
+
+.error-state__title {
+	color: var(--error-text);
+	font-size: var(--error-title-size);
+}
+
+.error-state__message {
+	margin-top: var(--error-message-spacing);
+
+	color: var(--error-message);
+}
+

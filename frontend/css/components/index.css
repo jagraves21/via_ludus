@@ -1,0 +1,69 @@
+/*
+# Component CSS Entry Point
+
+## Purpose
+
+Defines the entry point for the reusable component CSS layer and
+establishes the loading order of component variables and component
+implementations.
+
+This file is the sole import entry point for the component layer.
+
+## Owns
+
+CSS imports and their architectural ordering within the component
+layer.
+
+The component variable interface is loaded before component
+implementations so that all component styles have access to their
+defined design variables.
+
+As additional reusable components are created, their imports should
+be added here according to their dependency order.
+
+This file should remain limited to imports and their architectural
+ordering.
+
+## Does Not Own
+
+Design tokens, semantic variables, component variables, global
+styles, typography, layout styles, component implementations,
+page-specific styles, or implementation details.
+
+Component variables belong in variables.css.
+
+Component implementation belongs in the individual component CSS
+files.
+
+## Dependencies
+
+variables.css
+
+All component implementation files depend on the component variable
+interface provided by variables.css.
+
+## Architecture
+
+```text
+css/
+└── components/
+    ├── index.css
+    ├── variables.css
+    ├── badges.css
+    ├── buttons.css
+    ├── cards.css
+    ├── feedback.css
+    ├── forms.css
+    └── navigation.css
+```
+*/
+
+
+@import url("variables.css");
+@import url("badges.css");
+@import url("buttons.css");
+@import url("cards.css");
+@import url("feedback.css");
+@import url("forms.css");
+@import url("navigation.css");
+
