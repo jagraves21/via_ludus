@@ -1,0 +1,36 @@
+# pip install -e ".[test,notebooks,webservice]"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "via-ludus"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+	"numpy",
+	"scipy",
+	"networkx",
+	"fastapi",
+]
+
+[project.optional-dependencies]
+test = [
+	"pytest",
+]
+
+notebooks = [
+	"tqdm",
+	"matplotlib",
+	"pandas",
+	"jupyter",
+]
+
+webservice = [
+	"uvicorn",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
