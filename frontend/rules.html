@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta
+		name="description"
+		content="Official rules for Via Ludus, a two-player strategy game of connection, territory, and blocking."
+	>
+
+	<title>Via Ludus | Rules</title>
+	<link rel="icon" href="icons/favicon.ico" sizes="any">
+	<link rel="icon" href="icons/favicon-32x32.png" type="image/png" sizes="32x32">
+	<link rel="icon" href="icons/favicon-16x16.png" type="image/png" sizes="16x16">
+	<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+	<link rel="manifest" href="site.webmanifest">
+	<meta name="theme-color" content="#3F72C4">
+
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/pages/rules.css">
+
+</head>
+
+<body class="site-page">
+
+	<header class="site-header">
+		<div class="container">
+			<a class="site-brand" href="index.html" aria-label="Via Ludus home">
+				<span class="brand-icon" aria-hidden="true">🔴</span>
+				<span class="brand-name">Via Ludus</span>
+			</a>
+
+			<nav class="site-nav" aria-label="Main navigation">
+				<ul class="navigation-list">
+					<li>
+						<a class="navigation-link" href="index.html">
+							Play
+						</a>
+					</li>
+
+					<li>
+						<a class="navigation-link is-active" href="rules.html" aria-current="page">
+							Rules
+						</a>
+					</li>
+
+					<!-- <li>
+						<a class="navigation-link" href="showcase.html">
+							Showcase
+						</a>
+					</li> -->
+
+					<li>
+						<a class="navigation-link" href="about.html">
+							About
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</header>
+
+	<main class="main-content">
+
+		<!-- Rules Introduction -->
+		<section class="section hero" aria-labelledby="rules-title">
+			<div class="container">
+
+				<div class="hero-content">
+					<p class="eyebrow">Official Rules</p>
+
+					<h1 id="rules-title">
+						Via Ludus Rules
+					</h1>
+
+					<p class="hero-description">
+						Via Ludus is a two-player connection game.
+						Players claim spaces, build paths, and block
+						their opponent while attempting to connect
+						their two target edges.
+					</p>
+				</div>
+
+			</div>
+		</section>
+
+		<!-- 1. Objective -->
+		<section class="section" aria-labelledby="overview-title">
+			<div class="container">
+
+				<header class="section-header">
+					<p class="eyebrow">Rule 1</p>
+
+					<h2 id="overview-title">
+						Objective
+					</h2>
+				</header>
+
+				<p>
+					Via Ludus is played by two players:
+					<span class="player-text--red">Red</span> and
+					<span class="player-text--blue">Blue</span>.
+					Each player has a different connection objective.
+				</p>
+
+				<p>
+					Players alternate turns, claiming available
+					White spaces. A player wins immediately when their
+					claimed spaces form an unbroken orthogonal path
+					between their two target edges.
+				</p>
+
+				<dl class="game-goals" aria-label="Player objectives">
+					<div class="game-goal game-goal--red">
+						<dt><span class="player-text--red">Red</span></dt>
+
+						<dd>
+							Connect the top edge of the board to the bottom edge.
+						</dd>
+					</div>
+
+					<div class="game-goal game-goal--blue">
+						<dt><span class="player-text--blue">Blue</span></dt>
+
+						<dd>
+							Connect the left edge of the board to the right edge.
+						</dd>
+					</div>
+				</dl>
+
+			</div>
+		</section>
+
+		<!-- 2. Board -->
+		<section class="section" aria-labelledby="board-title">
+			<div class="container">
+
+				<header class="section-header">
+					<p class="eyebrow">Rule 2</p>
+
+					<h2 id="board-title">
+						The Board
+					</h2>
+				</header>
+
+				<p>
+					The board is a rectangular grid containing four
+					types of spaces. Each space has a fixed state
+					during the game unless it is an available White
+					space that a player claims.
+				</p>
+
+				<div
+					id="starting-board-example"
+					class="rules-board-example rules-board-example--starting"
+				>
+					<div class="loading" aria-live="polite">
+						<span
+							class="loading__spinner"
+							aria-hidden="true"
+						></span>
+
+						<span>
+							Loading board example...
+						</span>
+					</div>
+				</div>
+
+				<ul class="board-legend" aria-label="Board space types">
+					<li class="board-legend-item">
+						<span
+							class="board-legend-marker board-legend-marker-red"
+							aria-hidden="true"
+						></span>
+
+						<span>
+							<strong>Red</strong>
+							&mdash;
+							A space claimed by <span class="player-text--red">Red</span>.
+						</span>
+					</li>
+
+					<li class="board-legend-item">
+						<span
+							class="board-legend-marker board-legend-marker-blue"
+							aria-hidden="true"
+						></span>
+
+						<span>
+							<strong>Blue</strong>
+							&mdash;
+							A space claimed by <span class="player-text--blue">Blue</span>.
+						</span>
+					</li>
+
+					<li class="board-legend-item">
+						<span
+							class="board-legend-marker board-legend-marker-open"
+							aria-hidden="true"
+						></span>
+
+						<span>
+							<strong>White</strong>
+							— An available space that may be
+							claimed by the player whose turn it is.
+						</span>
+					</li>
+
+					<li class="board-legend-item">
+						<span
+							class="board-legend-marker board-legend-marker-corner"
+							aria-hidden="true"
+						></span>
+
+						<span>
+							<strong>Wall</strong>
+							— A blocked space that cannot be claimed.
+						</span>
+					</li>
+				</ul>
+
+			</div>
+		</section>
+
+		<!-- 3. Setup -->
+		<section class="section" aria-labelledby="setup-title">
+			<div class="container">
+
+				<header class="section-header">
+					<p class="eyebrow">Rule 3</p>
+
+					<h2 id="setup-title">
+						Game Setup
+					</h2>
+				</header>
+
+				<ol class="rules-steps">
+					<li class="rules-step">
+						<span class="rules-step-title">Choose the Board Size</span>
+
+						<p>
+							Select the desired board size before
+							starting the game.
+						</p>
+					</li>
+					
+					<li class="rules-step">
+						<span class="rules-step-title">Assign the Players</span>
+
+						<p>
+							Assign a human player or available
+							computer agent to
+							<span class="player-text--red">Red</span> and
+							<span class="player-text--blue">Blue</span>.
+						</p>
+					</li>
+
+					<li class="rules-step">
+						<span class="rules-step-title">Begin the Game</span>
+
+						<p>
+							<span class="player-text--red">Red</span>
+							always takes the first turn.
+						</p>
+					</li>
+				</ol>
+
+			</div>
+		</section>
+
+		<!-- 4. Taking a Turn -->
+		<section class="section" aria-labelledby="turn-title">
+			<div class="container">
+
+				<header class="section-header">
+					<p class="eyebrow">Rule 4</p>
+
+					<h2 id="turn-title">
+						Taking a Turn
+					</h2>
+				</header>
+
+				<p>
+					Players alternate turns throughout the game.
+					A player may make one legal move during their
+					turn.
+				</p>
+
+				<ol class="rules-steps">
+					<li class="rules-step">
+						<span class="rules-step-title">Select a White Space</span>
+
+						<p>
+							Choose one White space that is currently
+							available.
+						</p>
+					</li>
+
+					<li class="rules-step">
+						<span class="rules-step-title">Claim the Space</span>
+
+						<p>
+							The selected space becomes the current
+							player's color and remains claimed for
+							the rest of the game.
+						</p>
+					</li>
+
+					<li class="rules-step">
+						<span class="rules-step-title">Check for Victory</span>
+
+						<p>
+							After the move, determine whether the
+							player has completed a connection between
+							their two target edges.
+						</p>
+					</li>
+
+					<li class="rules-step">
+						<span class="rules-step-title">Pass the Turn</span>
+
+						<p>
+							If no player has won, the turn passes to
+							the other player.
+						</p>
+					</li>
+				</ol>
+
+			</div>
+		</section>
+
+		<!-- 5. Winning -->
+		<section class="section" aria-labelledby="winning-title">
+			<div class="container">
+
+				<header class="section-header">
+					<p class="eyebrow">Rule 5</p>
+
+					<h2 id="winning-title">
+						Winning the Game
+					</h2>
+				</header>
+
+				<p>
+					A player wins immediately when their claimed
+					spaces form a continuous orthogonal path between
+					their two target edges.
+				</p>
+
+				<div class="winning-goals" aria-label="Winning conditions">
+
+					<article class="winning-goal">
+						<h3>Red's connection</h3>
+
+						<p>
+							<span class="player-text--red">Red</span>
+							wins by forming an unbroken path from the
+							top edge of the board to the bottom edge.
+						</p>
+
+						<div
+							id="red-winning-example"
+							class="rules-board-example"
+						>
+							<div class="loading" aria-live="polite">
+								<span
+									class="loading__spinner"
+									aria-hidden="true"
+								></span>
+
+								<span>
+									Loading Red connection example...
+								</span>
+							</div>
+						</div>
+					</article>
+
+					<article class="winning-goal">
+						<h3>Blue's connection</h3>
+
+						<p>
+							<span class="player-text--blue">Blue</span>
+							wins by forming an unbroken path from the
+							left edge of the board to the right edge.
+						</p>
+
+						<div
+							id="blue-winning-example"
+							class="rules-board-example"
+						>
+							<div class="loading" aria-live="polite">
+								<span
+									class="loading__spinner"
+									aria-hidden="true"
+								></span>
+
+								<span>
+									Loading Blue connection example...
+								</span>
+							</div>
+						</div>
+					</article>
+
+				</div>
+
+				<p class="rules-note">
+					Connections are orthogonal only. Diagonal spaces
+					do not connect. The game ends immediately when
+					a winning connection is completed.
+				</p>
+
+			</div>
+		</section>
+
+		<!-- 6. Legal Moves -->
+		<section class="section" aria-labelledby="moves-title">
+			<div class="container">
+
+				<header class="section-header">
+					<p class="eyebrow">Rule 6</p>
+
+					<h2 id="moves-title">
+						Legal Moves
+					</h2>
+				</header>
+
+				<p>
+					A move is legal only when all of the following
+					conditions are satisfied:
+				</p>
+
+				<ul class="rules-list">
+					<li>
+						It is the player's turn.
+					</li>
+
+					<li>
+						The game is still active.
+					</li>
+
+					<li>
+						The selected space is White.
+					</li>
+				</ul>
+
+			</div>
+		</section>
+
+		<!-- 7. Restrictions -->
+		<section class="section" aria-labelledby="restrictions-title">
+			<div class="container">
+
+				<header class="section-header">
+					<p class="eyebrow">Rule 7</p>
+
+					<h2 id="restrictions-title">
+						Move Restrictions
+					</h2>
+				</header>
+
+				<ul class="rules-list">
+					<li>
+						A player may claim only one space per turn.
+					</li>
+
+					<li>
+						A claimed space cannot change ownership.
+					</li>
+
+					<li>
+						<span class="player-text--red">Red</span>
+						and
+						<span class="player-text--blue">Blue</span>
+						spaces cannot be claimed again.
+					</li>
+
+					<li>
+						Wall spaces cannot be claimed.
+					</li>
+
+					<li>
+						A player cannot make a move after the game
+						has ended.
+					</li>
+
+					<li>
+						A player cannot make a move outside their turn.
+					</li>
+				</ul>
+
+			</div>
+		</section>
+
+		<!-- 8. Game End -->
+		<section class="section" aria-labelledby="game-end-title">
+			<div class="container">
+
+				<header class="section-header">
+					<p class="eyebrow">Rule 8</p>
+
+					<h2 id="game-end-title">
+						End of Game
+					</h2>
+				</header>
+
+				<p>
+					The game ends immediately when either player
+					completes their required connection.
+				</p>
+
+				<p>
+					Once the game has ended, no additional moves may
+					be made. The winning player's connection remains
+					visible as the final board state.
+				</p>
+
+				<p>
+					A new game must be started to reset the board and
+					begin another match.
+				</p>
+
+			</div>
+		</section>
+
+		<!-- Quick Reference -->
+		<section class="section" aria-labelledby="reference-title">
+			<div class="container">
+
+				<header class="section-header">
+					<p class="eyebrow">Quick Reference</p>
+
+					<h2 id="reference-title">
+						Rules at a Glance
+					</h2>
+				</header>
+
+				<ul class="rules-list">
+					<li>
+						<span class="player-text--red">Red</span>
+						moves first.
+					</li>
+
+					<li>
+						Players alternate turns.
+					</li>
+
+					<li>
+						Each turn allows one move.
+					</li>
+
+					<li>
+						Only White spaces may be claimed.
+					</li>
+
+					<li>
+						<span class="player-text--red">Red</span>
+						connects top to bottom.
+					</li>
+
+					<li>
+						<span class="player-text--blue">Blue</span>
+						connects left to right.
+					</li>
+
+					<li>
+						Connections use orthogonal spaces only.
+					</li>
+
+					<li>
+						The first completed connection wins.
+					</li>
+
+					<li>
+						Play stops immediately when a player wins.
+					</li>
+				</ul>
+
+			</div>
+		</section>
+
+		<!-- Start Playing -->
+		<section class="section" aria-labelledby="new-game-title">
+			<div class="container">
+
+				<header class="section-header">
+					<p class="eyebrow">Play</p>
+
+					<h2 id="new-game-title">
+						Ready to Play?
+					</h2>
+				</header>
+
+				<p>
+					Review the rules, choose your board size and
+					players, then start a new game.
+				</p>
+
+				<a id="rules-game-link" class="button button--lg" href="index.html">
+					Play Via Ludus
+				</a>
+
+			</div>
+		</section>
+
+	</main>
+
+	<footer class="site-footer">
+		<div class="container">
+			<p>🔵 2026 Via Ludus &middot;</p>
+		</div>
+	</footer>
+
+	<script type="module" src="js/rules.js"></script>
+</body>
+</html>
+

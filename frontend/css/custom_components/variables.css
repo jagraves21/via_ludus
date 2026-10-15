@@ -1,0 +1,61 @@
+/* Shared */
+
+:root {
+	--board-background: var(--cream);
+	--board-border: var(--gray-300);
+	--board-border-width: 1px;
+
+	--board-cell-background: var(--white);
+	--board-cell-border: var(--gray-300);
+	--board-cell-border-width: 1px;
+
+	--board-wall-background: var(--gray-800);
+	--board-wall-border: var(--gray-900);
+
+	--board-winning-text: var(--white);
+
+	--board-size: 8;
+	--board-cell-size: 3rem;
+	--board-max-width: 40rem;
+	--board-radius: 0.5rem;
+	--board-gap: 0.25rem;
+	--board-padding: 0.5rem;
+
+	--board-cell-radius: 0.25rem;
+	--board-cell-transition: 150ms ease-in-out;
+
+	--board-cell-focus-ring: var(--blue-light);
+	--board-cell-focus-ring-width: 3px;
+	--board-cell-focus-ring-offset: 2px;
+}
+
+
+/* Red */
+
+:root {
+	--board-cell-red-background: var(--red);
+	--board-cell-red-border: var(--red-dark);
+	--board-cell-red-text: var(--white);
+
+	--board-red-turn-playable-background: var(--red-pale);
+	--board-red-turn-playable-border: var(--red-light);
+
+	--board-red-win-background: var(--red-deep);
+	--board-red-win-border: var(--red-deep);
+}
+
+
+/* Blue */
+
+:root {
+	--board-cell-blue-background: var(--blue);
+	--board-cell-blue-border: var(--blue-dark);
+	--board-cell-blue-text: var(--white);
+
+	--board-blue-turn-playable-background: var(--blue-pale);
+	--board-blue-turn-playable-border: var(--blue-light);
+
+	--board-blue-win-background: var(--blue-deep);
+	--board-blue-win-border: var(--blue-deep);
+}
+

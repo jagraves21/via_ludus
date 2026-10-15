@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta
+		name="description"
+		content="Via Ludus is a two-player strategy game of connection, territory, and blocking."
+	>
+
+	<title>Via Ludus</title>
+	<link rel="icon" href="icons/favicon.ico" sizes="any">
+	<link rel="icon" href="icons/favicon-32x32.png" type="image/png" sizes="32x32">
+	<link rel="icon" href="icons/favicon-16x16.png" type="image/png" sizes="16x16">
+	<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+	<link rel="manifest" href="site.webmanifest">
+	<meta name="theme-color" content="#3F72C4">
+
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/pages/index.css">
+
+</head>
+
+<body class="site-page">
+
+	<header class="site-header">
+		<div class="container">
+			<a class="site-brand" href="index.html" aria-label="Via Ludus home">
+				<span class="brand-icon" aria-hidden="true">🔴</span>
+				<span class="brand-name">Via Ludus</span>
+			</a>
+
+			<nav class="site-nav" aria-label="Main navigation">
+				<ul class="navigation-list">
+					<li>
+						<a class="navigation-link is-active" href="index.html" aria-current="page">
+							Play
+						</a>
+					</li>
+
+					<li>
+						<a class="navigation-link" href="rules.html">
+							Rules
+						</a>
+					</li>
+
+					<!-- <li>
+						<a class="navigation-link" href="showcase.html">
+							Showcase
+						</a>
+					</li> -->
+
+					<li>
+						<a class="navigation-link" href="about.html">
+							About
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</header>
+
+<main class="main-content">
+
+	<!-- Hero -->
+	<section class="section hero" aria-labelledby="game-title">
+		<div class="container">
+			<div class="hero-content">
+				<p class="eyebrow">Via Ludus</p>
+				<h1 id="game-title">Play Via Ludus</h1>
+				<p class="hero-description">A two-player strategy game of connection. Build a path across the board before your opponent does.</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Game Setup -->
+	<section class="section game-setup" aria-labelledby="game-setup-title">
+		<div class="container">
+			<header class="section-header">
+				<p class="eyebrow">Game Setup</p>
+				<h2 id="game-setup-title">Configure Game</h2>
+			</header>
+			
+			<div id="game-settings" class="card">
+				<div class="card__body">
+					<div class="game-controls">
+
+						<!-- Board Size -->
+						<div class="game-control">
+							<label class="field__label" for="board-size">
+								Board Size
+							</label>
+
+							<select class="input" id="board-size" name="board-size">
+								<option value="5">5</option>
+								<option value="7">7</option>
+								<option value="9">9</option>
+								<option value="11" selected>11</option>
+								<option value="13">13</option>
+								<option value="15">15</option>
+								<option value="17">17</option>
+								<option value="19">19</option>
+							</select>
+						</div>
+
+						<!-- Red Player -->
+						<div class="game-control">
+							<label class="field__label" for="red-player">
+								<span class="player-text--red">Red Player</span>
+							</label>
+
+							<select id="red-player" class="input" name="red-player">
+								<option value="human" selected>Human</option>
+							</select>
+						</div>
+
+						<!-- Blue Player -->
+						<div class="game-control">
+							<label class="field__label" for="blue-player">
+								<span class="player-text--blue">Blue Player</span>
+							</label>
+
+							<select id="blue-player" class="input" name="blue-player">
+								<option value="human" selected>Human</option>
+							</select>
+						</div>
+
+						<!-- Game Actions -->
+						<div class="game-actions">
+							<button id="game-action" class="button button--lg game-action--start" type="button">
+								Start Game
+							</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Game Status -->
+	<section id="game-status" class="section game-status-section" aria-labelledby="game-status-title">
+		<div class="container">
+			<header class="section-header">
+				<p class="eyebrow">Game Status</p>
+				<h2 id="game-status-title">Game Not Started</h2>
+			</header>
+
+			<div class="game-turn-indicator">
+				<p id="turn-indicator">
+					Start a new game to begin playing.
+				</p>
+			</div>
+
+			<div id="game-board-container">
+				<div class="loading" aria-live="polite">
+					<span class="loading__spinner" aria-hidden="true"></span>
+					<span>Loading game...</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
+</main>
+
+	<footer class="site-footer">
+		<div class="container">
+			<p>🔵 2026 Via Ludus &middot;</p>
+		</div>
+	</footer>
+
+	<script type="module" src="js/index.js"></script>
+</body>
+</html>

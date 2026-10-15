@@ -1,0 +1,107 @@
+/* Import Page Variables */
+@import url("variables.css");
+
+
+/* Setup */
+
+.game-setup {
+	margin-bottom: var(--game-setup-spacing);
+}
+
+
+/* Controls */
+
+.game-controls {
+	display: grid;
+	gap: var(--game-controls-gap);
+}
+
+.game-actions {
+	display: flex;
+	gap: var(--game-controls-gap);
+}
+
+#game-settings {
+	background: var(--game-settings-background);
+}
+
+
+/* Game Action */
+
+.game-action--start {
+	color: var(--game-action-start-text);
+	background: var(--game-action-start-background);
+	border-color: var(--game-action-start-border);
+}
+
+.game-action--start:hover,
+.game-action--start:focus-visible {
+	color: var(--game-action-start-highlight-text);
+	background: var(--game-action-start-highlight-background);
+	border-color: var(--game-action-start-border);
+}
+
+.game-action--end {
+	color: var(--game-action-end-text);
+	background: var(--game-action-end-background);
+	border-color: var(--game-action-end-border);
+}
+
+.game-action--end:hover,
+.game-action--end:focus-visible {
+	color: var(--game-action-end-highlight-text);
+	background: var(--game-action-end-highlight-background);
+	border-color: var(--game-action-end-border);
+}
+
+.game-action--start,
+.game-action--end {
+	min-width: var(--game-action-width);
+	border-width: var(--game-action-border-width);
+}
+
+
+/* Status */
+
+.game-status--red-turn {
+	color: var(--game-status-red-turn-text);
+	background: var(--game-status-red-turn-background);
+	border-color: var(--game-status-red-turn-border);
+}
+
+.game-status--red-win {
+	color: var(--game-status-red-win-text);
+	background: var(--game-status-red-win-background);
+	border-color: var(--game-status-red-win-border);
+}
+
+.game-status--blue-turn {
+	color: var(--game-status-blue-turn-text);
+	background: var(--game-status-blue-turn-background);
+	border-color: var(--game-status-blue-turn-border);
+}
+
+.game-status--blue-win {
+	color: var(--game-status-blue-win-text);
+	background: var(--game-status-blue-win-background);
+	border-color: var(--game-status-blue-win-border);
+}
+
+
+/* Turn Indicator */
+
+.game-turn-indicator {
+	min-height: var(--game-turn-indicator-min-height);
+	margin-bottom: var(--game-turn-indicator-spacing);
+}
+
+.game-turn-indicator .red-turn,
+.game-turn-indicator .red-win {
+	color: var(--game-turn-indicator-red-text);
+}
+
+.game-turn-indicator .blue-turn,
+.game-turn-indicator .blue-win {
+	color: var(--game-turn-indicator-blue-text);
+}
+

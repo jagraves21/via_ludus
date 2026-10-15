@@ -1,0 +1,54 @@
+/*
+# Badge Component
+
+## Purpose
+
+Defines the reusable badge component and its supported variants.
+
+## Owns
+
+Badge structure, presentation, sizing, spacing, typography,
+and variant-specific styling.
+
+## Does Not Own
+
+Raw color values, site-wide semantic variables, global
+typography, global layout, or page-specific styling.
+
+## Variables
+
+Consumes variables exclusively from components/variables.css.
+*/
+
+
+/* Base Badge */
+.badge {
+	display: inline-flex;
+	align-items: center;
+
+	min-height: var(--badge-min-height);
+	padding:
+		var(--badge-padding-block)
+		var(--badge-padding-inline);
+
+	background: var(--badge-background);
+	border-radius: var(--badge-radius);
+
+	color: var(--badge-text);
+	font-size: var(--badge-font-size);
+	font-weight: var(--badge-font-weight);
+	line-height: var(--badge-line-height);
+}
+
+/* Primary Variant */
+.badge--primary {
+	--badge-background: var(--badge-primary-background);
+	--badge-text: var(--badge-primary-text);
+}
+
+/* Neutral Variant */
+.badge--neutral {
+	--badge-background: var(--badge-neutral-background);
+	--badge-text: var(--badge-neutral-text);
+}
+

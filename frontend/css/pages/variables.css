@@ -1,0 +1,103 @@
+/* Game */
+
+:root {
+	--game-setup-spacing: 1.5rem;
+	--game-controls-gap: 0.75rem;
+	--game-turn-indicator-spacing: 1.5rem;
+	--game-turn-indicator-min-height: 2rem;
+}
+
+
+/* Game Goals */
+
+:root {
+	--game-goals-gap: 0.75rem;
+	--game-goal-gap: 0.5rem;
+}
+
+
+/* Game Setup Steps */
+
+:root {
+	--game-setup-step-title-spacing: 0.5rem;
+}
+
+
+/* Rules Board */
+
+:root {
+	--rules-board-example-spacing: 2rem;
+}
+
+
+/* Board Legend */
+
+:root {
+	--board-legend-gap: 0.75rem;
+	--board-legend-spacing: 2rem;
+	--board-legend-item-gap: 0.75rem;
+	--board-legend-marker-size: 1rem;
+}
+
+
+/* Game Action */
+
+:root {
+	--game-settings-background: linear-gradient(
+		225deg,
+		var(--red-pale),
+		var(--blue-pale)
+	);
+
+	--game-action-start-text: var(--white);
+	--game-action-start-background: var(--blue);
+	--game-action-start-border: var(--blue-dark);
+	--game-action-start-highlight-text: var(--white);
+	--game-action-start-highlight-background: var(--blue-deep);
+
+	--game-action-end-text: var(--white);
+	--game-action-end-background: var(--red);
+	--game-action-end-border: var(--red-dark);
+	--game-action-end-highlight-text: var(--white);
+	--game-action-end-highlight-background: var(--red-deep);
+
+	--game-action-width: 10rem;
+	--game-action-border-width: 2px;
+}
+
+
+/* Game Link */
+
+:root {
+	--rules-game-link-background: var(--red-light);
+	--rules-game-link-border: var(--red-dark);
+	--rules-game-link-text: var(--blue);
+	--rules-game-link-border-width: 2px;
+}
+
+
+/* Red */
+
+:root {
+	--game-status-red-turn-text: var(--color-player-red-text);
+	--game-status-red-turn-background: var(--red-pale);
+	--game-status-red-turn-border: var(--red-light);
+
+	--game-status-red-win-text: var(--color-player-red-text);
+	--game-status-red-win-background: var(--red-pale);
+	--game-status-red-win-border: var(--red-light);
+
+	--game-turn-indicator-red-text: var(--color-player-red-text);
+}
+
+
+/* Blue */
+
+:root {
+	--game-status-blue-turn-text: var(--color-player-blue-text);
+	--game-status-blue-turn-background: var(--blue-pale);
+	--game-status-blue-turn-border: var(--blue-light);
+
+	--game-turn-indicator-blue-text: var(--color-player-blue-text);
+}
+

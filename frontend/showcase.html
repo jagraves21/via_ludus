@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta
+		name="description"
+		content="Explore the Via Ludus component showcase, including reusable interface components, variants, states, and responsive behavior."
+	>
+
+	<title>Via Ludus | Showcase</title>
+	<link rel="icon" href="icons/favicon.ico" sizes="any">
+	<link rel="icon" href="icons/favicon-32x32.png" type="image/png" sizes="32x32">
+	<link rel="icon" href="icons/favicon-16x16.png" type="image/png" sizes="16x16">
+	<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+	<link rel="manifest" href="site.webmanifest">
+	<meta name="theme-color" content="#3F72C4">
+
+	<link rel="stylesheet" href="css/index.css">
+
+</head>
+
+<body class="site-page">
+
+	<header class="site-header">
+		<div class="container">
+			<a class="site-brand" href="index.html" aria-label="Via Ludus home">
+				<span class="brand-icon" aria-hidden="true">🔴</span>
+				<span class="brand-name">Via Ludus</span>
+			</a>
+
+			<nav class="site-nav" aria-label="Main navigation">
+				<ul class="navigation-list">
+					<li>
+						<a class="navigation-link" href="index.html">
+							Play
+						</a>
+					</li>
+
+					<li>
+						<a class="navigation-link" href="rules.html">
+							Rules
+						</a>
+					</li>
+
+					<li>
+						<a
+							class="navigation-link is-active"
+							href="showcase.html"
+							aria-current="page"
+						>
+							Showcase
+						</a>
+					</li>
+
+					<li>
+						<a class="navigation-link" href="about.html">
+							About
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</header>
+
+	<main class="main-content">
+
+		<!-- Hero -->
+		<section class="section hero" aria-labelledby="showcase-title">
+			<div class="container">
+				<div class="hero-content">
+					<p class="eyebrow">Component Library</p>
+					<h1 id="showcase-title">Showcase</h1>
+					<p class="hero-description">
+						A visual reference for the reusable interface and game components
+						used throughout Via Ludus.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Navigation -->
+		<section class="section" aria-labelledby="navigation-title">
+			<div class="container">
+				<header class="section-header">
+					<p class="eyebrow">Components</p>
+					<h2 id="navigation-title">Navigation</h2>
+				</header>
+
+				<p>
+					Navigation links in their standard and active states.
+				</p>
+
+				<nav aria-label="Showcase navigation">
+					<ul class="navigation-list">
+						<li>
+							<a class="navigation-link is-active" href="#buttons">
+								Buttons
+							</a>
+						</li>
+						<li>
+							<a class="navigation-link" href="#badges">
+								Badges
+							</a>
+						</li>
+						<li>
+							<a class="navigation-link" href="#cards">
+								Cards
+							</a>
+						</li>
+						<li>
+							<a class="navigation-link" href="#forms">
+								Forms
+							</a>
+						</li>
+						<li>
+							<a class="navigation-link" href="#feedback">
+								Feedback
+							</a>
+						</li>
+						<li>
+							<a class="navigation-link" href="#game-components">
+								Game
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</section>
+
+		<!-- Buttons -->
+		<section class="section" id="buttons" aria-labelledby="buttons-title">
+			<div class="container">
+				<header class="section-header">
+					<p class="eyebrow">Actions</p>
+					<h2 id="buttons-title">Buttons</h2>
+				</header>
+
+				<p>
+					Standard, secondary, text, and large button variants.
+				</p>
+
+				<div>
+					<h3>Default</h3>
+					<button class="button" type="button">Start Game</button>
+					<button class="button" type="button">New Game</button>
+				</div>
+
+				<div>
+					<h3>Secondary</h3>
+					<button class="button button--secondary" type="button">
+						Reset Game
+					</button>
+					<button class="button button--secondary" type="button">
+						Cancel
+					</button>
+				</div>
+
+				<div>
+					<h3>Text</h3>
+					<button class="button button--text" type="button">
+						View Rules
+					</button>
+					<button class="button button--text" type="button">
+						Learn More
+					</button>
+				</div>
+
+				<div>
+					<h3>Large</h3>
+					<button class="button button--lg" type="button">
+						Start Game
+					</button>
+					<button
+						class="button button--lg button--secondary"
+						type="button"
+					>
+						Reset Game
+					</button>
+				</div>
+			</div>
+		</section>
+
+		<!-- Badges -->
+		<section class="section" id="badges" aria-labelledby="badges-title">
+			<div class="container">
+				<header class="section-header">
+					<p class="eyebrow">Labels</p>
+					<h2 id="badges-title">Badges</h2>
+				</header>
+
+				<p>
+					Labels for player colors, status, and neutral information.
+				</p>
+
+				<div>
+					<h3>Default</h3>
+					<span class="badge">Open</span>
+					<span class="badge">Ready</span>
+				</div>
+
+				<div>
+					<h3>Primary</h3>
+					<span class="badge badge--primary">Red</span>
+					<span class="badge badge--primary">Blue</span>
+				</div>
+
+				<div>
+					<h3>Neutral</h3>
+					<span class="badge badge--neutral">White</span>
+					<span class="badge badge--neutral">Wall</span>
+				</div>
+			</div>
+		</section>
+
+		<!-- Cards -->
+		<section class="section" id="cards" aria-labelledby="cards-title">
+			<div class="container">
+				<header class="section-header">
+					<p class="eyebrow">Content</p>
+					<h2 id="cards-title">Cards</h2>
+				</header>
+
+				<p>
+					Default and interactive cards used for grouped game content.
+				</p>
+
+				<div class="card">
+					<div class="card__body">
+						<h3 class="card__title">Game Information</h3>
+						<p>
+							Each card groups related information or actions into a
+							clear, reusable interface element.
+						</p>
+					</div>
+				</div>
+
+				<div class="card card--interactive">
+					<div class="card__body">
+						<h3 class="card__title">Game Setup</h3>
+						<p>
+							Choose a board size and player configuration before
+							starting a game.
+						</p>
+						<button class="button" type="button">
+							Start Game
+						</button>
+					</div>
+				</div>
+
+				<div class="card card--interactive">
+					<div class="card__body">
+						<h3 class="card__title">Game Status</h3>
+						<p>
+							<span class="badge badge--primary">Red's Turn</span>
+						</p>
+						<p>
+							The current player selects an available white cell.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Forms -->
+		<section class="section" id="forms" aria-labelledby="forms-title">
+			<div class="container">
+				<header class="section-header">
+					<p class="eyebrow">Input</p>
+					<h2 id="forms-title">Forms</h2>
+				</header>
+
+				<p>
+					Inputs, labels, groups, and larger controls used by the game setup.
+				</p>
+
+				<div>
+					<h3>Board Size</h3>
+
+					<label class="field__label" for="showcase-board-size">
+						Board Size
+					</label>
+
+					<select class="input" id="showcase-board-size">
+						<option value="5">5 × 5</option>
+						<option value="7">7 × 7</option>
+						<option value="9">9 × 9</option>
+						<option value="11" selected>11 × 11</option>
+						<option value="13">13 × 13</option>
+						<option value="15">15 × 15</option>
+						<option value="17">17 × 17</option>
+						<option value="19">19 × 19</option>
+					</select>
+				</div>
+
+				<div>
+					<h3>Player Selection</h3>
+
+					<div class="input-group">
+						<label class="field__label" for="showcase-red-player">
+							Red Player
+						</label>
+
+						<select class="input" id="showcase-red-player">
+							<option>Human</option>
+						</select>
+
+						<label class="field__label" for="showcase-blue-player">
+							Blue Player
+						</label>
+
+						<select class="input" id="showcase-blue-player">
+							<option>Human</option>
+						</select>
+					</div>
+				</div>
+
+				<div>
+					<h3>Large Action</h3>
+
+					<button class="button button--lg" type="button">
+						Start Game
+					</button>
+				</div>
+			</div>
+		</section>
+
+		<!-- Feedback -->
+		<section class="section" id="feedback" aria-labelledby="feedback-title">
+			<div class="container">
+				<header class="section-header">
+					<p class="eyebrow">States</p>
+					<h2 id="feedback-title">Feedback</h2>
+				</header>
+
+				<p>
+					Feedback states for loading, waiting, errors, and completed games.
+				</p>
+
+				<div>
+					<h3>Loading State</h3>
+
+					<div class="loading">
+						<span
+							class="loading__spinner"
+							aria-hidden="true"
+						></span>
+						<span>Setting up game...</span>
+					</div>
+				</div>
+
+				<div>
+					<h3>Empty State</h3>
+
+					<div class="empty-state">
+						<div class="empty-state__content">
+							<h3 class="empty-state__title">
+								No Game Started
+							</h3>
+
+							<p class="empty-state__description">
+								Choose your game settings and start a new game.
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<h3>Empty State With Action</h3>
+
+					<div class="empty-state">
+						<div class="empty-state__content">
+							<h3 class="empty-state__title">
+								Ready to Play
+							</h3>
+
+							<p class="empty-state__description">
+								Start a new Via Ludus game.
+							</p>
+						</div>
+
+						<div class="empty-state__actions">
+							<button class="button" type="button">
+								Start Game
+							</button>
+
+							<button
+								class="button button--secondary"
+								type="button"
+							>
+								View Rules
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<div>
+					<h3>Error State</h3>
+
+					<div class="error-state">
+						<h3 class="error-state__title">
+							Unable to Start Game
+						</h3>
+
+						<p class="error-state__message">
+							There was a problem creating the game board.
+						</p>
+					</div>
+				</div>
+
+				<div>
+					<h3>Game Complete</h3>
+
+					<div class="empty-state">
+						<div class="empty-state__content">
+							<h3 class="empty-state__title">
+								Red Wins
+							</h3>
+
+							<p class="empty-state__description">
+								Red has connected the top edge to the bottom edge.
+							</p>
+						</div>
+
+						<div class="empty-state__actions">
+							<button class="button" type="button">
+								New Game
+							</button>
+
+							<button
+								class="button button--secondary"
+								type="button"
+							>
+								View Rules
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Game Components -->
+		<section
+			class="section"
+			id="game-components"
+			aria-labelledby="game-components-title"
+		>
+			<div class="container">
+				<header class="section-header">
+					<p class="eyebrow">Via Ludus</p>
+					<h2 id="game-components-title">Game Components</h2>
+				</header>
+
+				<p>
+					Core visual elements used to represent the Via Ludus game.
+				</p>
+
+				<div class="card">
+					<div class="card__body">
+						<h3 class="card__title">Players</h3>
+
+						<p>
+							<span class="badge badge--primary">Red</span>
+							<span class="badge badge--neutral">Blue</span>
+						</p>
+
+						<p>
+							Red connects the top edge to the bottom edge.
+							Blue connects the left edge to the right edge.
+						</p>
+					</div>
+				</div>
+
+				<div class="card">
+					<div class="card__body">
+						<h3 class="card__title">Cell States</h3>
+
+						<p>
+							Cells can represent player territory, available
+							spaces, or walls.
+						</p>
+
+						<div class="board-legend">
+							<div class="board-legend-item">
+								<span
+									class="board-legend-marker board-legend-marker-red"
+									aria-hidden="true"
+								></span>
+								<span>Red</span>
+							</div>
+
+							<div class="board-legend-item">
+								<span
+									class="board-legend-marker board-legend-marker-blue"
+									aria-hidden="true"
+								></span>
+								<span>Blue</span>
+							</div>
+
+							<div class="board-legend-item">
+								<span
+									class="board-legend-marker board-legend-marker-open"
+									aria-hidden="true"
+								></span>
+								<span>White</span>
+							</div>
+
+							<div class="board-legend-item">
+								<span
+									class="board-legend-marker board-legend-marker-corner"
+									aria-hidden="true"
+								></span>
+								<span>Wall</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="card">
+					<div class="card__body">
+						<h3 class="card__title">Game Actions</h3>
+
+						<p>
+							Common actions available throughout the game flow.
+						</p>
+
+						<div class="input-group">
+							<button class="button" type="button">
+								Start Game
+							</button>
+
+							<button
+								class="button button--secondary"
+								type="button"
+							>
+								Reset Game
+							</button>
+
+							<button
+								class="button button--text"
+								type="button"
+							>
+								View Rules
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+	</main>
+
+	<footer class="site-footer">
+		<div class="container">
+			<p>🔵 2026 Via Ludus &middot;</p>
+		</div>
+	</footer>
+
+</body>
+</html>
+

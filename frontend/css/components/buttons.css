@@ -1,0 +1,87 @@
+/*
+# Button Component
+
+## Purpose
+
+Defines the reusable button component and its supported variants
+and interactive states.
+
+## Owns
+
+Button structure, presentation, sizing, spacing, typography,
+interactive states, transitions, and variant-specific styling.
+
+## Does Not Own
+
+Raw color values, site-wide semantic variables, global
+typography, global layout, or page-specific styling.
+
+## Variables
+
+Consumes variables exclusively from components/variables.css.
+*/
+
+
+/* Base Button */
+.button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	min-height: var(--button-min-height);
+	padding: var(--button-padding-block) var(--button-padding-inline);
+
+	background: var(--button-background);
+	border: var(--button-border-width) solid var(--button-border);
+	border-radius: var(--button-radius);
+
+	color: var(--button-text);
+	font-weight: var(--button-font-weight);
+	line-height: var(--button-line-height);
+
+	transition:
+		background-color var(--button-transition),
+		border-color var(--button-transition),
+		color var(--button-transition);
+}
+
+/* Interactive State */
+.button:hover {
+	background: var(--button-background-hover);
+	border-color: var(--button-border-hover);
+	color: var(--button-text-hover);
+}
+
+/* Secondary Variant */
+.button--secondary {
+	--button-background: var(--button-secondary-background);
+	--button-background-hover: var(--button-secondary-background-hover);
+
+	--button-border: var(--button-secondary-border);
+	--button-border-hover: var(--button-secondary-border-hover);
+
+	--button-text: var(--button-secondary-text);
+	--button-text-hover: var(--button-secondary-text-hover);
+}
+
+/* Text Variant */
+.button--text {
+	--button-background: var(--button-text-background);
+	--button-background-hover: var(--button-text-background-hover);
+
+	--button-border: var(--button-text-border);
+	--button-border-hover: var(--button-text-border-hover);
+
+	--button-text: var(--button-text-color);
+	--button-text-hover: var(--button-text-color-hover);
+
+	min-height: var(--button-text-min-height);
+	padding: var(--button-text-padding);
+}
+
+/* Large Variant */
+.button--lg {
+	min-height: var(--button-large-min-height);
+	padding-inline: var(--button-large-padding-inline);
+}
+

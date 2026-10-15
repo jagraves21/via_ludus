@@ -1,0 +1,27 @@
+from via_ludus import (
+	PlayerColor,
+	SearchBoard as ViaLudusBoard,
+	agents,
+)
+
+
+def get_agents() -> list[str]:
+	return list(agents)
+
+
+def get_move(
+	agent_name,
+	rows,
+	cols,
+	board,
+	color,
+):
+	serialized = f"{rows},{cols},{board}"
+	board = ViaLudusBoard.deserialize(serialized)
+
+	agent = agents[agent_name](
+		PlayerColor(color),
+	)
+
+	return agent.choose_move(board)
+

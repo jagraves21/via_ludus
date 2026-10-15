@@ -1,0 +1,252 @@
+/*
+
+# Global Layout
+
+## Purpose
+
+Defines the site's reusable structural layout system and responsive
+spatial behavior.
+
+This file provides reusable page structure and layout primitives
+without defining design-system variables or consuming raw design
+tokens directly.
+
+## Owns
+
+Site-wide structural layout, including:
+
+* Page structure
+* Main content containers
+* General containers
+* Sections
+* Section headers
+* Layout spacing
+* Section relationships
+* Structural section dividers
+* Responsive layout behavior
+* Structural relationships between reusable layout elements
+
+Layout primitives may establish relationships between their own
+elements when those relationships are part of the general site-wide
+layout system.
+
+## Does Not Own
+
+This file does not own:
+
+* Variable definitions
+* Raw color definitions
+* Semantic design-token definitions
+* Typography
+* Component styling
+* Navigation styling
+* Site header styling
+* Site footer styling
+* Page-specific styling
+
+Visual design decisions used by layout primitives are represented by
+semantic variables rather than hard-coded values or raw palette
+variables.
+
+## Defined Variables
+
+None.
+
+## Expected Variables
+
+Semantic layout variables from variables.css, including:
+
+* Container dimensions
+* Main content dimensions
+* Horizontal gutters
+* Section spacing
+* Section header spacing
+* Section divider appearance
+* Border dimensions required by layout structure
+
+Responsive gutter values are represented by semantic layout variables
+and are applied through the layout primitives at their appropriate
+breakpoints.
+
+Responsive breakpoint values themselves remain structural CSS
+conditions rather than custom-property variables.
+
+## Responsive Layout Strategy
+
+Main content and general containers use a width-based gutter
+strategy.
+
+The available width is calculated from the viewport and the
+appropriate semantic gutter value, while the resulting layout is
+constrained by the corresponding maximum-width variable.
+
+Breakpoint-specific gutter variables allow the site's responsive
+spatial configuration to remain centralized in variables.css without
+changing the underlying layout implementation.
+
+The same width-based strategy is maintained across responsive
+breakpoints so that the layout model remains consistent as the
+viewport changes.
+
+## Dependencies
+
+variables.css
+
+This file consumes semantic variables from variables.css.
+
+It does not consume raw variables from colors.css and must not bypass
+the semantic variable layer.
+
+## Architecture
+
+```text
+css/
+│
+├── colors.css
+│   └── raw color palette
+│
+├── variables.css
+│   └── semantic site-wide variables
+│
+└── layout.css
+    └── global site-wide layout
+```
+
+Layout implementation should consume semantic design decisions from
+variables.css without knowing the raw values or palette relationships
+behind those decisions.
+
+Layout primitives may establish relationships between their own
+elements, but they must not introduce dependencies on components,
+pages, or implementation details from unrelated layers.
+*/
+
+
+.site-page {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+/* Main Content */
+
+.main-content {
+	flex: 1;
+	margin-inline: auto;
+	width: min(
+		100% - var(--layout-main-gutter) * 2,
+		var(--layout-main-max-width)
+	);
+}
+
+/* Container */
+
+.container {
+	margin-inline: auto;
+	width: min(
+		100% - var(--layout-container-gutter) * 2,
+		var(--layout-container-max-width)
+	);
+}
+
+/* Site Header And Footer Layout */
+
+.site-header .container,
+.site-footer .container {
+	display: flex;
+	align-items: center;
+	min-height: inherit;
+}
+
+.site-header {
+	min-height: var(--layout-site-header-min-height);
+}
+
+.site-footer {
+	min-height: var(--layout-site-footer-min-height);
+}
+
+.site-header .container {
+	justify-content: space-between;
+	gap: 2rem;
+}
+
+/* Sections */
+
+.section {
+	padding-block: var(--layout-section-spacing);
+}
+
+.section + .section {
+	position: relative;
+	padding-top: 0;
+}
+
+/* Section Divider */
+
+.section + .section::before {
+	position: absolute;
+	top: 0;
+	right: var(--layout-section-divider-inset);
+	left: var(--layout-section-divider-inset);
+	height: var(--border-width-medium);
+	background: var(--layout-section-divider);
+	content: "";
+}
+
+/* Section Header */
+
+.section-header {
+	margin-bottom: var(--layout-section-header-spacing);
+}
+
+.section-header > * + * {
+	margin-top: var(--layout-section-header-item-spacing);
+}
+
+/* Medium Layout */
+
+@media (min-width: 768px) {
+	.main-content {
+		width: min(
+			100% - var(--layout-main-gutter-medium) * 2,
+			var(--layout-main-max-width)
+		);
+	}
+
+	.container {
+		width: min(
+			100% - var(--layout-container-gutter-medium) * 2,
+			var(--layout-container-max-width)
+		);
+	}
+
+	.section + .section::before {
+		right: var(--layout-section-divider-inset-medium);
+		left: var(--layout-section-divider-inset-medium);
+	}
+}
+
+/* Large Layout */
+
+@media (min-width: 1200px) {
+	.main-content {
+		width: min(
+			100% - var(--layout-main-gutter-large) * 2,
+			var(--layout-main-max-width)
+		);
+	}
+
+	.container {
+		width: min(
+			100% - var(--layout-container-gutter-large) * 2,
+			var(--layout-container-max-width)
+		);
+	}
+
+	.section + .section::before {
+		right: var(--layout-section-divider-inset-large);
+		left: var(--layout-section-divider-inset-large);
+	}
+}
+

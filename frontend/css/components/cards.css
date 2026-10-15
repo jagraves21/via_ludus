@@ -1,0 +1,66 @@
+/*
+# Card Component
+
+## Purpose
+
+Defines the reusable card component and its supported variants
+and interactive states.
+
+## Owns
+
+Card structure, presentation, sizing, spacing, borders, radii,
+shadows, interactive states, transitions, and variant-specific
+styling.
+
+## Does Not Own
+
+Raw color values, site-wide semantic variables, global
+typography, global layout, or page-specific styling.
+
+## Variables
+
+Consumes variables exclusively from components/variables.css.
+*/
+
+
+/* Base Card */
+.card {
+	background: var(--card-background);
+
+	border:
+		var(--card-border-width)
+		solid
+		var(--card-border);
+
+	border-radius: var(--card-radius);
+
+	box-shadow: var(--card-shadow);
+}
+
+/* Card Body */
+.card__body {
+	padding: var(--card-padding);
+}
+
+/* Card Title */
+.card__title {
+	margin-bottom: var(--card-title-spacing);
+
+	color: var(--card-title);
+}
+
+/* Interactive Card */
+.card--interactive {
+	transition:
+		border-color var(--card-transition),
+		box-shadow var(--card-transition),
+		transform var(--card-transition);
+}
+
+/* Interactive Hover State */
+.card--interactive:hover {
+	border-color: var(--card-border-hover);
+	box-shadow: var(--card-shadow-hover);
+	transform: var(--card-interactive-transform);
+}
+

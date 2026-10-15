@@ -1,0 +1,168 @@
+/*
+# Global Base Styles
+
+## Purpose
+
+Defines the site's global foundational presentation for the document
+and application shell.
+
+This file applies site-wide foundational presentation that sits above
+the browser reset and semantic design variables while remaining below
+more specialized architectural layers.
+
+It establishes visual and interaction-related presentation that is
+global to the site but does not belong to the typographic system,
+general layout system, reusable components, or page-specific styling.
+
+## Owns
+
+Global foundational presentation, including:
+
+- Page background
+- Site header presentation
+- Site footer presentation
+- Structural separators
+- Global keyboard focus indicators
+- Global text selection presentation
+- Other site-wide foundational presentation that does not belong to
+  typography, layout, components, or pages
+
+Rules in this file may target global HTML elements or site-wide
+structural elements when the styling represents a foundational concern
+rather than a specialized component or page concern.
+
+## Does Not Own
+
+This file does not own:
+
+- Browser normalization or reset behavior
+- Raw color definitions
+- Semantic variable definitions
+- Global typography
+- Typographic rhythm
+- General layout systems or responsive layout
+- Reusable component styling
+- Component-specific interaction states
+- Page-specific styling
+- Component-specific presentation
+- Page-specific backgrounds, separators, or other visual details
+
+For example:
+
+- Body background belongs here; body typography belongs in typography.css.
+- Global focus indicators belong here; component-specific focus states
+  belong with their component.
+- Global structural separators belong here; component-specific
+  separators belong with the component.
+- Site header and footer foundational presentation belongs here;
+  navigation styling belongs in navigation.css.
+
+## Defined Variables
+
+None.
+
+## Expected Variables
+
+Semantic variables from variables.css, including:
+
+- Global background colors
+- Header colors
+- Footer colors
+- Border and separator values
+- Focus indicator values
+- Text selection values
+
+This file must consume semantic variables rather than raw variables
+from colors.css.
+
+## Dependencies
+
+variables.css
+
+This file consumes semantic variables from variables.css.
+
+It does not consume raw variables from colors.css and must not bypass
+the semantic variable layer.
+
+## Architecture
+
+```text
+css/
+│
+├── colors.css
+│   └── raw color palette
+│
+├── variables.css
+│   └── semantic site-wide variables
+│
+└── base.css
+    └── global site-wide presentation
+```
+
+base.css provides global foundational presentation for the site without
+becoming a general-purpose styling layer.
+
+More specialized concerns should remain in their appropriate
+architectural layers.
+*/
+
+
+body {
+	background-color: var(--color-background);
+}
+
+/* Header */
+
+.site-header {
+	background: var(--color-site-header-background);
+	color: var(--color-site-header-text);
+}
+
+/* Footer */
+
+.site-footer {
+	background: var(--color-site-footer-background);
+	color: var(--color-site-footer-text);
+	font-weight: var(--font-weight-site-footer);
+}
+
+/* Site Brand */
+
+.site-brand {
+	color: var(--color-site-brand-text);
+	font-weight: var(--font-weight-site-brand);
+	text-decoration: none;
+}
+
+/* Structural Separators */
+
+hr {
+	border: 0;
+	border-top: var(--border-width-separator) solid var(--color-border);
+}
+
+/* Interactive Focus */
+
+:focus-visible {
+	outline: var(--focus-ring-width) solid var(--color-focus-ring);
+	outline-offset: var(--focus-ring-offset);
+}
+
+/* Text Selection */
+
+::selection {
+	background-color: var(--color-selection-background);
+	color: var(--color-selection-text);
+}
+
+/* Player Text */
+
+.player-text--red {
+	font-weight: var(--font-weight-bold);
+	color: var(--color-player-red-text);
+}
+
+.player-text--blue {
+	font-weight: var(--font-weight-bold);
+	color: var(--color-player-blue-text);
+}
