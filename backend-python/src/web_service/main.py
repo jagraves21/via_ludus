@@ -54,6 +54,10 @@ def main(host, port, frontend):
 	)
 
 	if frontend is not None:
+		frontend = frontend.resolve()
+		print(f"Frontend directory: {frontend}")
+		print(f"Directory exists: {frontend.is_dir()}")
+
 		app.mount(
 			"/",
 			StaticFiles(
