@@ -33,20 +33,29 @@ def parse_args():
 		help="frontend directory"
 	)
 
+	parser.add_argument(
+		"--cors-origins",
+		nargs="*",
+		default=[],
+		help="allowed CORS origins"
+	)
+
 	return vars(parser.parse_args())
 
 
-def main(host, port, frontend):
+def main(host, port, frontend, cors_origins):
 	app = FastAPI(
 		title="Via Ludus API",
 	)
 
-	#app.add_middleware(
-	#	CORSMiddleware,
-	#	allow_origins=["*"],
-	#	allow_methods=["*"],
-	#	allow_headers=["*"],
-	#)
+	print(f"{cors_origins = }")
+
+	app.add_middleware(
+		CORSMiddleware,
+		allow_origins=cors_origins,
+		allow_methods=["*"],
+		allow_headers=["*"],
+	)
 
 	app.include_router(
 		agents_router,
