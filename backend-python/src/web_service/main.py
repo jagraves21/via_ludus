@@ -48,8 +48,6 @@ def main(host, port, frontend, cors_origins):
 		title="Via Ludus API",
 	)
 
-	print(f"{cors_origins = }")
-
 	app.add_middleware(
 		CORSMiddleware,
 		allow_origins=cors_origins,
