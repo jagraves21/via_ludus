@@ -49,7 +49,7 @@ from .edge_centrality_agent import (
 )
 
 
-agents = {
+all_agents = {
 	agent.get_agent_name(): agent
 	for agent in (
 		RandomAgent,
@@ -94,7 +94,7 @@ agents = {
 	)
 }
 
-agents1 = {
+ordered_agents = {
 	agent.get_agent_name(): agent
 	for agent in (
 		RandomAgent,
@@ -128,6 +128,8 @@ agents1 = {
 		EdgeCurrentFlowBetweennessCentralitySubsetAgent,
 	)
 }
+
+agents = ordered_agents
 
 
 __all__ = [
