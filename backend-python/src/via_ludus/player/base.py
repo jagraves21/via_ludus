@@ -11,6 +11,10 @@ class Player(ABC):
 		self._color = color
 
 	@property
+	def is_deterministic(self):
+		return False
+
+	@property
 	def color(self):
 		return self._color
 
@@ -39,4 +43,21 @@ class Player(ABC):
 
 	def __str__(self):
 		return f"{self.color} Player"
+
+
+class DeterministicPlayer(Player):
+	"""A player that guarantees repeatable move selection.
+
+	Subclasses promise that choose_move returns the same move for
+	equivalent board states, regardless of the history that produced
+	the board or previous calls to the player.
+
+	The guarantee assumes the player's configuration remains unchanged.
+	This contract is declarative and is not enforced at runtime.
+	"""
+	pass
+
+	@property
+	def is_deterministic(self):
+		return True
 
