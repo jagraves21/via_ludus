@@ -18,6 +18,11 @@ from .player import (
 	RandomMinSelector,
 	SoftmaxSelector,
 	SoftminSelector,
+	BestSelectorMixin,
+	RandomMaxSelectorMixin,
+	RandomMinSelectorMixin,
+	SoftmaxSelectorMixin,
+	SoftminSelectorMixin,
 )
 
 from . import validation
@@ -46,6 +51,12 @@ __all__ = [
 	"RandomMinSelector",
 	"SoftmaxSelector",
 	"SoftminSelector",
+
+	"BestSelectorMixin",
+	"RandomMaxSelectorMixin",
+	"RandomMinSelectorMixin",
+	"SoftmaxSelectorMixin",
+	"SoftminSelectorMixin",
 
 	"agents",
 ]

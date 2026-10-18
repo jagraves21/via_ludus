@@ -8,6 +8,14 @@ from .move_selector import (
 	SoftminSelector,
 )
 
+from .selector_mixins import (
+	BestSelectorMixin,
+	RandomMaxSelectorMixin,
+	RandomMinSelectorMixin,
+	SoftmaxSelectorMixin,
+	SoftminSelectorMixin,
+)
+
 from .base import (
 	Player,
 	DeterministicPlayer,
@@ -34,6 +42,12 @@ __all__ = [
 	"RandomMinSelector",
 	"SoftmaxSelector",
 	"SoftminSelector",
+
+	"BestSelectorMixin",
+	"RandomMaxSelectorMixin",
+	"RandomMinSelectorMixin",
+	"SoftmaxSelectorMixin",
+	"SoftminSelectorMixin",
 
 	"Player",
 	"DeterministicPlayer",
