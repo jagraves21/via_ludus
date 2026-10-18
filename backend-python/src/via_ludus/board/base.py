@@ -5,11 +5,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from ..utils import with_ax
+
 from .cells import (
 	Cell,
 	validate_cell,
+	validate_playable_cell,
+	validate_player_cell,
 )
-
 
 class Board(ABC):
 	def __init__(self, size=11):
@@ -100,21 +102,17 @@ class Board(ABC):
 		return board
 
 	def get(self, row, col):
+		self._validate_position(row, col)
 		return self._board[row, col]
 
 	def set(self, row, col, cell):
-		from .cells import (
-			validate_player_cell,
-			validate_playable_cell,
-		)
-
+		self._validate_position(row, col)
 		validate_player_cell(cell)
 		validate_playable_cell(self._board[row, col])
 		self._board[row, col] = cell
 
 	def reset(self, row, col):
-		from .cells import validate_player_cell
-
+		self._validate_position(row, col)
 		validate_player_cell(self._board[row, col])
 		self._board[row, col] = Cell.WHITE
 
@@ -152,6 +150,19 @@ class Board(ABC):
 				and 0 <= new_col < self.cols
 			):
 				yield new_row, new_col
+
+	def _validate_position(self, row, col):
+		if not isinstance(row, (int, np.integer)) or isinstance(row, (bool, np.bool_)):
+			raise TypeError("row must be an integer")
+
+		if not isinstance(col, (int, np.integer)) or isinstance(col, (bool, np.bool_)):
+			raise TypeError("col must be an integer")
+
+		if not 0 <= row < self.rows:
+			raise IndexError(f"row index out of range: {row}")
+
+		if not 0 <= col < self.cols:
+			raise IndexError(f"col index out of range: {col}")
 
 	@with_ax
 	def plot(self, ax):
