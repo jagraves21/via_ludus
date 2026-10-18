@@ -3,6 +3,7 @@ from .move_selector import (
 	BestSelector,
 	RandomBestSelector,
 	SoftmaxSelector,
+	SoftminSelector,
 )
 from .base import Player
 from .scoring import ScoringPlayer
@@ -19,6 +20,7 @@ __all__ = [
 	"BestSelector",
 	"RandomBestSelector",
 	"SoftmaxSelector",
+	"SoftminSelector",
 	
 	"Player",
 	
