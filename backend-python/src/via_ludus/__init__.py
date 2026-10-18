@@ -8,11 +8,21 @@ from .board import (
 
 from .player import (
 	Player,
+	DeterministicPlayer,
 	ScoringPlayer,
+	DeterministicScoringPlayer,
 	MoveSelector,
 	BestSelector,
 	RandomBestSelector,
+	RandomMaxSelector,
+	RandomMinSelector,
 	SoftmaxSelector,
+	SoftminSelector,
+	BestSelectorMixin,
+	RandomMaxSelectorMixin,
+	RandomMinSelectorMixin,
+	SoftmaxSelectorMixin,
+	SoftminSelectorMixin,
 )
 
 from . import validation
@@ -30,11 +40,23 @@ __all__ = [
 	"UnionFindBoard",
 
 	"Player",
+	"DeterministicPlayer",
 	"ScoringPlayer",
+	"DeterministicScoringPlayer",
+
 	"MoveSelector",
 	"BestSelector",
 	"RandomBestSelector",
+	"RandomMaxSelector",
+	"RandomMinSelector",
 	"SoftmaxSelector",
+	"SoftminSelector",
+
+	"BestSelectorMixin",
+	"RandomMaxSelectorMixin",
+	"RandomMinSelectorMixin",
+	"SoftmaxSelectorMixin",
+	"SoftminSelectorMixin",
 
 	"agents",
 ]
