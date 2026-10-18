@@ -1,6 +1,7 @@
 from .move_selector import (
 	MoveSelector,
 	BestSelector,
+	RandomBestSelector,
 	RandomMaxSelector,
 	RandomMinSelector,
 	SoftmaxSelector,
@@ -28,6 +29,7 @@ from .validation import (
 __all__ = [
 	"MoveSelector",
 	"BestSelector",
+	"RandomBestSelector",
 	"RandomMaxSelector",
 	"RandomMinSelector",
 	"SoftmaxSelector",
