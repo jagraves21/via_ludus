@@ -43,31 +43,44 @@ class RandomBestSelector(MoveSelector):
 		return best_moves[index]
 
 
-class SoftmaxSelector(MoveSelector):
+class _SoftSelector(MoveSelector):
+	_direction = 1
+
 	def __init__(self, temperature=1.0, seed=None):
-		if temperature <= 0:
-			raise ValueError("Temperature must be greater than 0")
+		if not np.isfinite(temperature) or temperature <= 0:
+			raise ValueError(
+				"Temperature must be finite and greater than 0"
+			)
 
 		self._temperature = temperature
 		self._rng = np.random.default_rng(seed)
 
 	def _select(self, scores):
 		moves = list(scores)
-		values = np.array(
+
+		values = np.asarray(
 			[scores[move] for move in moves],
 			dtype=float,
 		)
 
-		logits = -values / self._temperature
+		logits = self._direction * values / self._temperature
 		logits -= np.max(logits)
 
 		probabilities = np.exp(logits)
 		probabilities /= probabilities.sum()
-		
+
 		index = self._rng.choice(
 			len(moves),
 			p=probabilities,
 		)
 
 		return moves[index]
+
+
+class SoftmaxSelector(_SoftSelector):
+	_direction = 1
+
+
+class SoftminSelector(_SoftSelector):
+	_direction = -1
 
