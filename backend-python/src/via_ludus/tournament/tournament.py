@@ -81,7 +81,7 @@ class RoundRobinTournament:
 	@property
 	def total_expected_games(self):
 		num_players = len(self._players)
-		return num_players * (num_players-1) * self._num_games_per_color
+		return num_players **2 * self._num_games_per_color
 
 	@property
 	def total_completed_games(self):
