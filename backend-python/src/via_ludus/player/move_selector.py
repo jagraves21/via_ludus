@@ -1,3 +1,4 @@
+
 from abc import ABC, abstractmethod
 
 import numpy as np
@@ -8,11 +9,11 @@ class MoveSelector(ABC):
 		scores = {
 			move: score
 			for move, score in scores.items()
-			if not np.isinf(score)
+			if np.isfinite(score)
 		}
 
 		if not scores:
-			raise ValueError("No available moves")
+			raise ValueError("No available moves with finite scores")
 
 		return self._select(scores)
 
@@ -23,7 +24,15 @@ class MoveSelector(ABC):
 
 class BestSelector(MoveSelector):
 	def _select(self, scores):
-		return max(scores, key=scores.get)
+		max_score = max(scores.values())
+
+		best_moves = sorted(
+			move
+			for move, score in scores.items()
+			if score == max_score
+		)
+
+		return best_moves[len(best_moves) // 2]
 
 
 class RandomBestSelector(MoveSelector):
@@ -60,13 +69,29 @@ class _SoftSelector(MoveSelector):
 
 		values = np.asarray(
 			[scores[move] for move in moves],
-			dtype=float,
+			dtype=np.longdouble,
 		)
 
-		logits = self._direction * values / self._temperature
-		logits -= np.max(logits)
+		temperature = np.longdouble(self._temperature)
 
-		probabilities = np.exp(logits)
+		# normalize before dividing to avoid overflow with extreme scores
+		values = self._direction * values
+		max_value = np.max(values)
+		differences = values - max_value
+
+		# clamp differences to avoid overflow during subtraction and
+		# underflow during exponentiation for extreme finite scores
+		differences = np.maximum(
+			differences,
+			-np.longdouble(np.finfo(np.longdouble).max),
+		)
+
+		logits = differences / temperature
+
+		# probabilities too small to matter are treated as zero
+		logits = np.maximum(logits, -745.0)
+
+		probabilities = np.asarray(np.exp(logits), dtype=float)
 		probabilities /= probabilities.sum()
 
 		index = self._rng.choice(
