@@ -6,7 +6,7 @@ from ..board import PlayerColor
 class Player(ABC):
 	def __init__(self, color):
 		if not isinstance(color, PlayerColor):
-			raise ValueError(f"Invalid player color: {color}")
+			raise TypeError(f"Invalid player color: {color}")
 
 		self._color = color
 
