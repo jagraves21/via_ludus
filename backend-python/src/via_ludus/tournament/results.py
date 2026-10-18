@@ -198,12 +198,12 @@ class TournamentResults:
 					if num_games
 					else float("nan")
 				),
-				"red_avg_moves": (
+				"red_avg_moves_to_win": (
 					sum(red_moves) / len(red_moves)
 					if red_moves
 					else float("nan")
 				),
-				"red_std_moves": (
+				"red_std_moves_to_win": (
 					pd.Series(red_moves).std()
 					if len(red_moves) > 1
 					else float("nan")
@@ -214,12 +214,12 @@ class TournamentResults:
 					if num_games
 					else float("nan")
 				),
-				"blue_avg_moves": (
+				"blue_avg_moves_to_win": (
 					sum(blue_moves) / len(blue_moves)
 					if blue_moves
 					else float("nan")
 				),
-				"blue_std_moves": (
+				"blue_std_moves_to_win": (
 					pd.Series(blue_moves).std()
 					if len(blue_moves) > 1
 					else float("nan")
@@ -232,12 +232,12 @@ class TournamentResults:
 			"num_games",
 			"red_wins",
 			"red_win_rate",
-			"red_avg_moves",
-			"red_std_moves",
+			"red_avg_moves_to_win",
+			"red_std_moves_to_win",
 			"blue_wins",
 			"blue_win_rate",
-			"blue_avg_moves",
-			"blue_std_moves",
+			"blue_avg_moves_to_win",
+			"blue_std_moves_to_win",
 		]
 
 		df = pd.DataFrame(data, columns=columns)
