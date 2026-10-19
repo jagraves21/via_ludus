@@ -8,9 +8,9 @@ from .board import (
 
 from .player import (
 	Player,
-	DeterministicPlayer,
+	DeterministicMoveSelectionMixin,
 	ScoringPlayer,
-	DeterministicScoringPlayer,
+	DeterministicScoringMixin,
 	MoveSelector,
 	BestSelector,
 	RandomBestSelector,
@@ -40,9 +40,9 @@ __all__ = [
 	"UnionFindBoard",
 
 	"Player",
-	"DeterministicPlayer",
+	"DeterministicMoveSelectionMixin",
 	"ScoringPlayer",
-	"DeterministicScoringPlayer",
+	"DeterministicScoringMixin",
 
 	"MoveSelector",
 	"BestSelector",

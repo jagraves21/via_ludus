@@ -21,12 +21,23 @@ class ScoringPlayer(Player):
 	def is_stochastic(self):
 		return self._selector.is_stochastic
 
+	@property
+	def is_deterministic(self):
+		return (
+			self.has_deterministic_scoring
+			and not self.is_stochastic
+		)
+
 	def choose_move(self, board):
 		scores = self.score_moves(board, self.color)
 		return self._selector.select(scores)
 
 	def choose_move_with_determinism(self, board):
 		scores = self.score_moves(board, self.color)
+
+		if not self.has_deterministic_scoring:
+			return self._selector.select(scores), False
+
 		return self._selector.select_with_determinism(scores)
 
 	@property
@@ -38,10 +49,10 @@ class ScoringPlayer(Player):
 		pass
 
 
-class DeterministicScoringPlayer(ScoringPlayer):
-	"""A scoring player that guarantees deterministic scoring.
+class DeterministicScoringMixin:
+	"""Contract for players that guarantee deterministic scoring.
 
-	Subclasses promise that score_moves returns the same scores for
+	Implementations promise that score_moves returns the same scores for
 	equivalent board states and colors, regardless of the history
 	that produced the board or previous calls to the player.
 
