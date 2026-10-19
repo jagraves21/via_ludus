@@ -1,14 +1,13 @@
-from .tactical_agent import TacticalAgent
+from ...player import RandomMaxSelectorMixin
+
+from ..agent import ScoringAgent
 
 
-class RandomAgent(TacticalAgent):
+class RandomAgent(RandomMaxSelectorMixin, ScoringAgent):
 	name = "Random"
 
 	def evaluate_move_options(self, board, color):
-		available = board.available
-
 		return {
 			move: 0
-			for move in available
+			for move in board.available
 		}
-
