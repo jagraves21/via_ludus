@@ -18,12 +18,12 @@ from .selector_mixins import (
 
 from .base import (
 	Player,
-	DeterministicPlayer,
+	DeterministicMoveSelectionMixin,
 )
 
 from .scoring import (
 	ScoringPlayer,
-	DeterministicScoringPlayer,
+	DeterministicScoringMixin,
 )
 
 from .validation import (
@@ -50,10 +50,10 @@ __all__ = [
 	"SoftminSelectorMixin",
 
 	"Player",
-	"DeterministicPlayer",
+	"DeterministicMoveSelectionMixin",
 
 	"ScoringPlayer",
-	"DeterministicScoringPlayer",
+	"DeterministicScoringMixin",
 
 	"is_player",
 	"validate_player",
