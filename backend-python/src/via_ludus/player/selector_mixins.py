@@ -1,5 +1,6 @@
 from .move_selector import (
-	BestSelector,
+	MaxSelector,
+	MinSelector,
 	RandomMaxSelector,
 	RandomMinSelector,
 	SoftmaxSelector,
@@ -7,9 +8,14 @@ from .move_selector import (
 )
 
 
-class BestSelectorMixin:
+class MaxSelectorMixin:
 	def create_selector(self):
-		return BestSelector()
+		return MaxSelector()
+
+
+class MinSelectorMixin:
+	def create_selector(self):
+		return MinSelector()
 
 
 class RandomMaxSelectorMixin:

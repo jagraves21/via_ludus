@@ -1,6 +1,8 @@
 from .move_selector import (
 	MoveSelector,
 	BestSelector,
+	MaxSelector,
+	MinSelector,
 	RandomBestSelector,
 	RandomMaxSelector,
 	RandomMinSelector,
@@ -9,7 +11,8 @@ from .move_selector import (
 )
 
 from .selector_mixins import (
-	BestSelectorMixin,
+	MaxSelectorMixin,
+	MinSelectorMixin,
 	RandomMaxSelectorMixin,
 	RandomMinSelectorMixin,
 	SoftmaxSelectorMixin,
@@ -37,13 +40,16 @@ from .validation import (
 __all__ = [
 	"MoveSelector",
 	"BestSelector",
+	"MaxSelector",
+	"MinSelector",
 	"RandomBestSelector",
 	"RandomMaxSelector",
 	"RandomMinSelector",
 	"SoftmaxSelector",
 	"SoftminSelector",
 
-	"BestSelectorMixin",
+	"MaxSelectorMixin",
+	"MinSelectorMixin",
 	"RandomMaxSelectorMixin",
 	"RandomMinSelectorMixin",
 	"SoftmaxSelectorMixin",
