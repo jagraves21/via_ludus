@@ -40,7 +40,7 @@ class UnionFindBoard(Board):
 	def _build_union_find(self, cell, source, target):
 		validate_cell(cell)
 
-		positions = list(self._positions(cell))
+		positions = list(self.positions_of(cell))
 		union_find = UnionFind(
 			[source, target] + positions
 		)
