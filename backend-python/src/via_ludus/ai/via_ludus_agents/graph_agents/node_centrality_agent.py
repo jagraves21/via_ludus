@@ -18,10 +18,10 @@ from .graph_agent import GraphAgent
 
 class NodeCentralityAgent(GraphAgent, ABC):
 	def graph_scores(self, graph):
-		return self.centrality(graph)
+		return self.node_centrality(graph)
 
 	@abstractmethod
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		pass
 
 
@@ -33,7 +33,7 @@ class DegreeCentralityAgent(
 ):
 	name = "Shaw"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.degree_centrality(graph)
 
 
@@ -45,7 +45,7 @@ class BetweennessCentralityAgent(
 ):
 	name = "Anthonisse"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.betweenness_centrality(
 			graph,
 			weight="resistance",
@@ -60,7 +60,7 @@ class BetweennessCentralitySubsetAgent(
 ):
 	name = "Brandes"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.betweenness_centrality_subset(
 			graph,
 			sources=[Endpoint.SOURCE],
@@ -77,7 +77,7 @@ class ClosenessCentralityAgent(
 ):
 	name = "Bavelas"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.closeness_centrality(
 			graph,
 			distance="resistance",
@@ -92,7 +92,7 @@ class EigenvectorCentralityAgent(
 ):
 	name = "Landau"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.eigenvector_centrality(
 			graph,
 			weight="connection_strength",
@@ -107,7 +107,7 @@ class EigenvectorNumpyCentralityAgent(
 ):
 	name = "Bonacich"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.eigenvector_centrality_numpy(
 			graph,
 			weight="connection_strength",
@@ -122,7 +122,7 @@ class KatzCentralityAgent(
 ):
 	name = "Katz"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.katz_centrality(
 			graph,
 			weight="connection_strength",
@@ -137,7 +137,7 @@ class KatzNumpyCentralityAgent(
 ):
 	name = "Leo"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.katz_centrality_numpy(
 			graph,
 			weight="connection_strength",
@@ -152,7 +152,7 @@ class LoadCentralityAgent(
 ):
 	name = "Goh"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.load_centrality(
 			graph,
 			weight="resistance",
@@ -167,7 +167,7 @@ class CurrentFlowBetweennessCentralityAgent(
 ):
 	name = "Newman"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.current_flow_betweenness_centrality(
 			graph,
 			weight="connection_strength",
@@ -182,7 +182,7 @@ class ApproximateCurrentFlowBetweennessCentralityAgent(
 ):
 	name = "Bozzo"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.approximate_current_flow_betweenness_centrality(
 			graph,
 			weight="connection_strength",
@@ -197,7 +197,7 @@ class CurrentFlowBetweennessCentralitySubsetAgent(
 ):
 	name = "Fleischer"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.current_flow_betweenness_centrality_subset(
 			graph,
 			sources=[Endpoint.SOURCE],
@@ -214,7 +214,7 @@ class CurrentFlowClosenessCentralityAgent(
 ):
 	name = "Zelen"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.current_flow_closeness_centrality(
 			graph,
 			weight="connection_strength",
@@ -229,7 +229,7 @@ class InformationCentralityAgent(
 ):
 	name = "Stephenson"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.information_centrality(
 			graph,
 			weight="connection_strength",
@@ -244,7 +244,7 @@ class CommunicabilityBetweennessCentralityAgent(
 ):
 	name = "Higham"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.communicability_betweenness_centrality(
 			graph,
 		)
@@ -258,7 +258,7 @@ class SubgraphCentralityAgent(
 ):
 	name = "Estrada"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.subgraph_centrality(graph)
 
 
@@ -270,7 +270,7 @@ class SubgraphCentralityExpAgent(
 ):
 	name = "Rodriguez-Velazquez"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.subgraph_centrality_exp(graph)
 
 
@@ -282,7 +282,7 @@ class HarmonicCentralityAgent(
 ):
 	name = "Marchiori"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.harmonic_centrality(
 			graph,
 			distance="resistance",
@@ -297,7 +297,7 @@ class PercolationCentralityAgent(
 ):
 	name = "Piraveenan"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.percolation_centrality(graph)
 
 
@@ -313,7 +313,7 @@ class SecondOrderCentralityAgent(
 	def higher_is_better(self):
 		return False
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.second_order_centrality(
 			graph,
 			weight="connection_strength",
@@ -328,7 +328,7 @@ class LaplacianCentralityAgent(
 ):
 	name = "Qi"
 
-	def centrality(self, graph):
+	def node_centrality(self, graph):
 		return nx.laplacian_centrality(
 			graph,
 			normalized=True,

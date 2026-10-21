@@ -1,85 +1,122 @@
+from abc import ABC, abstractmethod
+
 import networkx as nx
 
-from .graphs import (
-	Endpoint,
-	board_to_move_graph,
+from ....player import (
+	MaxSelectorMixin,
+	MinSelectorMixin,
 )
-from .centrality_agent import CentralityAgent
+from .graph_agent import GraphAgent
+from .graph_builder_mixins import (
+	UndirectedMoveGraphMixin,
+	DirectedMoveGraphMixin,
+)
+from .graph_utils import Endpoint
 
 
-class EdgeCentralityAgent(CentralityAgent):
-	@property
-	def graph_builder(self):
-		return board_to_move_graph
+class EdgeCentralityAgent(GraphAgent, ABC):
+	def graph_scores(self, graph):
+		return self.edge_centrality(graph)
 
-	def move_scores_from_centrality(self, graph, centrality):
+	def move_scores_from_graph_scores(self, graph, centrality):
+		def edge_score(u, v):
+			return centrality.get(
+				(u, v),
+				centrality.get((v, u), 0),
+			)
+
 		return {
 			node: sum(
-				centrality.get(edge, 0)
-				for edge in graph.edges(node)
+				edge_score(node, neighbor)
+				for neighbor in graph.neighbors(node)
 			)
 			for node in graph
+			if isinstance(node, tuple)
 		}
+
+	@abstractmethod
+	def edge_centrality(self, graph):
+		pass
 
 
 # Michelle Girvan
-class EdgeBetweennessCentralityAgent(EdgeCentralityAgent):
+class EdgeBetweennessCentralityAgent(
+	UndirectedMoveGraphMixin,
+	MaxSelectorMixin,
+	EdgeCentralityAgent,
+):
 	name = "Girvan"
 
-	def centrality(self, graph):
+	def edge_centrality(self, graph):
 		return nx.edge_betweenness_centrality(
 			graph,
-			weight="weight",
+			weight="traversal_cost",
 		)
 
 
 # Ulrik Brandes
 class EdgeBetweennessCentralitySubsetAgent(
-	EdgeCentralityAgent
+	UndirectedMoveGraphMixin,
+	MaxSelectorMixin,
+	EdgeCentralityAgent,
 ):
-	name = "Brandes"
+	name = "Ulrik"
 
-	def centrality(self, graph):
+	def edge_centrality(self, graph):
 		return nx.edge_betweenness_centrality_subset(
 			graph,
 			sources=[Endpoint.SOURCE],
 			targets=[Endpoint.TARGET],
-			weight="weight",
+			weight="traversal_cost",
 		)
 
 
 # Daniel Fleischer
 class EdgeCurrentFlowBetweennessCentralityAgent(
-	EdgeCentralityAgent
+	UndirectedMoveGraphMixin,
+	MaxSelectorMixin,
+	EdgeCentralityAgent,
 ):
-	name = "Fleischer"
+	name = "Daniel"
 
-	def centrality(self, graph):
+	def edge_centrality(self, graph):
+		if not nx.is_connected(graph):
+			return {}
+
 		return nx.edge_current_flow_betweenness_centrality(
 			graph,
+			weight="connection_strength",
 		)
 
 
 # Mark E. J. Newman
 class EdgeCurrentFlowBetweennessCentralitySubsetAgent(
-	EdgeCentralityAgent
+	UndirectedMoveGraphMixin,
+	MaxSelectorMixin,
+	EdgeCentralityAgent,
 ):
 	name = "Mark"
 
-	def centrality(self, graph):
-		nodes = list(graph)
+	def edge_centrality(self, graph):
+		if not nx.is_connected(graph):
+			return {}
 
 		return nx.edge_current_flow_betweenness_centrality_subset(
 			graph,
 			sources=[Endpoint.SOURCE],
 			targets=[Endpoint.TARGET],
+			weight="connection_strength",
 		)
 
 
 # Kwang-Il Goh
-class EdgeLoadCentralityAgent(EdgeCentralityAgent):
+class EdgeLoadCentralityAgent(
+	UndirectedMoveGraphMixin,
+	MaxSelectorMixin,
+	EdgeCentralityAgent,
+):
 	name = "Kwang-Il"
 
-	def centrality(self, graph):
+	def edge_centrality(self, graph):
 		return nx.edge_load_centrality(graph)
 

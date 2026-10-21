@@ -4,11 +4,7 @@ from .agent import (
 	ScoringAgent,
 )
 
-from .via_ludus_agents import (
-	RandomAgent,
-	Undergrad,
-	DegreeCentralityAgent,
-)
+from . import via_ludus_agents
 
 agents = AgentBase.get_agents()
 
@@ -17,10 +13,6 @@ __all__ = [
 	"AgentBase",
 	"Agent",
 	"ScoringAgent",
-
-	"RandomAgent",
-	"Undergrad",
-	"DegreeCentralityAgent",
 
 	"agents",
 ]

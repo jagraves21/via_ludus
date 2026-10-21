@@ -1,13 +1,11 @@
 from .random_agent import RandomAgent
-from .graph_agents import (
-	Undergrad,
-	DegreeCentralityAgent,
-)
+
+from .shortest_path_agent import ShortestPathAgent
 
 __all__ = [
 	"RandomAgent",
+	
+	"ShortestPathAgent",
 
-	"Undergrad",
-	"DegreeCentralityAgent",
 ]
 
