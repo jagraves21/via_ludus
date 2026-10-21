@@ -1,19 +1,48 @@
 import networkx as nx
 
-from .graphs import (
+from ....board import Cell
+
+from ....player import (
+	DeterministicScoringMixin,
+	RandomMinSelectorMixin,
+)
+
+from .graph_utils import (
 	Endpoint,
 	board_to_player_graph,
 )
-from .tactical_agent import TacticalAgent
-from ..board import Cell, PlayerColor
+
+from .graph_agent import GraphAgent
 
 
-class Undergrad(TacticalAgent):
+class Undergrad(
+	DeterministicScoringMixin,
+	RandomMinSelectorMixin,
+	GraphAgent,
+):
 	name = "Undergrad"
 
+	def build_graphs(self, board, color):
+		my_graph = board_to_player_graph(board, color)
+		opponent_graph = board_to_player_graph(board, color.opponent)
+		return my_graph, opponent_graph
+
 	@property
-	def higher_is_better(self):
-		return False
+	def graph_builder(self):
+		return self.build_graphs
+
+	def graph_scores(self, graph):
+		my_graph, opponent_graph = graph
+		
+		my_scores = self._calculate_scores(my_graph)
+		opponent_scores = self._calculate_scores(opponent_graph)
+		
+		#return my_scores
+		return opponent_scores
+		return {
+			cell: my_score#- opponent_scores.get(cell, 0)
+			for cell, my_score in my_scores.items()
+		}
 
 	def _calculate_scores(self, graph):
 		source_distances = nx.single_source_dijkstra_path_length(
@@ -36,20 +65,5 @@ class Undergrad(TacticalAgent):
 				and node in source_distances
 				and node in target_distances
 			)
-		}
-
-	def evaluate_move_options(self, board, color):
-		my_graph = board_to_player_graph(board, color)
-		opponent_graph = board_to_player_graph(board, color.opponent)
-
-		my_scores = self._calculate_scores(my_graph)
-		opponent_scores = self._calculate_scores(opponent_graph)
-		
-		#return my_scores
-		return opponent_scores
-
-		return {
-			cell: my_score#- opponent_scores.get(cell, 0)
-			for cell, my_score in my_scores.items()
 		}
 
