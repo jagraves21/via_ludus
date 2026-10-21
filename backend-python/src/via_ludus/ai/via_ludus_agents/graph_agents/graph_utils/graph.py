@@ -1,139 +1,145 @@
-from enum import StrEnum
 from itertools import combinations
+from math import exp
 
 import networkx as nx
-from networkx.algorithms.connectivity import minimum_st_node_cut
 
-from ...board import (
+from .....board import (
 	Cell,
-	PlayerColor,
+	validate_player_color,
+)
+
+from .constants import Endpoint
+from .utils import (
+	neighbors,
+	edge_cells,
 )
 
 
-class Endpoint(StrEnum):
-	SOURCE = "S"
-	TARGET = "T"
-
-	def __str__(self):
-		return self.value
-
-	def __repr__(self):
-		return f"Endpoint.{self.name}"
-
-
 def _edge_attributes(weight):
+	connection_strength = 1 / (1 + weight)
+
 	return {
 		"weight": weight,
-		"cost": weight,
-		"strength": 1 / (weight + 1),
+		"traversal_cost": weight,
+		"connection_strength": connection_strength,
+		"traversability": exp(-weight),
+		"resistance": weight + 1e-6,
+		"availability": connection_strength,
+		"penalty": weight,
 	}
 
 
-def board_to_player_graph(board, color):
-	if not isinstance(color, PlayerColor):
-		raise ValueError(f"Invalid player color: {color}")
+def board_to_player_graph(
+	board,
+	color,
+	directed=False,
+	remove_unreachable=False,
+):
+	validate_player_color(color)
 
+	graph = nx.DiGraph() if directed else nx.Graph()
 	cell = color.cell
-	graph = nx.Graph()
 
-	# add cells that the player can use
-	for row in range(board.rows):
-		for col in range(board.cols):
-			node_cell = board.get(row, col)
+	# add empty cells and cells belonging to the player
+	for row, col in board.empty_cells | board.positions_of(cell):
+		graph.add_node(
+			(row, col),
+			cell=board.get(row, col),
+		)
 
-			if node_cell in (cell, Cell.WHITE):
-				graph.add_node(
-					(row, col),
-					cell=node_cell,
-				)
-
-	# connect neighboring cells
-	directions = (
-		(-1, 0),
-		(1, 0),
-		(0, -1),
-		(0, 1),
-	)
-
-	for row, col in graph.nodes:
-		for row_offset, col_offset in directions:
-			new_row = row + row_offset
-			new_col = col + col_offset
-
-			if not (
-				0 <= new_row < board.rows
-				and 0 <= new_col < board.cols
-			):
-				continue
-
-			neighbor = (new_row, new_col)
-
+	# connect adjacent usable cells
+	for vertex in list(graph.nodes):
+		for neighbor in neighbors(board, *vertex):
 			if neighbor not in graph:
 				continue
 
-			if (
-				board.get(row, col) == cell
-				and board.get(new_row, new_col) == cell
-			):
-				weight = 0
+			# undirected edges are processed once
+			if not directed and vertex >= neighbor:
+				continue
+
+			vertex_cell = graph.nodes[vertex]["cell"]
+			neighbor_cell = graph.nodes[neighbor]["cell"]
+
+			if directed:
+				# entering a white cell costs 1
+				# entering an own cell costs 0
+				graph.add_edge(
+					vertex,
+					neighbor,
+					**_edge_attributes(
+						int(neighbor_cell == Cell.WHITE)
+					),
+				)
+				graph.add_edge(
+					neighbor,
+					vertex,
+					**_edge_attributes(
+						int(vertex_cell == Cell.WHITE)
+					),
+				)
 			else:
-				weight = 1
+				# an undirected connection costs 1 if either endpoint is white
+				weight = int(
+					vertex_cell == Cell.WHITE
+					or neighbor_cell == Cell.WHITE
+				)
+
+				graph.add_edge(
+					vertex,
+					neighbor,
+					**_edge_attributes(weight),
+				)
+
+	# add source and target endpoints
+	graph.add_node(Endpoint.SOURCE, cell=cell)
+	graph.add_node(Endpoint.TARGET, cell=cell)
+
+	for endpoint in (Endpoint.SOURCE, Endpoint.TARGET):
+		for row, col in edge_cells(board, color, endpoint):
+			vertex = (row, col)
+
+			if vertex not in graph:
+				continue
 
 			graph.add_edge(
-				(row, col),
-				neighbor,
-				**_edge_attributes(weight),
+				endpoint,
+				vertex,
+				**_edge_attributes(0),
 			)
 
-	# add source and target
-	graph.add_node(
-		Endpoint.SOURCE,
-		cell=cell,
-	)
-	graph.add_node(
-		Endpoint.TARGET,
-		cell=cell,
-	)
-
-	if color == PlayerColor.RED:
-		for col in range(board.cols):
-			if (0, col) in graph:
+			if directed:
 				graph.add_edge(
-					Endpoint.SOURCE,
-					(0, col),
+					vertex,
+					endpoint,
 					**_edge_attributes(0),
 				)
 
-			if (board.rows - 1, col) in graph:
-				graph.add_edge(
-					Endpoint.TARGET,
-					(board.rows - 1, col),
-					**_edge_attributes(0),
-				)
+	if remove_unreachable:
+		if directed:
+			reachable_nodes = (
+				nx.descendants(graph, Endpoint.SOURCE)
+				| nx.descendants(graph, Endpoint.TARGET)
+				| {Endpoint.SOURCE, Endpoint.TARGET}
+			)
+		else:
+			reachable_nodes = (
+				nx.node_connected_component(graph, Endpoint.SOURCE)
+				| nx.node_connected_component(graph, Endpoint.TARGET)
+			)
 
-	elif color == PlayerColor.BLUE:
-		for row in range(board.rows):
-			if (row, 0) in graph:
-				graph.add_edge(
-					Endpoint.SOURCE,
-					(row, 0),
-					**_edge_attributes(0),
-				)
-
-			if (row, board.cols - 1) in graph:
-				graph.add_edge(
-					Endpoint.TARGET,
-					(row, board.cols - 1),
-					**_edge_attributes(0),
-				)
+		graph.remove_nodes_from(
+			set(graph.nodes) - reachable_nodes
+		)
 
 	return graph
 
 
-def board_to_move_graph(board, color):
+def board_to_move_graph(board, color, directed=False):
 	graph = board_to_player_graph(
 		board,
 		color,
+		directed=directed,
+		remove_unreachable=True,
 	)
 
 	shortest_paths = dict(
@@ -149,91 +155,64 @@ def board_to_move_graph(board, color):
 		if data["cell"] == Cell.WHITE
 	}
 
-	reachable_white_nodes = {
-		node
-		for node in white_nodes
-		if (
-			node in shortest_paths[Endpoint.SOURCE]
-			or node in shortest_paths[Endpoint.TARGET]
+	move_graph = nx.DiGraph() if directed else nx.Graph()
+
+	# add source and target endpoints
+	for endpoint in (Endpoint.SOURCE, Endpoint.TARGET):
+		move_graph.add_node(
+			endpoint,
+			**graph.nodes[endpoint],
 		)
-	}
 
-	move_graph = nx.Graph()
-
-	move_graph.add_node(
-		Endpoint.SOURCE,
-		**graph.nodes[Endpoint.SOURCE],
-	)
-
-	move_graph.add_node(
-		Endpoint.TARGET,
-		**graph.nodes[Endpoint.TARGET],
-	)
-
+	# add all white nodes
 	move_graph.add_nodes_from(
 		(
 			node,
 			graph.nodes[node],
 		)
-		for node in reachable_white_nodes
+		for node in white_nodes
 	)
 
-	for u in [Endpoint.SOURCE, Endpoint.TARGET]:
-		for v, distance in shortest_paths[u].items():
-			if distance == 1:
-				move_graph.add_edge(
-					u,
-					v,
-					**_edge_attributes(distance),
-				)
+	# connect candidate moves separated by a path of
+	# weight 1 in the player graph
+	for u, v in combinations(white_nodes, 2):
+		distance_uv = shortest_paths[u].get(v)
+		distance_vu = shortest_paths[v].get(u)
 
-	for u, v in combinations(
-		reachable_white_nodes,
-		2,
-	):
-		distance = shortest_paths[u].get(v)
-
-		if distance in (1, 2):
+		if distance_uv == 1:
 			move_graph.add_edge(
 				u,
 				v,
-				**_edge_attributes(distance),
+				**_edge_attributes(1),
 			)
 
+		if directed and distance_vu == 1:
+			move_graph.add_edge(
+				v,
+				u,
+				**_edge_attributes(1),
+			)
+
+	# connect endpoints to white nodes with a shortest path
+	# of weight 1 in the player graph
+	for endpoint in (Endpoint.SOURCE, Endpoint.TARGET):
+		for node in white_nodes:
+			if shortest_paths[endpoint].get(node) in (0, 1):
+				move_graph.add_edge(
+					endpoint,
+					node,
+					**_edge_attributes(1),
+				)
+
+			if (
+				directed
+				and shortest_paths[node].get(endpoint) in (0, 1)
+			):
+				move_graph.add_edge(
+					node,
+					endpoint,
+					**_edge_attributes(1),
+				)
+
 	return move_graph
-
-
-def minimum_endpoint_cut(graph):
-	return minimum_st_node_cut(
-		graph,
-		Endpoint.SOURCE,
-		Endpoint.TARGET,
-	)
-
-
-def all_minimum_endpoint_cuts(graph):
-	k = nx.node_connectivity(
-		graph,
-		Endpoint.SOURCE,
-		Endpoint.TARGET,
-	)
-
-	nodes = set(graph) - {
-		Endpoint.SOURCE,
-		Endpoint.TARGET,
-	}
-
-	for cut in combinations(nodes, k):
-		cut = set(cut)
-
-		reduced_graph = graph.copy()
-		reduced_graph.remove_nodes_from(cut)
-
-		if not nx.has_path(
-			reduced_graph,
-			Endpoint.SOURCE,
-			Endpoint.TARGET,
-		):
-			yield cut
-
 

@@ -1,21 +1,36 @@
+from abc import ABC, abstractmethod
+
 import networkx as nx
 
-from .graphs import (
-	Endpoint,
-	board_to_move_graph,
+from ....player import (
+	RandomMaxSelectorMixin,
+	RandomMinSelectorMixin,
 )
 
-from .centrality_agent import CentralityAgent
+from .graph_builder_mixins import (
+	UndirectedPlayerGraphMixin,
+	UndirectedMoveGraphMixin,
+)
+
+from .graph_utils import Endpoint
+from .graph_agent import GraphAgent
 
 
-class NodeCentralityAgent(CentralityAgent):
-	@property
-	def graph_builder(self):
-		return board_to_move_graph
+class NodeCentralityAgent(GraphAgent, ABC):
+	def graph_scores(self, graph):
+		return self.centrality(graph)
+
+	@abstractmethod
+	def centrality(self, graph):
+		pass
 
 
 # Marvin E. Shaw
-class DegreeCentralityAgent(NodeCentralityAgent):
+class DegreeCentralityAgent(
+	RandomMaxSelectorMixin,
+	UndirectedMoveGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Shaw"
 
 	def centrality(self, graph):
@@ -23,18 +38,26 @@ class DegreeCentralityAgent(NodeCentralityAgent):
 
 
 # Jan L. Anthonisse
-class BetweennessCentralityAgent(NodeCentralityAgent):
+class BetweennessCentralityAgent(
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Anthonisse"
 
 	def centrality(self, graph):
 		return nx.betweenness_centrality(
 			graph,
-			weight="cost",
+			weight="resistance",
 		)
 
 
 # Ulrik Brandes
-class BetweennessCentralitySubsetAgent(NodeCentralityAgent):
+class BetweennessCentralitySubsetAgent(
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Brandes"
 
 	def centrality(self, graph):
@@ -42,102 +65,135 @@ class BetweennessCentralitySubsetAgent(NodeCentralityAgent):
 			graph,
 			sources=[Endpoint.SOURCE],
 			targets=[Endpoint.TARGET],
-			weight="cost",
+			weight="resistance",
 		)
 
 
 # Alex Bavelas
-class ClosenessCentralityAgent(NodeCentralityAgent):
+class ClosenessCentralityAgent(
+	RandomMinSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Bavelas"
 
 	def centrality(self, graph):
 		return nx.closeness_centrality(
 			graph,
-			distance="cost",
+			distance="resistance",
 		)
 
 
 # Edmund Landau
-class EigenvectorCentralityAgent(NodeCentralityAgent):
+class EigenvectorCentralityAgent(
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Landau"
 
 	def centrality(self, graph):
 		return nx.eigenvector_centrality(
 			graph,
-			weight="strength",
+			weight="connection_strength",
 		)
 
 
 # Phillip Bonacich
-class EigenvectorNumpyCentralityAgent(NodeCentralityAgent):
+class EigenvectorNumpyCentralityAgent(
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Bonacich"
 
 	def centrality(self, graph):
 		return nx.eigenvector_centrality_numpy(
 			graph,
-			weight="strength",
+			weight="connection_strength",
 		)
 
 
-# Leo Katz
-class KatzCentralityAgent(NodeCentralityAgent):
+# Phillip Bonacich
+class KatzCentralityAgent(
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Katz"
 
 	def centrality(self, graph):
 		return nx.katz_centrality(
 			graph,
-			weight="strength",
+			weight="connection_strength",
 		)
 
 
 # Leo Katz
-class KatzNumpyCentralityAgent(NodeCentralityAgent):
+class KatzNumpyCentralityAgent(
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Leo"
 
 	def centrality(self, graph):
 		return nx.katz_centrality_numpy(
 			graph,
-			weight="strength",
+			weight="connection_strength",
 		)
 
 
 # Kwang-Il Goh
-class LoadCentralityAgent(NodeCentralityAgent):
+class LoadCentralityAgent(
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Goh"
 
 	def centrality(self, graph):
 		return nx.load_centrality(
 			graph,
-			weight="cost",
+			weight="resistance",
 		)
 
 
 # Mark E. J. Newman
-class CurrentFlowBetweennessCentralityAgent(NodeCentralityAgent):
+class CurrentFlowBetweennessCentralityAgent(
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Newman"
 
 	def centrality(self, graph):
 		return nx.current_flow_betweenness_centrality(
 			graph,
-			weight="cost",
+			weight="connection_strength",
 		)
 
 
 # Enrico Bozzo
 class ApproximateCurrentFlowBetweennessCentralityAgent(
-	NodeCentralityAgent
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
 ):
 	name = "Bozzo"
 
 	def centrality(self, graph):
 		return nx.approximate_current_flow_betweenness_centrality(
 			graph,
+			weight="connection_strength",
 		)
 
 
 # Daniel Fleischer
 class CurrentFlowBetweennessCentralitySubsetAgent(
-	NodeCentralityAgent
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
 ):
 	name = "Fleischer"
 
@@ -146,35 +202,45 @@ class CurrentFlowBetweennessCentralitySubsetAgent(
 			graph,
 			sources=[Endpoint.SOURCE],
 			targets=[Endpoint.TARGET],
-			weight="cost",
+			weight="connection_strength",
 		)
 
 
 # Milan Zelen
-class CurrentFlowClosenessCentralityAgent(NodeCentralityAgent):
+class CurrentFlowClosenessCentralityAgent(
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Zelen"
 
 	def centrality(self, graph):
 		return nx.current_flow_closeness_centrality(
 			graph,
-			weight="cost",
+			weight="connection_strength",
 		)
 
 
 # Karen Stephenson
-class InformationCentralityAgent(NodeCentralityAgent):
+class InformationCentralityAgent(
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Stephenson"
 
 	def centrality(self, graph):
 		return nx.information_centrality(
 			graph,
-			weight="cost",
+			weight="connection_strength",
 		)
 
 
 # Desmond J. Higham
 class CommunicabilityBetweennessCentralityAgent(
-	NodeCentralityAgent
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
 ):
 	name = "Higham"
 
@@ -185,7 +251,11 @@ class CommunicabilityBetweennessCentralityAgent(
 
 
 # Ernesto Estrada
-class SubgraphCentralityAgent(NodeCentralityAgent):
+class SubgraphCentralityAgent(
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Estrada"
 
 	def centrality(self, graph):
@@ -193,7 +263,11 @@ class SubgraphCentralityAgent(NodeCentralityAgent):
 
 
 # Juan A. Rodriguez-Velazquez
-class SubgraphCentralityExpAgent(NodeCentralityAgent):
+class SubgraphCentralityExpAgent(
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Rodriguez-Velazquez"
 
 	def centrality(self, graph):
@@ -201,18 +275,26 @@ class SubgraphCentralityExpAgent(NodeCentralityAgent):
 
 
 # Massimo Marchiori
-class HarmonicCentralityAgent(NodeCentralityAgent):
+class HarmonicCentralityAgent(
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Marchiori"
 
 	def centrality(self, graph):
 		return nx.harmonic_centrality(
 			graph,
-			distance="cost",
+			distance="resistance",
 		)
 
 
 # Mahendra Piraveenan
-class PercolationCentralityAgent(NodeCentralityAgent):
+class PercolationCentralityAgent(
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Piraveenan"
 
 	def centrality(self, graph):
@@ -220,7 +302,11 @@ class PercolationCentralityAgent(NodeCentralityAgent):
 
 
 # Anne-Marie Kermarrec
-class SecondOrderCentralityAgent(NodeCentralityAgent):
+class SecondOrderCentralityAgent(
+	RandomMinSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Kermarrec"
 
 	@property
@@ -230,12 +316,16 @@ class SecondOrderCentralityAgent(NodeCentralityAgent):
 	def centrality(self, graph):
 		return nx.second_order_centrality(
 			graph,
-			weight="cost",
+			weight="connection_strength",
 		)
 
 
 # Xingqin Qi
-class LaplacianCentralityAgent(NodeCentralityAgent):
+class LaplacianCentralityAgent(
+	RandomMaxSelectorMixin,
+	UndirectedPlayerGraphMixin,
+	NodeCentralityAgent,
+):
 	name = "Qi"
 
 	def centrality(self, graph):
