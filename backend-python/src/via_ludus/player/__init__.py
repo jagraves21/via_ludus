@@ -31,12 +31,12 @@ from .scoring import (
 
 from .validation import (
 	is_player,
-	validate_player,
-	is_scoring_player,
-	validate_scoring_player,
 	is_player_class,
-	validate_player_class,
+	is_scoring_player,
 	is_scoring_player_class,
+	validate_player,
+	validate_player_class,
+	validate_scoring_player,
 	validate_scoring_player_class,
 )
 
@@ -66,13 +66,12 @@ __all__ = [
 	"DeterministicScoringMixin",
 
 	"is_player",
-	"validate_player",
-	"is_scoring_player",
-	"validate_scoring_player",
-
 	"is_player_class",
-	"validate_player_class",
+	"is_scoring_player",
 	"is_scoring_player_class",
+	"validate_player",
+	"validate_player_class",
+	"validate_scoring_player",
 	"validate_scoring_player_class",
 ]
 
