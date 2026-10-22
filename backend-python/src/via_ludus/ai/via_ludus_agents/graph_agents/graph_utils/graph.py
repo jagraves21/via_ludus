@@ -5,14 +5,39 @@ import networkx as nx
 
 from .....board import (
 	Cell,
+	PlayerColor,
 	validate_player_color,
 )
 
-from .constants import Endpoint
-from .utils import (
-	neighbors,
-	edge_cells,
+from .constants import (
+	Endpoint,
+	validate_endpoint,
 )
+
+
+def _edge_cells(board, color, endpoint):
+	validate_player_color(color)
+	validate_endpoint(endpoint)
+
+	if color == PlayerColor.RED:
+		row = (
+			0
+			if endpoint == Endpoint.SOURCE
+			else board.rows - 1
+		)
+
+		for col in range(board.cols):
+			yield row, col
+
+	elif color == PlayerColor.BLUE:
+		col = (
+			0
+			if endpoint == Endpoint.SOURCE
+			else board.cols - 1
+		)
+
+		for row in range(board.rows):
+			yield row, col
 
 
 def _edge_attributes(weight):
@@ -49,7 +74,7 @@ def board_to_player_graph(
 
 	# connect adjacent usable cells
 	for vertex in list(graph.nodes):
-		for neighbor in neighbors(board, *vertex):
+		for neighbor in board.neighbors(*vertex):
 			if neighbor not in graph:
 				continue
 
@@ -95,7 +120,7 @@ def board_to_player_graph(
 	graph.add_node(Endpoint.TARGET, cell=cell)
 
 	for endpoint in (Endpoint.SOURCE, Endpoint.TARGET):
-		for row, col in edge_cells(board, color, endpoint):
+		for row, col in _edge_cells(board, color, endpoint):
 			vertex = (row, col)
 
 			if vertex not in graph:
@@ -173,20 +198,22 @@ def board_to_move_graph(board, color, directed=False):
 		for node in white_nodes
 	)
 
+	dist = 1 if directed else 2
+
 	# connect candidate moves separated by a path of
 	# weight 1 in the player graph
 	for u, v in combinations(white_nodes, 2):
 		distance_uv = shortest_paths[u].get(v)
 		distance_vu = shortest_paths[v].get(u)
 
-		if distance_uv == 1:
+		if distance_uv == dist:
 			move_graph.add_edge(
 				u,
 				v,
 				**_edge_attributes(1),
 			)
 
-		if directed and distance_vu == 1:
+		if directed and distance_vu == dist:
 			move_graph.add_edge(
 				v,
 				u,

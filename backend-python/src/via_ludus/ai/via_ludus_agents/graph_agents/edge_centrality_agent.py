@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import inspect
 
 import networkx as nx
 
@@ -119,4 +120,11 @@ class EdgeLoadCentralityAgent(
 
 	def edge_centrality(self, graph):
 		return nx.edge_load_centrality(graph)
+
+
+EDGE_CENTRALITY_AGENTS = {
+	agent.get_agent_name(): agent
+	for agent in EdgeCentralityAgent.__subclasses__()
+	if not inspect.isabstract(agent)
+}
 
