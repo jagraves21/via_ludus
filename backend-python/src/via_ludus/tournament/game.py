@@ -1,15 +1,12 @@
-from ..board import (
-	PlayerColor,
-	UnionFindBoard as ViaLudusBoard,
-)
-
-from ..validation import(
+from ..board import PlayerColor
+from ..validation import (
 	resolve_starting_player_color,
-	validate_board,
 	resolve_board,
+	is_scoring_player,
 	validate_player,
 	validate_player_class,
 )
+
 
 class Game:
 	def __init__(
@@ -32,7 +29,7 @@ class Game:
 		)
 
 		self.reset()
-	
+
 	@property
 	def board(self):
 		return self._board.copy()
@@ -76,6 +73,13 @@ class Game:
 	@property
 	def is_game_over(self):
 		return self.winner is not None
+
+	@property
+	def is_deterministic(self):
+		return all(
+			player.is_deterministic
+			for player in self._players.values()
+		)
 
 	def _validate_players(self):
 		for color, player in self._players.items():
@@ -128,11 +132,50 @@ class Game:
 		move = self.current_player.choose_move(self.board)
 		return self.make_move(move)
 
+	def make_player_move_with_determinism(self):
+		if self.is_game_over:
+			raise ValueError("Game is already over")
+
+		# trust the player's explicit, whole-policy contract
+		if self.current_player.is_deterministic:
+			move = self.current_player.choose_move(self.board)
+			move_is_deterministic = True
+		elif is_scoring_player(self.current_player):
+			move, move_is_deterministic = (
+				self.current_player.choose_move_with_determinism(
+					self.board
+				)
+			)
+		else:
+			# no contract or per-move assessment is available
+			move = self.current_player.choose_move(self.board)
+			move_is_deterministic = False
+
+		move = self.make_move(move)
+		return move, move_is_deterministic
+
 	def play(self):
 		while not self.is_game_over:
 			self.make_player_move()
 
 		return self.winner
+
+	def play_with_determinism(self):
+		was_deterministic = True
+
+		while not self.is_game_over:
+			if not was_deterministic:
+				self.make_player_move()
+				continue
+
+			_, move_is_deterministic = (
+				self.make_player_move_with_determinism()
+			)
+
+			if not move_is_deterministic:
+				was_deterministic = False
+
+		return self.winner, was_deterministic
 
 	def __str__(self):
 		return (
@@ -149,7 +192,7 @@ class Game:
 			f"Game("
 			f"board={self._board!r}, "
 			f"current_player={self.current_player!r}, "
-			f"current_color={self.current_color!r}, "
+			f"current_color={self.current_color}, "
 			f"moves={self.move_count}, "
 			f"winner={self.winner!r}"
 			f")"

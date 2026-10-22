@@ -1,7 +1,5 @@
 from tqdm.auto import tqdm
 
-from ..board import PlayerColor
-
 from .game import Game
 from .results import TournamentResults
 
@@ -22,7 +20,7 @@ def play_matchup(
 		board=board,
 		starting_color=starting_color,
 	)
-	
+
 	red_name = red_player.__name__ if red_name is None else red_name
 	blue_name = blue_player.__name__ if blue_name is None else blue_name
 	results = TournamentResults([red_name, blue_name])
@@ -38,23 +36,53 @@ def play_matchup(
 		)
 
 	try:
-		for _ in range(num_games):
+		for game_index in range(num_games):
 			progress.set_postfix(
 				red=red_name,
 				blue=blue_name,
 			)
 
-			game.reset()
-			winner = game.play()
+			if game_index == 0:
+				game.reset()
+				winner, deterministic = game.play_with_determinism()
+				moves = game.move_count
 
-			results.add_matchup_result(
-				red_name,
-				blue_name,
-				winner,
-				game.move_count,
-			)
+				results.add_matchup_result(
+					red_name,
+					blue_name,
+					winner,
+					moves,
+					deterministic,
+				)
 
-			progress.update(1)
+				progress.update(1)
+
+				if deterministic:
+					for _ in range(1, num_games):
+						results.add_matchup_result(
+							red_name,
+							blue_name,
+							winner,
+							moves,
+							True,
+						)
+						progress.update(1)
+
+					break
+
+			else:
+				game.reset()
+				winner = game.play()
+
+				results.add_matchup_result(
+					red_name,
+					blue_name,
+					winner,
+					game.move_count,
+					False,
+				)
+
+				progress.update(1)
 	finally:
 		if owns_progress:
 			progress.close()
@@ -72,8 +100,12 @@ def play_head_to_head(
 	player_a_name=None,
 	player_b_name=None,
 ):
-	player_a_name = player_a.__name__ if player_a_name is None else player_a_name
-	player_b_name = player_b.__name__ if player_b_name is None else player_b_name
+	player_a_name = (
+		player_a.__name__ if player_a_name is None else player_a_name
+	)
+	player_b_name = (
+		player_b.__name__ if player_b_name is None else player_b_name
+	)
 
 	results = TournamentResults([player_a_name, player_b_name])
 
@@ -118,3 +150,4 @@ def play_head_to_head(
 			progress.close()
 
 	return results
+

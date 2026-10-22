@@ -9,7 +9,7 @@ from ..board import (
 	UnionFindBoard as ViaLudusBoard,
 )
 
-from ..validation import(
+from ..validation import (
 	resolve_starting_player_color,
 	resolve_board,
 	validate_player_class,
@@ -81,13 +81,13 @@ class RoundRobinTournament:
 	@property
 	def total_expected_games(self):
 		num_players = len(self._players)
-		return num_players **2 * self._num_games_per_color
+		return num_players ** 2 * self._num_games_per_color
 
 	@property
 	def total_completed_games(self):
 		return sum(
-			self.get_matchup_games_played(red_player,blue_player)
-			for red_player,blue_player in self.expected_matchups
+			self.get_matchup_games_played(red_player, blue_player)
+			for red_player, blue_player in self.expected_matchups
 		)
 
 	@property
@@ -121,7 +121,7 @@ class RoundRobinTournament:
 			else None
 		)
 
-		# save the inital checkpoint
+		# Save the initial checkpoint.
 		if checkpoint_file is not None:
 			self._results.save(checkpoint_file)
 
@@ -191,7 +191,7 @@ class RoundRobinTournament:
 
 	@staticmethod
 	def _validate_loaded_results(results, players, num_games_per_color):
-		unknown_players = sorted( set(results.players) - set(players) )
+		unknown_players = sorted(set(results.players) - set(players))
 
 		if unknown_players:
 			warnings.warn(
@@ -204,7 +204,13 @@ class RoundRobinTournament:
 
 		excess_matchups = []
 
-		for red_player, blue_player, matchup_results, moves in results:
+		for (
+			red_player,
+			blue_player,
+			matchup_results,
+			moves,
+			deterministic,
+		) in results:
 			num_games = len(matchup_results)
 
 			if num_games > num_games_per_color:
