@@ -131,7 +131,7 @@ class Board(ABC):
 
 		return instance
 
-	def _neighbors(self, row, col):
+	def neighbors(self, row, col):
 		directions = (
 			(-1, 0),
 			(1, 0),
@@ -166,7 +166,7 @@ class Board(ABC):
 		# import locally to avoid a circular import
 		# between board and visualizations
 		from ..visualizations import plot_board
-		return plot_board(self, **kwargs)
+		plot_board(self, **kwargs)
 
 	def serialize(self):
 		serialization = {

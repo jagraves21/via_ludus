@@ -59,7 +59,7 @@ class UnionFindBoard(Board):
 				if col == self.cols - 1:
 					union_find.union(current, target)
 
-			for neighbor_row, neighbor_col in self._neighbors(row, col):
+			for neighbor_row, neighbor_col in self.neighbors(row, col):
 				neighbor = (neighbor_row, neighbor_col)
 
 				if self.get(neighbor_row, neighbor_col) == cell:
@@ -107,7 +107,7 @@ class UnionFindBoard(Board):
 		current = (row, col)
 		union_find.add(current)
 
-		for neighbor_row, neighbor_col in self._neighbors(row, col):
+		for neighbor_row, neighbor_col in self.neighbors(row, col):
 			if self.get(neighbor_row, neighbor_col) == cell:
 				neighbor = (neighbor_row, neighbor_col)
 				union_find.union(current, neighbor)

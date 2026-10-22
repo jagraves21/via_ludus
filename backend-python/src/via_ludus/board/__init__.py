@@ -1,10 +1,10 @@
 from .cells import (
 	Cell,
 	is_cell,
-	validate_cell,
 	is_playable_cell,
-	validate_playable_cell,
 	is_player_cell,
+	validate_cell,
+	validate_playable_cell,
 	validate_player_cell,
 )
 from .colors import (
@@ -33,10 +33,10 @@ def resolve_board(board, default=None):
 __all__ = [
 	"Cell",
 	"is_cell",
-	"validate_cell",
 	"is_playable_cell",
-	"validate_playable_cell",
 	"is_player_cell",
+	"validate_cell",
+	"validate_playable_cell",
 	"validate_player_cell",
 	
 	"PlayerColor",
