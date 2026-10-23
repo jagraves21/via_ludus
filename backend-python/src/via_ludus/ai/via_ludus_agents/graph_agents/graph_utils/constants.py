@@ -1,12 +1,12 @@
-from enum import StrEnum
+from enum import Enum
 
 
-class Endpoint(StrEnum):
-	SOURCE = "S"
-	TARGET = "T"
+class Endpoint(tuple, Enum):
+	SOURCE = (-1, "S")
+	TARGET = (-1, "T")
 
 	def __str__(self):
-		return self.value
+		return self.value[1]
 
 	def __repr__(self):
 		return f"Endpoint.{self.name}"
