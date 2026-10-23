@@ -62,40 +62,47 @@ def board_to_player_graph(
 ):
 	validate_player_color(color)
 
-	graph = nx.DiGraph() if directed else nx.Graph()
+	player_graph = nx.DiGraph() if directed else nx.Graph()
+	player_graph.graph.update(
+		board=board,
+		color=color,
+		directed=directed,
+		type="player_graph",
+	)
+
 	cell = color.cell
 
 	# add empty cells and cells belonging to the player
 	for row, col in board.empty_cells | board.positions_of(cell):
-		graph.add_node(
+		player_graph.add_node(
 			(row, col),
 			cell=board.get(row, col),
 		)
 
 	# connect adjacent usable cells
-	for vertex in list(graph.nodes):
+	for vertex in list(player_graph.nodes):
 		for neighbor in board.neighbors(*vertex):
-			if neighbor not in graph:
+			if neighbor not in player_graph:
 				continue
 
 			# undirected edges are processed once
 			if not directed and vertex >= neighbor:
 				continue
 
-			vertex_cell = graph.nodes[vertex]["cell"]
-			neighbor_cell = graph.nodes[neighbor]["cell"]
+			vertex_cell = player_graph.nodes[vertex]["cell"]
+			neighbor_cell = player_graph.nodes[neighbor]["cell"]
 
 			if directed:
 				# entering a white cell costs 1
 				# entering an own cell costs 0
-				graph.add_edge(
+				player_graph.add_edge(
 					vertex,
 					neighbor,
 					**_edge_attributes(
 						int(neighbor_cell == Cell.WHITE)
 					),
 				)
-				graph.add_edge(
+				player_graph.add_edge(
 					neighbor,
 					vertex,
 					**_edge_attributes(
@@ -109,31 +116,31 @@ def board_to_player_graph(
 					or neighbor_cell == Cell.WHITE
 				)
 
-				graph.add_edge(
+				player_graph.add_edge(
 					vertex,
 					neighbor,
 					**_edge_attributes(weight),
 				)
 
 	# add source and target endpoints
-	graph.add_node(Endpoint.SOURCE, cell=cell)
-	graph.add_node(Endpoint.TARGET, cell=cell)
+	player_graph.add_node(Endpoint.SOURCE, cell=cell)
+	player_graph.add_node(Endpoint.TARGET, cell=cell)
 
 	for endpoint in (Endpoint.SOURCE, Endpoint.TARGET):
 		for row, col in _edge_cells(board, color, endpoint):
 			vertex = (row, col)
 
-			if vertex not in graph:
+			if vertex not in player_graph:
 				continue
 
-			graph.add_edge(
+			player_graph.add_edge(
 				endpoint,
 				vertex,
 				**_edge_attributes(0),
 			)
 
 			if directed:
-				graph.add_edge(
+				player_graph.add_edge(
 					vertex,
 					endpoint,
 					**_edge_attributes(0),
@@ -142,25 +149,25 @@ def board_to_player_graph(
 	if remove_unreachable:
 		if directed:
 			reachable_nodes = (
-				nx.descendants(graph, Endpoint.SOURCE)
-				| nx.descendants(graph, Endpoint.TARGET)
+				nx.descendants(player_graph, Endpoint.SOURCE)
+				| nx.descendants(player_graph, Endpoint.TARGET)
 				| {Endpoint.SOURCE, Endpoint.TARGET}
 			)
 		else:
 			reachable_nodes = (
-				nx.node_connected_component(graph, Endpoint.SOURCE)
-				| nx.node_connected_component(graph, Endpoint.TARGET)
+				nx.node_connected_component(player_graph, Endpoint.SOURCE)
+				| nx.node_connected_component(player_graph, Endpoint.TARGET)
 			)
 
-		graph.remove_nodes_from(
-			set(graph.nodes) - reachable_nodes
+		player_graph.remove_nodes_from(
+			set(player_graph.nodes) - reachable_nodes
 		)
 
-	return graph
+	return player_graph
 
 
 def board_to_move_graph(board, color, directed=False):
-	graph = board_to_player_graph(
+	player_graph = board_to_player_graph(
 		board,
 		color,
 		directed=directed,
@@ -169,31 +176,37 @@ def board_to_move_graph(board, color, directed=False):
 
 	shortest_paths = dict(
 		nx.all_pairs_dijkstra_path_length(
-			graph,
+			player_graph,
 			weight="weight",
 		)
 	)
 
 	white_nodes = {
 		node
-		for node, data in graph.nodes(data=True)
+		for node, data in player_graph.nodes(data=True)
 		if data["cell"] == Cell.WHITE
 	}
 
 	move_graph = nx.DiGraph() if directed else nx.Graph()
+	move_graph.graph.update(
+		board=board,
+		color=color,
+		directed=directed,
+		type="move_graph",
+	)
 
 	# add source and target endpoints
 	for endpoint in (Endpoint.SOURCE, Endpoint.TARGET):
 		move_graph.add_node(
 			endpoint,
-			**graph.nodes[endpoint],
+			**player_graph.nodes[endpoint],
 		)
 
 	# add all white nodes
 	move_graph.add_nodes_from(
 		(
 			node,
-			graph.nodes[node],
+			player_graph.nodes[node],
 		)
 		for node in white_nodes
 	)
