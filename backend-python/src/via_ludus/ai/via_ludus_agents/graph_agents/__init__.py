@@ -35,14 +35,13 @@ from .distance_agent import (
 )
 
 from .paths_agent import (
-	MyPathsAgent,
-	OpponentPathsAgent,
+	OffensivePathsAgent,
+	DefensivePathsAgent,
 	CombinedPathsAgent,
 	PATH_AGENTS,
 )
 
 from .vertex_cut_agent import (
-	VertexCutAgent,
 	OffensiveCutAgent,
 	DefensiveCutAgent,
 	OffensiveOverlapCutAgent,
@@ -128,11 +127,10 @@ __all__ = [
 	"CombinedDistanceAgent",
 	"DISTANCE_AGENTS",
 	
-	"MyPathsAgent",
-	"OpponentPathsAgent",
+	"OffensivePathsAgent",
+	"DefensivePathsAgent",
 	"CombinedPathsAgent",
 
-	"VertexCutAgent",
 	"OffensiveCutAgent",
 	"DefensiveCutAgent",
 	"OffensiveOverlapCutAgent",

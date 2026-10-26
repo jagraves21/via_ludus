@@ -103,14 +103,14 @@ class SinglePathsAgent(PathsAgent):
 		return self._count_path_nodes(paths)
 
 
-class MyPathsAgent(
+class OffensivePathsAgent(
 	DirectedPlayerGraphMixin,
 	SinglePathsAgent,
 ):
 	name = "Bellman"
 
 
-class OpponentPathsAgent(
+class DefensivePathsAgent(
 	DirectedOpponentPlayerGraphMixin,
 	SinglePathsAgent,
 ):
