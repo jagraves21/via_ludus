@@ -1,7 +1,9 @@
+from abc import ABC, abstractmethod
+import inspect
+
 import networkx as nx
 
 from ....board import Cell
-
 from ....player import (
 	DeterministicScoringMixin,
 	RandomMinSelectorMixin,
@@ -9,42 +11,36 @@ from ....player import (
 
 from .graph_utils import (
 	Endpoint,
-	board_to_player_graph,
+	is_endpoint,
 )
-
+from .graph_builder_mixins import (
+	DirectedOpponentPlayerGraphMixin,
+	DirectedPlayerGraphMixin,
+	DirectedPlayerGraphPairMixin,
+)
 from .graph_agent import GraphAgent
 
 
-class Undergrad(
+class DistanceAgent(
 	DeterministicScoringMixin,
 	RandomMinSelectorMixin,
 	GraphAgent,
+	ABC,
 ):
-	name = "Undergrad"
+	@abstractmethod
+	def _get_distances(self, graph):
+		pass
 
-	def build_graphs(self, board, color):
-		my_graph = board_to_player_graph(board, color)
-		opponent_graph = board_to_player_graph(board, color.opponent)
-		return my_graph, opponent_graph
-
-	@property
-	def graph_builder(self):
-		return self.build_graphs
+	@abstractmethod
+	def _score_distances(self, distances):
+		pass
 
 	def graph_scores(self, graph):
-		my_graph, opponent_graph = graph
-		
-		my_scores = self._calculate_scores(my_graph)
-		opponent_scores = self._calculate_scores(opponent_graph)
-		
-		#return my_scores
-		return opponent_scores
-		return {
-			cell: my_score#- opponent_scores.get(cell, 0)
-			for cell, my_score in my_scores.items()
-		}
+		distances = self._get_distances(graph)
+		return self._score_distances(distances)
 
-	def _calculate_scores(self, graph):
+	@staticmethod
+	def _calculate_distances(graph):
 		source_distances = nx.single_source_dijkstra_path_length(
 			graph,
 			Endpoint.SOURCE,
@@ -60,10 +56,68 @@ class Undergrad(
 			node: source_distances[node] + target_distances[node]
 			for node, data in graph.nodes(data=True)
 			if (
-				isinstance(node, tuple)
+				not is_endpoint(node)
 				and data["cell"] == Cell.WHITE
 				and node in source_distances
 				and node in target_distances
 			)
 		}
+
+class SingleDistanceAgent(DistanceAgent):
+	def _get_distances(self, graph):
+		return self._calculate_distances(graph)
+
+	def _score_distances(self, distances):
+		return distances
+
+
+# Robert W. Floyd
+class OffensiveDistanceAgent(
+	DirectedPlayerGraphMixin,
+	SingleDistanceAgent,
+):
+	name = "Floyd"
+
+
+# Stephen Warshall
+class DefensiveDistanceAgent(
+	DirectedOpponentPlayerGraphMixin,
+	SingleDistanceAgent,
+):
+	name = "Warshall"
+
+
+class DoubleDistanceAgent(DistanceAgent):
+	def _get_distances(self, graphs):
+		return tuple(
+			self._calculate_distances(graph)
+			for graph in graphs
+		)
+
+	def _score_distances(self, distances):
+		candidate_distances, reference_distances = distances
+
+		return {
+			cell: candidate_distances.get(cell, 0)
+			+ reference_distances.get(cell, 0)
+			for cell in (
+				candidate_distances.keys()
+				| reference_distances.keys()
+			)
+		}
+
+
+# Bernard Roy
+class CombinedDistanceAgent(
+	DirectedPlayerGraphPairMixin,
+	DoubleDistanceAgent,
+):
+	name = "Roy"
+
+
+DISTANCE_AGENTS = {
+	agent.get_agent_name(): agent
+	for agent in DistanceAgent.__subclasses__()
+	if not inspect.isabstract(agent)
+}
 

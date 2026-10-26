@@ -10,13 +10,22 @@ from ....player import (
 
 from .graph_builder_mixins import (
 	UndirectedPlayerGraphMixin,
+	UndirectedPlayerGraphFilteredMixin,
+	DirectedPlayerGraphMixin,
+	DirectedPlayerGraphFilteredMixin,
 	UndirectedMoveGraphMixin,
+	DirectedMoveGraphMixin,
 )
 
 from .graph_utils import Endpoint
 from .graph_agent import GraphAgent
 
-
+# For these agents to qualify as deterministic scorers,
+# any convergence-based algorithm must use a fixed,
+# deterministic initialization.
+#
+# For example, eigenvector centrality implementations that
+# depend on iterative convergence may not be deterministic.
 class VertexCentralityAgent(GraphAgent, ABC):
 	def graph_scores(self, graph):
 		return self.vertex_centrality(graph)
@@ -41,7 +50,7 @@ class DegreeCentralityAgent(
 # Jan L. Anthonisse
 class BetweennessCentralityAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Anthonisse"
@@ -56,7 +65,7 @@ class BetweennessCentralityAgent(
 # Ulrik Brandes
 class BetweennessCentralitySubsetAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Brandes"
@@ -88,11 +97,15 @@ class ClosenessCentralityAgent(
 # Edmund Landau
 class EigenvectorCentralityAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
+	ABC,
 ):
 	name = "Landau"
 
+	# this often does not converge and raise an exception
+	# make abstract so it does not get registered
+	@abstractmethod
 	def vertex_centrality(self, graph):
 		return nx.eigenvector_centrality(
 			graph,
@@ -103,7 +116,7 @@ class EigenvectorCentralityAgent(
 # Phillip Bonacich
 class EigenvectorNumpyCentralityAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Bonacich"
@@ -118,7 +131,7 @@ class EigenvectorNumpyCentralityAgent(
 # Phillip Bonacich
 class KatzCentralityAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Katz"
@@ -133,7 +146,7 @@ class KatzCentralityAgent(
 # Leo Katz
 class KatzNumpyCentralityAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Leo"
@@ -148,7 +161,7 @@ class KatzNumpyCentralityAgent(
 # Kwang-Il Goh
 class LoadCentralityAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Goh"
@@ -163,7 +176,7 @@ class LoadCentralityAgent(
 # Mark E. J. Newman
 class CurrentFlowBetweennessCentralityAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedPlayerGraphFilteredMixin,
 	VertexCentralityAgent,
 ):
 	name = "Newman"
@@ -178,7 +191,7 @@ class CurrentFlowBetweennessCentralityAgent(
 # Enrico Bozzo
 class ApproximateCurrentFlowBetweennessCentralityAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedPlayerGraphFilteredMixin,
 	VertexCentralityAgent,
 ):
 	name = "Bozzo"
@@ -193,7 +206,7 @@ class ApproximateCurrentFlowBetweennessCentralityAgent(
 # Daniel Fleischer
 class CurrentFlowBetweennessCentralitySubsetAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedPlayerGraphFilteredMixin,
 	VertexCentralityAgent,
 ):
 	name = "Fleischer"
@@ -210,7 +223,7 @@ class CurrentFlowBetweennessCentralitySubsetAgent(
 # Milan Zelen
 class CurrentFlowClosenessCentralityAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Zelen"
@@ -225,7 +238,7 @@ class CurrentFlowClosenessCentralityAgent(
 # Karen Stephenson
 class InformationCentralityAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Stephenson"
@@ -240,7 +253,7 @@ class InformationCentralityAgent(
 # Desmond J. Higham
 class CommunicabilityBetweennessCentralityAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Higham"
@@ -254,7 +267,7 @@ class CommunicabilityBetweennessCentralityAgent(
 # Ernesto Estrada
 class SubgraphCentralityAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Estrada"
@@ -266,7 +279,7 @@ class SubgraphCentralityAgent(
 # Juan A. Rodriguez-Velazquez
 class SubgraphCentralityExpAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Rodriguez-Velazquez"
@@ -278,7 +291,7 @@ class SubgraphCentralityExpAgent(
 # Massimo Marchiori
 class HarmonicCentralityAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Marchiori"
@@ -305,7 +318,7 @@ class PercolationCentralityAgent(
 # Anne-Marie Kermarrec
 class SecondOrderCentralityAgent(
 	RandomMinSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Kermarrec"
@@ -317,14 +330,14 @@ class SecondOrderCentralityAgent(
 	def vertex_centrality(self, graph):
 		return nx.second_order_centrality(
 			graph,
-			weight="connection_strength",
+			weight="traversal_cost",
 		)
 
 
 # Xingqin Qi
 class LaplacianCentralityAgent(
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Qi"
@@ -341,3 +354,4 @@ VERTEX_CENTRALITY_AGENTS = {
 	for agent in VertexCentralityAgent.__subclasses__()
 	if not inspect.isabstract(agent)
 }
+
