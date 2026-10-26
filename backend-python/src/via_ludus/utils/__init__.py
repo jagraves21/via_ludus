@@ -1,5 +1,3 @@
-from .plotting import with_ax
-
 from .timing import (
 	time_it,
 	Timer,
@@ -8,8 +6,6 @@ from .timing import (
 
 
 __all__ = [
-	"with_ax",
-
 	"time_it",
 	"Timer",
 	"time_block",

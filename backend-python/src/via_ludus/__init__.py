@@ -1,3 +1,4 @@
+from . import board
 from .board import (
 	Cell,
 	PlayerColor,
@@ -6,6 +7,7 @@ from .board import (
 	UnionFindBoard,
 )
 
+from . import player
 from .player import (
 	Player,
 	DeterministicMoveSelectionMixin,
@@ -13,12 +15,15 @@ from .player import (
 	DeterministicScoringMixin,
 	MoveSelector,
 	BestSelector,
+	MaxSelector,
+	MinSelector,
 	RandomBestSelector,
 	RandomMaxSelector,
 	RandomMinSelector,
 	SoftmaxSelector,
 	SoftminSelector,
-	BestSelectorMixin,
+	MaxSelectorMixin,
+	MinSelectorMixin,
 	RandomMaxSelectorMixin,
 	RandomMinSelectorMixin,
 	SoftmaxSelectorMixin,
@@ -26,9 +31,19 @@ from .player import (
 )
 
 from . import validation
+
 from . import tournament
+
 from . import ai
-from .ai import agents
+from .ai import (
+	AI_AGENTS,
+	VIA_LUDUS_AGENTS,
+	GRAPH_AGENTS,
+	VERTEX_CUT_AGENTS,
+	VERTEX_CENTRALITY_AGENTS,
+	EDGE_CENTRALITY_AGENTS,
+)
+
 from . import utils
 
 
@@ -43,21 +58,27 @@ __all__ = [
 	"DeterministicMoveSelectionMixin",
 	"ScoringPlayer",
 	"DeterministicScoringMixin",
-
 	"MoveSelector",
 	"BestSelector",
+	"MaxSelector",
+	"MinSelector",
 	"RandomBestSelector",
 	"RandomMaxSelector",
 	"RandomMinSelector",
 	"SoftmaxSelector",
 	"SoftminSelector",
-
-	"BestSelectorMixin",
+	"MaxSelectorMixin",
+	"MinSelectorMixin",
 	"RandomMaxSelectorMixin",
 	"RandomMinSelectorMixin",
 	"SoftmaxSelectorMixin",
 	"SoftminSelectorMixin",
 
-	"agents",
+	"AI_AGENTS",
+	"VIA_LUDUS_AGENTS",
+	"GRAPH_AGENTS",
+	"VERTEX_CUT_AGENTS",
+	"VERTEX_CENTRALITY_AGENTS",
+	"EDGE_CENTRALITY_AGENTS",
 ]
 

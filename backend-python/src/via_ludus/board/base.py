@@ -1,10 +1,7 @@
 from abc import ABC, abstractmethod
 import warnings
 
-import matplotlib.pyplot as plt
 import numpy as np
-
-from ..utils import with_ax
 
 from .cells import (
 	Cell,
@@ -30,22 +27,22 @@ class Board(ABC):
 	def cols(self):
 		return self._board.shape[1]
 
-	def _positions(self, cell):
+	def positions_of(self, cell):
 		validate_cell(cell)
 		rows, cols = np.where(self._board == cell)
 		return set(zip(map(int, rows), map(int, cols)))
 
 	@property
 	def empty_cells(self):
-		return self._positions(Cell.WHITE)
+		return self.positions_of(Cell.WHITE)
 
 	@property
 	def red_cells(self):
-		return self._positions(Cell.RED)
+		return self.positions_of(Cell.RED)
 
 	@property
 	def blue_cells(self):
-		return self._positions(Cell.BLUE)
+		return self.positions_of(Cell.BLUE)
 
 	@property
 	def available(self):
@@ -133,7 +130,7 @@ class Board(ABC):
 
 		return instance
 
-	def _neighbors(self, row, col):
+	def neighbors(self, row, col):
 		directions = (
 			(-1, 0),
 			(1, 0),
@@ -164,26 +161,11 @@ class Board(ABC):
 		if not 0 <= col < self.cols:
 			raise IndexError(f"col index out of range: {col}")
 
-	@with_ax
-	def plot(self, ax):
-		for row in range(self.rows):
-			for col in range(self.cols):
-				cell = self.get(row, col)
-
-				ax.add_patch(
-					plt.Rectangle(
-						(col, self.rows - row - 1),
-						1,
-						1,
-						facecolor=cell.color,
-						edgecolor="black",
-					)
-				)
-
-		ax.set_xlim(0, self.cols)
-		ax.set_ylim(0, self.rows)
-		ax.set_aspect("equal")
-		ax.axis("off")
+	def plot(self, **kwargs):
+		# import locally to avoid a circular import
+		# between board and visualizations
+		from ..visualizations import plot_board
+		plot_board(self, **kwargs)
 
 	def serialize(self):
 		serialization = {

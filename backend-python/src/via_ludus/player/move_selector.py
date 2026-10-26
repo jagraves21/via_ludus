@@ -1,21 +1,19 @@
-
 from abc import ABC, abstractmethod
 
 import numpy as np
 
 
 class MoveSelector(ABC):
-	def _validate_scores(self, scores):
-		scores = {
-			move: score
-			for move, score in scores.items()
-			if np.isfinite(score)
-		}
+	@property
+	@abstractmethod
+	def is_stochastic(self):
+		"""Whether this selector can make random choices."""
+		pass
 
-		if not scores:
-			raise ValueError("No available moves with finite scores")
-
-		return scores
+	@abstractmethod
+	def has_unique_best_move(self, scores):
+		"""Whether these scores guarantee a single selected move."""
+		pass
 
 	def select(self, scores):
 		scores = self._validate_scores(scores)
@@ -23,7 +21,7 @@ class MoveSelector(ABC):
 
 	def select_with_determinism(self, scores):
 		scores = self._validate_scores(scores)
-		is_deterministic = self.has_deterministic_selection(scores)
+		is_deterministic = self.has_unique_best_move(scores)
 
 		if not self.is_stochastic and not is_deterministic:
 			raise RuntimeError(
@@ -39,39 +37,58 @@ class MoveSelector(ABC):
 	def _select(self, scores):
 		pass
 
-	@property
-	@abstractmethod
-	def is_stochastic(self):
-		"""Whether this selector can make random choices."""
-		pass
+	def _validate_scores(self, scores):
+		scores = {
+			move: score
+			for move, score in scores.items()
+			if np.isfinite(score)
+		}
 
-	@abstractmethod
-	def has_deterministic_selection(self, scores):
-		"""Whether these scores guarantee a single selected move."""
-		pass
+		if not scores:
+			raise ValueError("No available moves with finite scores")
+
+		return scores
 
 
-class BestSelector(MoveSelector):
+class _BestScoreSelector(MoveSelector, ABC):
+	_direction = 1
+
+	def _best_score(self, scores):
+		if self._direction == 1:
+			return max(scores.values())
+
+		return min(scores.values())
+
+
+class BestSelector(_BestScoreSelector, ABC):
 	@property
 	def is_stochastic(self):
 		return False
 
-	def has_deterministic_selection(self, scores):
+	def has_unique_best_move(self, scores):
 		return True
 
 	def _select(self, scores):
-		max_score = max(scores.values())
+		best_score = self._best_score(scores)
 
 		best_moves = sorted(
 			move
 			for move, score in scores.items()
-			if score == max_score
+			if score == best_score
 		)
 
 		return best_moves[len(best_moves) // 2]
 
 
-class RandomBestSelector(MoveSelector, ABC):
+class MaxSelector(BestSelector):
+	_direction = 1
+
+
+class MinSelector(BestSelector):
+	_direction = -1
+
+
+class _RandomSelector(MoveSelector, ABC):
 	def __init__(self, seed=None):
 		self._rng = np.random.default_rng(seed)
 
@@ -79,7 +96,12 @@ class RandomBestSelector(MoveSelector, ABC):
 	def is_stochastic(self):
 		return True
 
-	def has_deterministic_selection(self, scores):
+
+class RandomBestSelector(_BestScoreSelector, _RandomSelector, ABC):
+	def __init__(self, seed=None):
+		super().__init__(seed=seed)
+
+	def has_unique_best_move(self, scores):
 		best_score = self._best_score(scores)
 
 		return sum(
@@ -99,22 +121,16 @@ class RandomBestSelector(MoveSelector, ABC):
 		index = self._rng.integers(len(best_moves))
 		return best_moves[index]
 
-	@abstractmethod
-	def _best_score(self, scores):
-		pass
-
 
 class RandomMaxSelector(RandomBestSelector):
-	def _best_score(self, scores):
-		return max(scores.values())
+	_direction = 1
 
 
 class RandomMinSelector(RandomBestSelector):
-	def _best_score(self, scores):
-		return min(scores.values())
+	_direction = -1
 
 
-class _SoftSelector(MoveSelector, ABC):
+class _SoftSelector(_RandomSelector, ABC):
 	_direction = 1
 
 	def __init__(self, temperature=1.0, seed=None):
@@ -124,13 +140,9 @@ class _SoftSelector(MoveSelector, ABC):
 			)
 
 		self._temperature = temperature
-		self._rng = np.random.default_rng(seed)
+		super().__init__(seed=seed)
 
-	@property
-	def is_stochastic(self):
-		return True
-
-	def has_deterministic_selection(self, scores):
+	def has_unique_best_move(self, scores):
 		return len(scores) == 1
 
 	def _select(self, scores):
@@ -143,12 +155,12 @@ class _SoftSelector(MoveSelector, ABC):
 
 		temperature = np.longdouble(self._temperature)
 
-		# normalize before dividing to reduce overflow risk
+		# Normalize before dividing to reduce overflow risk.
 		values = self._direction * values
 		max_value = np.max(values)
 		differences = values - max_value
 
-		# clamp extreme differences to avoid numerical overflow
+		# Clamp extreme differences to avoid numerical overflow.
 		differences = np.maximum(
 			differences,
 			-np.longdouble(np.finfo(np.longdouble).max),
@@ -156,7 +168,7 @@ class _SoftSelector(MoveSelector, ABC):
 
 		logits = differences / temperature
 
-		# treat negligible probabilities as zero
+		# Treat negligible probabilities as zero.
 		logits = np.maximum(logits, -745.0)
 
 		probabilities = np.asarray(np.exp(logits), dtype=float)

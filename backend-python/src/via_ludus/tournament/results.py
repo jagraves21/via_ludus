@@ -6,9 +6,10 @@ import warnings
 
 from matplotlib import pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+import numpy as np
 import pandas as pd
 
-from ..utils import with_ax
+from ..visualizations import with_ax
 
 from ..board import (
 	PlayerColor,
@@ -22,6 +23,7 @@ class TournamentResults:
 		self._results = defaultdict(lambda: {
 			"results": [],
 			"moves": [],
+			"deterministic": [],
 		})
 
 	@property
@@ -35,24 +37,61 @@ class TournamentResults:
 			for matchup in self._results.values()
 		)
 
-	def add_matchup_result(self, red_player, blue_player, result, move):
+	@property
+	def deterministic_games(self):
+		return sum(
+			sum(matchup["deterministic"])
+			for matchup in self._results.values()
+		)
+
+	@property
+	def deterministic_game_rate(self):
+		return (
+			self.deterministic_games / self.total_games
+			if self.total_games
+			else 0.0
+		)
+
+	def add_matchup_result(
+		self,
+		red_player,
+		blue_player,
+		result,
+		move,
+		deterministic,
+	):
 		self._validate_players(red_player, blue_player)
 		self._validate_result(result, move)
+		self._validate_deterministic(deterministic)
 
 		self.add_matchup_data(
 			red_player,
 			blue_player,
 			[result],
 			[move],
+			[deterministic],
 		)
 
-	def add_matchup_data(self, red_player, blue_player, results, moves):
+	def add_matchup_data(
+		self,
+		red_player,
+		blue_player,
+		results,
+		moves,
+		deterministic,
+	):
 		self._validate_players(red_player, blue_player)
 		self._validate_results(results, moves)
+		self._validate_deterministic_data(
+			results,
+			moves,
+			deterministic,
+		)
 
-		matchups = self._results[(red_player, blue_player)]
-		matchups["results"].extend(results)
-		matchups["moves"].extend(moves)
+		matchup = self._results[(red_player, blue_player)]
+		matchup["results"].extend(results)
+		matchup["moves"].extend(moves)
+		matchup["deterministic"].extend(deterministic)
 
 	def add_tournament_data(self, other):
 		if not isinstance(other, TournamentResults):
@@ -70,6 +109,7 @@ class TournamentResults:
 				blue_player,
 				matchup["results"],
 				matchup["moves"],
+				matchup["deterministic"],
 			)
 
 	def get_matchup_results(self, red_player, blue_player):
@@ -77,6 +117,12 @@ class TournamentResults:
 
 	def get_matchup_moves(self, red_player, blue_player):
 		return self.get_matchup_data(red_player, blue_player)["moves"]
+
+	def get_matchup_determinism(self, red_player, blue_player):
+		return self.get_matchup_data(
+			red_player,
+			blue_player,
+		)["deterministic"]
 
 	def get_matchup_data(self, red_player, blue_player):
 		self._validate_players(red_player, blue_player)
@@ -87,31 +133,51 @@ class TournamentResults:
 			return {
 				"results": (),
 				"moves": (),
+				"deterministic": (),
 			}
 
 		return {
 			"results": tuple(matchup["results"]),
 			"moves": tuple(matchup["moves"]),
+			"deterministic": tuple(matchup["deterministic"]),
 		}
 
 	def get_matchup_count(self, red_player, blue_player):
-		return len( self.get_matchup_results(red_player, blue_player) )
-		
+		return len(
+			self.get_matchup_results(red_player, blue_player)
+		)
+
 	def summary(self):
 		data = []
 
 		for player in self._players:
-			red_results = list(itertools.chain.from_iterable(
-				matchup["results"]
+			red_matchups = [
+				matchup
 				for (red_player, _), matchup in self._results.items()
 				if red_player == player
+			]
+			blue_matchups = [
+				matchup
+				for (red_player, blue_player), matchup
+				in self._results.items()
+				if blue_player == player and red_player != player
+			]
+
+			red_results = list(itertools.chain.from_iterable(
+				matchup["results"] for matchup in red_matchups
+			))
+			blue_results = list(itertools.chain.from_iterable(
+				matchup["results"] for matchup in blue_matchups
 			))
 
-			blue_results = list(itertools.chain.from_iterable(
-				matchup["results"]
-				for (red_player, blue_player), matchup in self._results.items()
-				if blue_player == player and red_player != blue_player
-			))
+			red_deterministic = sum(
+				sum(matchup["deterministic"])
+				for matchup in red_matchups
+			)
+			blue_deterministic = sum(
+				sum(matchup["deterministic"])
+				for matchup in blue_matchups
+			)
 
 			red_games = len(red_results)
 			blue_games = len(blue_results)
@@ -126,36 +192,55 @@ class TournamentResults:
 				for result in blue_results
 			)
 			total_wins = red_wins + blue_wins
+			total_deterministic = (
+				red_deterministic + blue_deterministic
+			)
 
 			data.append({
 				"player": player,
 				"total_games": total_games,
 				"total_wins": total_wins,
-				"total_win_rate": total_wins / total_games if total_games else 0.0,
+				"total_win_rate": (
+					total_wins / total_games if total_games else 0.0
+				),
+				"deterministic_games": total_deterministic,
+				"deterministic_game_rate": (
+					total_deterministic / total_games
+					if total_games else 0.0
+				),
 				"red_games": red_games,
 				"red_wins": red_wins,
-				"red_win_rate": red_wins / red_games if red_games else 0.0,
+				"red_win_rate": (
+					red_wins / red_games if red_games else 0.0
+				),
+				"red_deterministic_games": red_deterministic,
 				"blue_games": blue_games,
 				"blue_wins": blue_wins,
-				"blue_win_rate": blue_wins / blue_games if blue_games else 0.0,
+				"blue_win_rate": (
+					blue_wins / blue_games if blue_games else 0.0
+				),
+				"blue_deterministic_games": blue_deterministic,
 			})
 
+		columns = [
+			"player",
+			"total_games",
+			"total_wins",
+			"total_win_rate",
+			"deterministic_games",
+			"deterministic_game_rate",
+			"red_games",
+			"red_wins",
+			"red_win_rate",
+			"red_deterministic_games",
+			"blue_games",
+			"blue_wins",
+			"blue_win_rate",
+			"blue_deterministic_games",
+		]
+
 		return (
-			pd.DataFrame(
-				data,
-				columns=[
-					"player",
-					"total_games",
-					"total_wins",
-					"total_win_rate",
-					"red_games",
-					"red_wins",
-					"red_win_rate",
-					"blue_games",
-					"blue_wins",
-					"blue_win_rate",
-				],
-			)
+			pd.DataFrame(data, columns=columns)
 			.sort_values("total_win_rate", ascending=False)
 			.reset_index(drop=True)
 		)
@@ -166,16 +251,16 @@ class TournamentResults:
 		for (red_player, blue_player), matchup in self._results.items():
 			results = matchup["results"]
 			moves = matchup["moves"]
+			deterministic = matchup["deterministic"]
 			num_games = len(results)
 
 			red_wins = sum(
-				result == PlayerColor.RED
-				for result in results
+				result == PlayerColor.RED for result in results
 			)
 			blue_wins = sum(
-				result == PlayerColor.BLUE
-				for result in results
+				result == PlayerColor.BLUE for result in results
 			)
+			deterministic_games = sum(deterministic)
 
 			red_moves = [
 				move
@@ -192,37 +277,36 @@ class TournamentResults:
 				"red_player": red_player,
 				"blue_player": blue_player,
 				"num_games": num_games,
+				"deterministic_games": deterministic_games,
+				"deterministic_game_rate": (
+					deterministic_games / num_games
+					if num_games else float("nan")
+				),
 				"red_wins": red_wins,
 				"red_win_rate": (
 					red_wins / num_games
-					if num_games
-					else float("nan")
+					if num_games else float("nan")
 				),
 				"red_avg_moves_to_win": (
 					sum(red_moves) / len(red_moves)
-					if red_moves
-					else float("nan")
+					if red_moves else float("nan")
 				),
 				"red_std_moves_to_win": (
 					pd.Series(red_moves).std()
-					if len(red_moves) > 1
-					else float("nan")
+					if len(red_moves) > 1 else float("nan")
 				),
 				"blue_wins": blue_wins,
 				"blue_win_rate": (
 					blue_wins / num_games
-					if num_games
-					else float("nan")
+					if num_games else float("nan")
 				),
 				"blue_avg_moves_to_win": (
 					sum(blue_moves) / len(blue_moves)
-					if blue_moves
-					else float("nan")
+					if blue_moves else float("nan")
 				),
 				"blue_std_moves_to_win": (
 					pd.Series(blue_moves).std()
-					if len(blue_moves) > 1
-					else float("nan")
+					if len(blue_moves) > 1 else float("nan")
 				),
 			})
 
@@ -230,6 +314,8 @@ class TournamentResults:
 			"red_player",
 			"blue_player",
 			"num_games",
+			"deterministic_games",
+			"deterministic_game_rate",
 			"red_wins",
 			"red_win_rate",
 			"red_avg_moves_to_win",
@@ -242,16 +328,14 @@ class TournamentResults:
 
 		df = pd.DataFrame(data, columns=columns)
 
-		player_order = self._players
-
 		df["red_player"] = pd.Categorical(
 			df["red_player"],
-			categories=player_order,
+			categories=self._players,
 			ordered=True,
 		)
 		df["blue_player"] = pd.Categorical(
 			df["blue_player"],
-			categories=player_order,
+			categories=self._players,
 			ordered=True,
 		)
 
@@ -341,6 +425,79 @@ class TournamentResults:
 
 		return red_matrix_df, blue_matrix_df, win_matrix_df
 
+	def elo_ratings(self, initial_rating=1500, k_factor=32, seed=42):
+		if k_factor <= 0:
+			raise ValueError("k_factor must be positive")
+
+		rng = np.random.default_rng(seed)
+
+		ratings = {
+			player: float(initial_rating)
+			for player in self._players
+		}
+		games_played = {
+			player: 0
+			for player in self._players
+		}
+
+		matchups = [
+			(red_player, blue_player, matchup["results"])
+			for (red_player, blue_player), matchup in self._results.items()
+		]
+
+		max_games = max(
+			(len(results) for _, _, results in matchups),
+			default=0,
+		)
+
+		for game_index in range(max_games):
+			order = rng.permutation(len(matchups))
+
+			for i in order:
+				red_player, blue_player, results = matchups[i]
+
+				if game_index >= len(results):
+					continue
+
+				result = results[game_index]
+
+				red_rating = ratings[red_player]
+				blue_rating = ratings[blue_player]
+
+				red_expected = 1 / (
+					1 + 10 ** ((blue_rating - red_rating) / 400)
+				)
+
+				red_score = (
+					1.0 if result == PlayerColor.RED else 0.0
+				)
+				blue_score = 1.0 - red_score
+
+				ratings[red_player] = (
+					red_rating
+					+ k_factor * (red_score - red_expected)
+				)
+				ratings[blue_player] = (
+					blue_rating
+					+ k_factor * (blue_score - (1 - red_expected))
+				)
+
+				games_played[red_player] += 1
+				games_played[blue_player] += 1
+
+		return (
+			pd.DataFrame([
+				{
+					"player": player,
+					"elo": ratings[player],
+					"games_played": games_played[player],
+				}
+				for player in self._players
+			])
+			.sort_values("elo", ascending=False)
+			.reset_index(drop=True)
+		)
+
 	@with_ax
 	def _plot_win_rate_matrix(
 		self,
@@ -380,7 +537,6 @@ class TournamentResults:
 					continue
 
 				red, green, blue, _ = colormap(value)
-
 				luminance = (
 					0.2126 * red
 					+ 0.7152 * green
@@ -459,14 +615,17 @@ class TournamentResults:
 		if len(players) != len(set(players)):
 			raise ValueError("Players must be unique.")
 
-		if not isinstance(num_games, int) or isinstance(num_games, bool) or num_games < 1:
+		if (
+			not isinstance(num_games, int)
+			or isinstance(num_games, bool)
+			or num_games < 1
+		):
 			raise ValueError("num_games must be a positive integer.")
 
-		required_pairs = list( itertools.product(players, repeat=2) )
+		required_pairs = list(itertools.product(players, repeat=2))
 
 		missing_pairs = [
-			pair
-			for pair in required_pairs
+			pair for pair in required_pairs
 			if pair not in self._results
 		]
 
@@ -476,11 +635,10 @@ class TournamentResults:
 			)
 
 		for pair in required_pairs:
-			# every pair is in _results so we can
-			# do this without modifying _results
 			matchup = self._results[pair]
 			results = matchup["results"]
 			moves = matchup["moves"]
+			deterministic = matchup["deterministic"]
 
 			if len(results) < num_games:
 				raise ValueError(
@@ -488,22 +646,23 @@ class TournamentResults:
 					f"at least {num_games} are required."
 				)
 
-			if len(moves) != len(results):
+			if not (
+				len(results) == len(moves) == len(deterministic)
+			):
 				raise ValueError(
-					f"Pairing {pair} has {len(results)} results "
-					f"but {len(moves)} move records."
+					f"Pairing {pair} has inconsistent record lengths."
 				)
-		
+
 		new_tournament = TournamentResults(players)
+
 		for pair in required_pairs:
-			# every pair is in _results so we can
-			# do this without modifying _results
 			matchup = self._results[pair]
-			results = matchup["results"]
-			moves = matchup["moves"]
 
 			new_tournament.add_matchup_data(
-				*pair, results[:num_games], moves[:num_games]
+				*pair,
+				matchup["results"][:num_games],
+				matchup["moves"][:num_games],
+				matchup["deterministic"][:num_games],
 			)
 
 		return new_tournament
@@ -529,7 +688,7 @@ class TournamentResults:
 			red_player = matchup["red_player"]
 			blue_player = matchup["blue_player"]
 
-			found_players.update( (red_player,blue_player) )
+			found_players.update((red_player, blue_player))
 
 			instance.add_matchup_data(
 				red_player,
@@ -539,17 +698,18 @@ class TournamentResults:
 					for result in matchup["results"]
 				],
 				matchup["moves"],
+				matchup["deterministic"],
 			)
-		
+
 		unknown_players = found_players - reported_players
-		if len(unknown_players) > 0:
+		if unknown_players:
 			raise ValueError(
 				"Matchup contains players not listed in 'players': "
 				+ ", ".join(sorted(unknown_players))
 			)
 
 		missing_players = reported_players - found_players
-		if len(missing_players) > 0:
+		if missing_players:
 			warnings.warn(
 				"The following players have no recorded matchups: "
 				+ ", ".join(sorted(missing_players)),
@@ -571,8 +731,10 @@ class TournamentResults:
 						for result in matchup["results"]
 					],
 					"moves": matchup["moves"],
+					"deterministic": matchup["deterministic"],
 				}
-				for (red_player, blue_player), matchup in self._results.items()
+				for (red_player, blue_player), matchup
+				in self._results.items()
 			],
 		}
 
@@ -612,6 +774,34 @@ class TournamentResults:
 				"results and moves must have the same length"
 			)
 
+	@staticmethod
+	def _validate_deterministic(deterministic):
+		if not isinstance(deterministic, bool):
+			raise TypeError("deterministic must be a bool")
+
+	@classmethod
+	def _validate_deterministic_data(
+		cls,
+		results,
+		moves,
+		deterministic,
+	):
+		if not isinstance(deterministic, (list, tuple)):
+			raise TypeError(
+				"deterministic must be a list or tuple"
+			)
+
+		for value in deterministic:
+			cls._validate_deterministic(value)
+
+		if not (
+			len(results) == len(moves) == len(deterministic)
+		):
+			raise ValueError(
+				"results, moves, and deterministic must have "
+				"the same length"
+			)
+
 	def __iter__(self):
 		for (red_player, blue_player), matchup in self._results.items():
 			yield (
@@ -619,6 +809,7 @@ class TournamentResults:
 				blue_player,
 				tuple(matchup["results"]),
 				tuple(matchup["moves"]),
+				tuple(matchup["deterministic"]),
 			)
 
 	def __str__(self):
@@ -626,23 +817,28 @@ class TournamentResults:
 			"Tournament Results",
 			f"Players: {', '.join(map(str, self._players))}",
 			f"Matchups: {len(self._results)}",
+			f"Games: {self.total_games}",
+			(
+				f"Deterministic games: {self.deterministic_games} "
+				f"({self.deterministic_game_rate:.1%})"
+			),
 		]
 
 		for (red_player, blue_player), matchup in self._results.items():
 			results = matchup["results"]
 			red_wins = sum(
-				result == PlayerColor.RED
-				for result in results
+				result == PlayerColor.RED for result in results
 			)
 			blue_wins = sum(
-				result == PlayerColor.BLUE
-				for result in results
+				result == PlayerColor.BLUE for result in results
 			)
+			deterministic_games = sum(matchup["deterministic"])
 
 			lines.append(
 				f"  {red_player} vs {blue_player}: "
 				f"{len(results)} games "
-				f"(Red wins: {red_wins}, Blue wins: {blue_wins})"
+				f"(Red wins: {red_wins}, Blue wins: {blue_wins}, "
+				f"Deterministic: {deterministic_games})"
 			)
 
 		return "\n".join(lines)

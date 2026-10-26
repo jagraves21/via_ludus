@@ -1,13 +1,15 @@
 from abc import ABC, abstractmethod
 
-from .graphs import board_to_player_graph
-from .tactical_agent import TacticalAgent
+from ...agent import ScoringAgent
+
+from .graph_utils import board_to_player_graph
 
 
-class GraphAgent(TacticalAgent, ABC):
+class GraphAgent(ScoringAgent, ABC):
 	@property
+	@abstractmethod
 	def graph_builder(self):
-		return board_to_player_graph
+		pass
 
 	@abstractmethod
 	def graph_scores(self, graph):

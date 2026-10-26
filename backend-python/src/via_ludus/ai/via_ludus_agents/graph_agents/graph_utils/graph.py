@@ -1,0 +1,258 @@
+from itertools import combinations
+from math import exp
+
+import networkx as nx
+
+from .....board import (
+	Cell,
+	PlayerColor,
+	validate_player_color,
+)
+
+from .constants import (
+	Endpoint,
+	validate_endpoint,
+)
+
+
+def _edge_cells(board, color, endpoint):
+	validate_player_color(color)
+	validate_endpoint(endpoint)
+
+	if color == PlayerColor.RED:
+		row = (
+			0
+			if endpoint == Endpoint.SOURCE
+			else board.rows - 1
+		)
+
+		for col in range(board.cols):
+			yield row, col
+
+	elif color == PlayerColor.BLUE:
+		col = (
+			0
+			if endpoint == Endpoint.SOURCE
+			else board.cols - 1
+		)
+
+		for row in range(board.rows):
+			yield row, col
+
+
+def _edge_attributes(weight):
+	connection_strength = 1 / (1 + weight)
+
+	return {
+		"weight": weight,
+		"traversal_cost": weight,
+		"connection_strength": connection_strength,
+		"traversability": exp(-weight),
+		"resistance": weight + 1e-6,
+		"availability": connection_strength,
+		"penalty": weight,
+	}
+
+
+def board_to_player_graph(
+	board,
+	color,
+	directed=False,
+	remove_unreachable=False,
+):
+	validate_player_color(color)
+
+	player_graph = nx.DiGraph() if directed else nx.Graph()
+	player_graph.graph.update(
+		board=board,
+		color=color,
+		directed=directed,
+		type="player_graph",
+	)
+
+	cell = color.cell
+
+	# add empty cells and cells belonging to the player
+	for row, col in board.empty_cells | board.positions_of(cell):
+		player_graph.add_node(
+			(row, col),
+			cell=board.get(row, col),
+		)
+
+	# connect adjacent usable cells
+	for vertex in list(player_graph.nodes):
+		for neighbor in board.neighbors(*vertex):
+			if neighbor not in player_graph:
+				continue
+
+			# undirected edges are processed once
+			if not directed and vertex >= neighbor:
+				continue
+
+			vertex_cell = player_graph.nodes[vertex]["cell"]
+			neighbor_cell = player_graph.nodes[neighbor]["cell"]
+
+			if directed:
+				# entering a white cell costs 1
+				# entering an own cell costs 0
+				player_graph.add_edge(
+					vertex,
+					neighbor,
+					**_edge_attributes(
+						int(neighbor_cell == Cell.WHITE)
+					),
+				)
+				player_graph.add_edge(
+					neighbor,
+					vertex,
+					**_edge_attributes(
+						int(vertex_cell == Cell.WHITE)
+					),
+				)
+			else:
+				# an undirected connection costs 1 if either endpoint is white
+				weight = int(
+					vertex_cell == Cell.WHITE
+					or neighbor_cell == Cell.WHITE
+				)
+
+				player_graph.add_edge(
+					vertex,
+					neighbor,
+					**_edge_attributes(weight),
+				)
+
+	# add source and target endpoints
+	player_graph.add_node(Endpoint.SOURCE, cell=cell)
+	player_graph.add_node(Endpoint.TARGET, cell=cell)
+
+	for endpoint in (Endpoint.SOURCE, Endpoint.TARGET):
+		for row, col in _edge_cells(board, color, endpoint):
+			vertex = (row, col)
+
+			if vertex not in player_graph:
+				continue
+
+			player_graph.add_edge(
+				endpoint,
+				vertex,
+				**_edge_attributes(0),
+			)
+
+			if directed:
+				player_graph.add_edge(
+					vertex,
+					endpoint,
+					**_edge_attributes(0),
+				)
+
+	if remove_unreachable:
+		if directed:
+			reachable_nodes = (
+				nx.descendants(player_graph, Endpoint.SOURCE)
+				| nx.descendants(player_graph, Endpoint.TARGET)
+				| {Endpoint.SOURCE, Endpoint.TARGET}
+			)
+		else:
+			reachable_nodes = (
+				nx.node_connected_component(player_graph, Endpoint.SOURCE)
+				| nx.node_connected_component(player_graph, Endpoint.TARGET)
+			)
+
+		player_graph.remove_nodes_from(
+			set(player_graph.nodes) - reachable_nodes
+		)
+
+	return player_graph
+
+
+def board_to_move_graph(board, color, directed=False):
+	player_graph = board_to_player_graph(
+		board,
+		color,
+		directed=directed,
+		remove_unreachable=True,
+	)
+
+	shortest_paths = dict(
+		nx.all_pairs_dijkstra_path_length(
+			player_graph,
+			weight="weight",
+		)
+	)
+
+	white_nodes = {
+		node
+		for node, data in player_graph.nodes(data=True)
+		if data["cell"] == Cell.WHITE
+	}
+
+	move_graph = nx.DiGraph() if directed else nx.Graph()
+	move_graph.graph.update(
+		board=board,
+		color=color,
+		directed=directed,
+		type="move_graph",
+	)
+
+	# add source and target endpoints
+	for endpoint in (Endpoint.SOURCE, Endpoint.TARGET):
+		move_graph.add_node(
+			endpoint,
+			**player_graph.nodes[endpoint],
+		)
+
+	# add all white nodes
+	move_graph.add_nodes_from(
+		(
+			node,
+			player_graph.nodes[node],
+		)
+		for node in white_nodes
+	)
+
+	dist = 1 if directed else 2
+
+	# connect candidate moves separated by a path of
+	# weight 1 in the player graph
+	for u, v in combinations(white_nodes, 2):
+		distance_uv = shortest_paths[u].get(v)
+		distance_vu = shortest_paths[v].get(u)
+
+		if distance_uv == dist:
+			move_graph.add_edge(
+				u,
+				v,
+				**_edge_attributes(1),
+			)
+
+		if directed and distance_vu == dist:
+			move_graph.add_edge(
+				v,
+				u,
+				**_edge_attributes(1),
+			)
+
+	# connect endpoints to white nodes with a shortest path
+	# of weight 1 in the player graph
+	for endpoint in (Endpoint.SOURCE, Endpoint.TARGET):
+		for node in white_nodes:
+			if shortest_paths[endpoint].get(node) in (0, 1):
+				move_graph.add_edge(
+					endpoint,
+					node,
+					**_edge_attributes(1),
+				)
+
+			if (
+				directed
+				and shortest_paths[node].get(endpoint) in (0, 1)
+			):
+				move_graph.add_edge(
+					node,
+					endpoint,
+					**_edge_attributes(1),
+				)
+
+	return move_graph
+

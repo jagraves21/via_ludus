@@ -48,7 +48,7 @@ class SearchBoard(Board):
 			if player == PlayerColor.BLUE and col == self.cols - 1:
 				return True
 
-			for neighbor in self._neighbors(row, col):
+			for neighbor in self.neighbors(row, col):
 				if neighbor in visited:
 					continue
 
