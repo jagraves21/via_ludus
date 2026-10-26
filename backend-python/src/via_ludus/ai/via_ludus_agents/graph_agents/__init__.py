@@ -1,15 +1,45 @@
 from .graph_builder_mixins import (
 	UndirectedPlayerGraphMixin,
 	UndirectedPlayerGraphFilteredMixin,
+	UndirectedOpponentPlayerGraphMixin,
+	UndirectedOpponentPlayerGraphFilteredMixin,
+	UndirectedMoveGraphMixin,
+	UndirectedOpponentMoveGraphMixin,
 	DirectedPlayerGraphMixin,
 	DirectedPlayerGraphFilteredMixin,
-	UndirectedMoveGraphMixin,
+	DirectedOpponentPlayerGraphMixin,
+	DirectedOpponentPlayerGraphFilteredMixin,
 	DirectedMoveGraphMixin,
+	DirectedOpponentMoveGraphMixin,
+	UndirectedPlayerGraphPairMixin,
+	UndirectedPlayerGraphFilteredPairMixin,
+	UndirectedMoveGraphPairMixin,
+	DirectedPlayerGraphPairMixin,
+	DirectedPlayerGraphFilteredPairMixin,
+	DirectedMoveGraphPairMixin,
+	UndirectedOpponentPlayerGraphPairMixin,
+	UndirectedOpponentPlayerGraphFilteredPairMixin,
+	UndirectedOpponentMoveGraphPairMixin,
+	DirectedOpponentPlayerGraphPairMixin,
+	DirectedOpponentPlayerGraphFilteredPairMixin,
+	DirectedOpponentMoveGraphPairMixin,
 )
 
 from .graph_agent import GraphAgent
 
-from .undergrad import Undergrad
+from .distance_agent import (
+	OffensiveDistanceAgent,
+	DefensiveDistanceAgent,
+	CombinedDistanceAgent,
+	DISTANCE_AGENTS,
+)
+
+from .paths_agent import (
+	MyPathsAgent,
+	OpponentPathsAgent,
+	CombinedPathsAgent,
+	PATH_AGENTS,
+)
 
 from .vertex_cut_agent import (
 	VertexCutAgent,
@@ -57,7 +87,8 @@ from .edge_centrality_agent import (
 )
 
 GRAPH_AGENTS = {
-	Undergrad.get_agent_name(): Undergrad,
+	**DISTANCE_AGENTS,
+	**PATH_AGENTS,
 	**VERTEX_CUT_AGENTS,
 	**VERTEX_CENTRALITY_AGENTS,
 	**EDGE_CENTRALITY_AGENTS,
@@ -65,16 +96,41 @@ GRAPH_AGENTS = {
 
 
 __all__ = [
-	"GraphAgent",
-	
-	"Undergrad",
-
 	"UndirectedPlayerGraphMixin",
 	"UndirectedPlayerGraphFilteredMixin",
+	"UndirectedOpponentPlayerGraphMixin",
+	"UndirectedOpponentPlayerGraphFilteredMixin",
+	"UndirectedMoveGraphMixin",
+	"UndirectedOpponentMoveGraphMixin",
 	"DirectedPlayerGraphMixin",
 	"DirectedPlayerGraphFilteredMixin",
-	"UndirectedMoveGraphMixin",
+	"DirectedOpponentPlayerGraphMixin",
+	"DirectedOpponentPlayerGraphFilteredMixin",
 	"DirectedMoveGraphMixin",
+	"DirectedOpponentMoveGraphMixin",
+	"UndirectedPlayerGraphPairMixin",
+	"UndirectedPlayerGraphFilteredPairMixin",
+	"UndirectedMoveGraphPairMixin",
+	"DirectedPlayerGraphPairMixin",
+	"DirectedPlayerGraphFilteredPairMixin",
+	"DirectedMoveGraphPairMixin",
+	"UndirectedOpponentPlayerGraphPairMixin",
+	"UndirectedOpponentPlayerGraphFilteredPairMixin",
+	"UndirectedOpponentMoveGraphPairMixin",
+	"DirectedOpponentPlayerGraphPairMixin",
+	"DirectedOpponentPlayerGraphFilteredPairMixin",
+	"DirectedOpponentMoveGraphPairMixin",
+
+	"GraphAgent",
+	
+	"OffensiveDistanceAgent",
+	"DefensiveDistanceAgent",
+	"CombinedDistanceAgent",
+	"DISTANCE_AGENTS",
+	
+	"MyPathsAgent",
+	"OpponentPathsAgent",
+	"CombinedPathsAgent",
 
 	"VertexCutAgent",
 	"OffensiveCutAgent",
@@ -113,6 +169,7 @@ __all__ = [
 	"EdgeLoadCentralityAgent",
 	
 	"GRAPH_AGENTS",
+	"PATH_AGENTS",
 	"VERTEX_CUT_AGENTS",
 	"VERTEX_CENTRALITY_AGENTS",
 	"EDGE_CENTRALITY_AGENTS",

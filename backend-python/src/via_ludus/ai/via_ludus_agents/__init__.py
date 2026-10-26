@@ -4,7 +4,12 @@ from .shortest_path_agent import ShortestPathAgent
 
 from . import graph_agents
 from .graph_agents import (
-	Undergrad,
+	OffensiveDistanceAgent,
+	DefensiveDistanceAgent,
+	CombinedDistanceAgent,
+	MyPathsAgent,
+	OpponentPathsAgent,
+	CombinedPathsAgent,
 	OffensiveCutAgent,
 	DefensiveCutAgent,
 	OffensiveOverlapCutAgent,
@@ -36,6 +41,8 @@ from .graph_agents import (
 	EdgeCurrentFlowBetweennessCentralitySubsetAgent,
 	EdgeLoadCentralityAgent,
 	GRAPH_AGENTS,
+	DISTANCE_AGENTS,
+	PATH_AGENTS,
 	VERTEX_CUT_AGENTS,
 	VERTEX_CENTRALITY_AGENTS,
 	EDGE_CENTRALITY_AGENTS,
@@ -52,7 +59,12 @@ __all__ = [
 	
 	"ShortestPathAgent",
 	
-	"Undergrad",
+	"OffensiveDistanceAgent",
+	"DefensiveDistanceAgent",
+	"CombinedDistanceAgent",
+	"MyPathsAgent",
+	"OpponentPathsAgent",
+	"CombinedPathsAgent",
 	"OffensiveCutAgent",
 	"DefensiveCutAgent",
 	"OffensiveOverlapCutAgent",
@@ -84,6 +96,7 @@ __all__ = [
 	"EdgeCurrentFlowBetweennessCentralitySubsetAgent",
 	"EdgeLoadCentralityAgent",
 	"GRAPH_AGENTS",
+	"PATH_AGENTS",
 	"VERTEX_CUT_AGENTS",
 	"VERTEX_CENTRALITY_AGENTS",
 	"EDGE_CENTRALITY_AGENTS",
