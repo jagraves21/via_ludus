@@ -128,13 +128,14 @@ class EigenvectorNumpyCentralityAgent(
 		)
 
 
-# Phillip Bonacich
+# Leo Katz
 class KatzCentralityAgent(
 	RandomMaxSelectorMixin,
 	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
+	ABC, 
 ):
-	name = "Katz"
+	name = "Leo"
 
 	def vertex_centrality(self, graph):
 		return nx.katz_centrality(
@@ -149,7 +150,7 @@ class KatzNumpyCentralityAgent(
 	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
-	name = "Leo"
+	name = "Katz"
 
 	def vertex_centrality(self, graph):
 		return nx.katz_centrality_numpy(
@@ -352,6 +353,9 @@ class LaplacianCentralityAgent(
 VERTEX_CENTRALITY_AGENTS = {
 	agent.get_agent_name(): agent
 	for agent in VertexCentralityAgent.__subclasses__()
-	if not inspect.isabstract(agent)
+	if (
+		not inspect.isabstract(agent)
+		and agent.get_agent_name() not in ["Landau","Leo"]
+	)
 }
 
