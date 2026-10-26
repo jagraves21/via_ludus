@@ -1,8 +1,7 @@
 from contextlib import contextmanager
+from datetime import timedelta
 from functools import wraps
 from time import perf_counter
-from datetime import timedelta
-
 
 
 def time_it(func):
