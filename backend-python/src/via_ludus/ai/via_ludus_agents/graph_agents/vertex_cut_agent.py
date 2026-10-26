@@ -17,7 +17,7 @@ from .graph_agent import GraphAgent
 
 
 class VertexCutAgent(
-	DeterministicScoringMixin,
+	#DeterministicScoringMixin, # verify the cut code first
 	RandomMaxSelectorMixin,
 	GraphAgent,
 	ABC,
