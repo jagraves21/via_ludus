@@ -37,3 +37,19 @@ for name in _GRAPH_REGISTRIES:
 AI_AGENTS = AgentBase.get_agents()
 __all__.append("AI_AGENTS")
 
+agent_order = [
+	"Mark", "Menger", "Whitney", "Bellman-Moore", "Fleischer",
+	"Newman", "Moore", "Piraveenan", "Ford", "Bozzo", "Brandes",
+	"Bellman", "Ulrik", "Dijkstra", "Roy", "Fulkerson", "Daniel",
+	"Floyd", "Anthonisse", "Goh", "Kwang-Il", "Girvan", "Kermarrec",
+	"Zelen", "Stephenson", "Higham", "Marchiori", "Shaw", "Qi",
+	"Warshall", "Katz", "Rodriguez-Velazquez", "Estrada",
+	"Bonacich", "Random", "Bavelas"
+]
+
+AI_AGENTS = {
+	name: AI_AGENTS[name]
+	for name in agent_order
+	if name in AI_AGENTS
+}
+
