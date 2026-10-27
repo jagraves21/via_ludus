@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
-import inspect
 
 from ....player import (
 	DeterministicScoringMixin,
 	RandomMaxSelectorMixin,
 )
+
+from ..utils import get_concrete_subclasses
 
 from .graph_utils import minimum_endpoint_cut
 from .graph_builder_mixins import (
@@ -93,9 +94,5 @@ class DefensiveOverlapCutAgent(
 	name = "Whitney"
 
 
-VERTEX_CUT_AGENTS = {
-	agent.get_agent_name(): agent
-	for agent in VertexCutAgent.__subclasses__()
-	if not inspect.isabstract(agent)
-}
+VERTEX_CUT_AGENTS = get_concrete_subclasses(VertexCutAgent)
 

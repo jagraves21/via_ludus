@@ -1,4 +1,4 @@
-from tqdm.auto import tqdm
+from ..utils import tqdm
 
 from .game import Game
 from .results import TournamentResults

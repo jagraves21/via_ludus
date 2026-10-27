@@ -1,10 +1,11 @@
 from functools import wraps
 
-import matplotlib.pyplot as plt
+from ..utils import requires_extra
 
 
 def with_ax(func):
 	@wraps(func)
+	@requires_extra("matplotlib.pyplot", "visualization")
 	def wrapper(
 		*args,
 		ax=None,
@@ -14,6 +15,8 @@ def with_ax(func):
 		close=False,
 		**kwargs,
 	):
+		import matplotlib.pyplot as plt
+
 		created = ax is None
 
 		if created:

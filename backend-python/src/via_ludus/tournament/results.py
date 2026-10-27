@@ -4,13 +4,11 @@ import json
 from pathlib import Path
 import warnings
 
-from matplotlib import pyplot as plt
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 import numpy as np
-import pandas as pd
+
+from ..utils import requires_extra
 
 from ..visualizations import with_ax
-
 from ..board import (
 	PlayerColor,
 	validate_player_color,
@@ -222,6 +220,16 @@ class TournamentResults:
 				"blue_deterministic_games": blue_deterministic,
 			})
 
+		return sorted(
+			data,
+			key=lambda row: row["total_win_rate"],
+			reverse=True,
+		)
+
+	@requires_extra("pandas", "dataframe")
+	def summary_df(self):
+		import pandas as pd
+
 		columns = [
 			"player",
 			"total_games",
@@ -239,11 +247,7 @@ class TournamentResults:
 			"blue_deterministic_games",
 		]
 
-		return (
-			pd.DataFrame(data, columns=columns)
-			.sort_values("total_win_rate", ascending=False)
-			.reset_index(drop=True)
-		)
+		return pd.DataFrame(self.summary(), columns=columns)
 
 	def head_to_head_summary(self):
 		data = []
@@ -292,7 +296,7 @@ class TournamentResults:
 					if red_moves else float("nan")
 				),
 				"red_std_moves_to_win": (
-					pd.Series(red_moves).std()
+					float(np.std(red_moves, ddof=1))
 					if len(red_moves) > 1 else float("nan")
 				),
 				"blue_wins": blue_wins,
@@ -305,10 +309,27 @@ class TournamentResults:
 					if blue_moves else float("nan")
 				),
 				"blue_std_moves_to_win": (
-					pd.Series(blue_moves).std()
+					float(np.std(blue_moves, ddof=1))
 					if len(blue_moves) > 1 else float("nan")
 				),
 			})
+
+		player_order = {
+			player: index
+			for index, player in enumerate(self._players)
+		}
+
+		return sorted(
+			data,
+			key=lambda row: (
+				player_order[row["red_player"]],
+				player_order[row["blue_player"]],
+			),
+		)
+
+	@requires_extra("pandas", "dataframe")
+	def head_to_head_summary_df(self):
+		import pandas as pd
 
 		columns = [
 			"red_player",
@@ -326,7 +347,10 @@ class TournamentResults:
 			"blue_std_moves_to_win",
 		]
 
-		df = pd.DataFrame(data, columns=columns)
+		df = pd.DataFrame(
+			self.head_to_head_summary(),
+			columns=columns,
+		)
 
 		df["red_player"] = pd.Categorical(
 			df["red_player"],
@@ -343,87 +367,178 @@ class TournamentResults:
 			["red_player", "blue_player"],
 		).reset_index(drop=True)
 
-	def _build_matrix(self, matchup_df, index, columns, column):
-		return matchup_df.pivot(
-			index=index,
-			columns=columns,
-			values=column,
+	def _build_matrix(self, matchup_data, index, columns, column):
+		matrix = {
+			row: {
+				col: float("nan")
+				for col in self._players
+			}
+			for row in self._players
+		}
+
+		for matchup in matchup_data:
+			row = matchup[index]
+			col = matchup[columns]
+			matrix[row][col] = matchup[column]
+
+		return matrix
+
+	@requires_extra("pandas", "dataframe")
+	def _matrix_to_df(self, matrix):
+		import pandas as pd
+
+		return pd.DataFrame.from_dict(
+			matrix,
+			orient="index",
+		).reindex(
+			index=self._players,
+			columns=self._players,
 		)
 
 	def red_win_matrix(self, rates=True):
-		matchup_df = self.head_to_head_summary()
+		matchup_data = self.head_to_head_summary()
 		column = "red_win_rate" if rates else "red_wins"
 
 		return self._build_matrix(
-			matchup_df,
+			matchup_data,
 			index="red_player",
 			columns="blue_player",
 			column=column,
 		)
 
+	@requires_extra("pandas", "dataframe")
+	def red_win_matrix_df(self, rates=True):
+		return self._matrix_to_df(
+			self.red_win_matrix(rates=rates)
+		)
+
 	def blue_win_matrix(self, rates=True):
-		matchup_df = self.head_to_head_summary()
+		matchup_data = self.head_to_head_summary()
 		column = "blue_win_rate" if rates else "blue_wins"
 
 		return self._build_matrix(
-			matchup_df,
+			matchup_data,
 			index="blue_player",
 			columns="red_player",
 			column=column,
 		)
 
+	@requires_extra("pandas", "dataframe")
+	def blue_win_matrix_df(self, rates=True):
+		return self._matrix_to_df(
+			self.blue_win_matrix(rates=rates)
+		)
+
 	def win_matrix(self, rates=True):
-		_, _, win_matrix_df = self.win_matrices(rates=rates)
-		return win_matrix_df
+		_, _, matrix = self.win_matrices(rates=rates)
+		return matrix
+
+	@requires_extra("pandas", "dataframe")
+	def win_matrix_df(self, rates=True):
+		return self._matrix_to_df(
+			self.win_matrix(rates=rates)
+		)
 
 	def win_matrices(self, rates=True):
-		matchup_df = self.head_to_head_summary()
+		matchup_data = self.head_to_head_summary()
 
-		red_matrix_df = self._build_matrix(
-			matchup_df,
+		red_matrix = self._build_matrix(
+			matchup_data,
 			index="red_player",
 			columns="blue_player",
 			column="red_wins",
 		)
-		blue_matrix_df = self._build_matrix(
-			matchup_df,
+		blue_matrix = self._build_matrix(
+			matchup_data,
 			index="blue_player",
 			columns="red_player",
 			column="blue_wins",
 		)
 
-		win_matrix_df = red_matrix_df.add(
-			blue_matrix_df,
-			fill_value=0,
-		)
+		win_matrix = {
+			row: {}
+			for row in self._players
+		}
+
+		for row in self._players:
+			for col in self._players:
+				red_value = red_matrix[row][col]
+				blue_value = blue_matrix[row][col]
+
+				if (
+					np.isnan(red_value)
+					and np.isnan(blue_value)
+				):
+					win_matrix[row][col] = float("nan")
+				else:
+					win_matrix[row][col] = (
+						(0 if np.isnan(red_value) else red_value)
+						+ (0 if np.isnan(blue_value) else blue_value)
+					)
 
 		if rates:
-			num_games_df = self._build_matrix(
-				matchup_df,
+			num_games_matrix = self._build_matrix(
+				matchup_data,
 				index="red_player",
 				columns="blue_player",
 				column="num_games",
 			)
-			total_games_df = num_games_df.add(
-				num_games_df.T,
-				fill_value=0,
-			)
-			win_matrix_df = win_matrix_df / total_games_df
 
-			red_matrix_df = self._build_matrix(
-				matchup_df,
+			rate_matrix = {
+				row: {}
+				for row in self._players
+			}
+
+			for row in self._players:
+				for col in self._players:
+					forward = num_games_matrix[row][col]
+					reverse = num_games_matrix[col][row]
+
+					if np.isnan(forward) and np.isnan(reverse):
+						total_games = float("nan")
+					else:
+						total_games = (
+							(0 if np.isnan(forward) else forward)
+							+ (0 if np.isnan(reverse) else reverse)
+						)
+
+					wins = win_matrix[row][col]
+
+					if np.isnan(wins) or np.isnan(total_games):
+						rate_matrix[row][col] = float("nan")
+					elif total_games == 0:
+						rate_matrix[row][col] = float("nan")
+					else:
+						rate_matrix[row][col] = wins / total_games
+
+			win_matrix = rate_matrix
+
+			red_matrix = self._build_matrix(
+				matchup_data,
 				index="red_player",
 				columns="blue_player",
 				column="red_win_rate",
 			)
-			blue_matrix_df = self._build_matrix(
-				matchup_df,
+			blue_matrix = self._build_matrix(
+				matchup_data,
 				index="blue_player",
 				columns="red_player",
 				column="blue_win_rate",
 			)
 
-		return red_matrix_df, blue_matrix_df, win_matrix_df
+		return red_matrix, blue_matrix, win_matrix
+
+	@requires_extra("pandas", "dataframe")
+	def win_matrices_df(self, rates=True):
+		red_matrix, blue_matrix, win_matrix = self.win_matrices(
+			rates=rates,
+		)
+
+		return (
+			self._matrix_to_df(red_matrix),
+			self._matrix_to_df(blue_matrix),
+			self._matrix_to_df(win_matrix),
+		)
 
 	def elo_ratings(self, initial_rating=1500, k_factor=32, seed=42):
 		if k_factor <= 0:
@@ -485,20 +600,46 @@ class TournamentResults:
 				games_played[red_player] += 1
 				games_played[blue_player] += 1
 
-		return (
-			pd.DataFrame([
-				{
-					"player": player,
-					"elo": ratings[player],
-					"games_played": games_played[player],
-				}
-				for player in self._players
-			])
-			.sort_values("elo", ascending=False)
-			.reset_index(drop=True)
+		data = [
+			{
+				"player": player,
+				"elo": ratings[player],
+				"games_played": games_played[player],
+			}
+			for player in self._players
+		]
+
+		return sorted(
+			data,
+			key=lambda row: row["elo"],
+			reverse=True,
 		)
 
-	@with_ax
+	@requires_extra("pandas", "dataframe")
+	def elo_ratings_df(
+		self,
+		initial_rating=1500,
+		k_factor=32,
+		seed=42,
+	):
+		import pandas as pd
+
+		return pd.DataFrame(
+			self.elo_ratings(
+				initial_rating=initial_rating,
+				k_factor=k_factor,
+				seed=seed,
+			),
+			columns=["player", "elo", "games_played"],
+		)
+
+	def _matrix_to_array(self, matrix):
+		return np.array([
+			[matrix[row][col] for col in self._players]
+			for row in self._players
+		], dtype=float)
+
+	@requires_extra("matplotlib", "visualization")
 	def _plot_win_rate_matrix(
 		self,
 		matrix,
@@ -510,6 +651,9 @@ class TournamentResults:
 		cmap=None,
 		ax=None,
 	):
+		import matplotlib.pyplot as plt
+		from mpl_toolkits.axes_grid1 import make_axes_locatable
+
 		colormap = plt.get_cmap(cmap)
 
 		image = ax.imshow(
@@ -533,7 +677,7 @@ class TournamentResults:
 			for col in range(matrix.shape[1]):
 				value = matrix[row, col]
 
-				if pd.isna(value):
+				if np.isnan(value):
 					continue
 
 				red, green, blue, _ = colormap(value)
@@ -564,14 +708,15 @@ class TournamentResults:
 		colorbar.set_ticks([0.0, 0.25, 0.5, 0.75, 1.0])
 		colorbar.set_ticklabels(["0%", "25%", "50%", "75%", "100%"])
 
+	@requires_extra("matplotlib", "visualization")
 	@with_ax
 	def plot_red_win_matrix(self, cmap="Reds", ax=None):
 		matrix = self.red_win_matrix(rates=True)
 
 		return self._plot_win_rate_matrix(
-			matrix.to_numpy(dtype=float),
-			row_labels=matrix.index,
-			column_labels=matrix.columns,
+			self._matrix_to_array(matrix),
+			row_labels=self._players,
+			column_labels=self._players,
 			title="Red Win Rate",
 			xlabel="Blue Player",
 			ylabel="Red Player",
@@ -579,14 +724,15 @@ class TournamentResults:
 			cmap=cmap,
 		)
 
+	@requires_extra("matplotlib", "visualization")
 	@with_ax
 	def plot_blue_win_matrix(self, cmap="Blues", ax=None):
 		matrix = self.blue_win_matrix(rates=True)
 
 		return self._plot_win_rate_matrix(
-			matrix.to_numpy(dtype=float),
-			row_labels=matrix.index,
-			column_labels=matrix.columns,
+			self._matrix_to_array(matrix),
+			row_labels=self._players,
+			column_labels=self._players,
 			title="Blue Win Rate",
 			xlabel="Red Player",
 			ylabel="Blue Player",
@@ -594,14 +740,15 @@ class TournamentResults:
 			cmap=cmap,
 		)
 
+	@requires_extra("matplotlib", "visualization")
 	@with_ax
 	def plot_win_matrix(self, cmap="RdYlGn", ax=None):
 		matrix = self.win_matrix(rates=True)
 
 		return self._plot_win_rate_matrix(
-			matrix.to_numpy(dtype=float),
-			row_labels=matrix.index,
-			column_labels=matrix.columns,
+			self._matrix_to_array(matrix),
+			row_labels=self._players,
+			column_labels=self._players,
 			title="Overall Win Rate",
 			xlabel="Opponent",
 			ylabel="Player",

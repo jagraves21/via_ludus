@@ -8,3 +8,4 @@ def validate_starting_color(starting_color):
 	)
 	validate_player(starting_color)
 	return starting_color
+

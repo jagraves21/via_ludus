@@ -1,3 +1,21 @@
+from importlib import import_module
+
+from ....utils.optional_dependencies import OptionalDependencyError
+
+
+try:
+	import_module("networkx")
+except ModuleNotFoundError as exc:
+	if exc.name != "networkx":
+		raise
+
+	raise OptionalDependencyError(
+		"The graph_agents package requires NetworkX. "
+		'Install it with `pip install -e ".[graph-agents]"` '
+		"from the repository root."
+	) from exc
+
+
 from .graph_builder_mixins import (
 	UndirectedPlayerGraphMixin,
 	UndirectedPlayerGraphFilteredMixin,
