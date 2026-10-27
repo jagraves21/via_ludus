@@ -1,4 +1,6 @@
 from collections import defaultdict
+import copy
+import gzip
 import itertools
 import json
 from pathlib import Path
@@ -814,19 +816,30 @@ class TournamentResults:
 
 		return new_tournament
 
-	def save(self, filename):
-		filename = Path(filename)
+	def _to_json(self):
+		return {
+			"players": self._players,
+			"matchups": [
+				{
+					"red_player": red_player,
+					"blue_player": blue_player,
+					"results": [
+						result.value
+						for result in matchup["results"]
+					],
+					"moves": matchup["moves"],
+					"deterministic": matchup["deterministic"],
+				}
+				for (red_player, blue_player), matchup
+				in self._results.items()
+			],
+		}
 
-		with filename.open("w", encoding="utf-8") as fp:
-			json.dump(self._results_to_json(), fp, indent=4)
+	def to_json(self):
+		return copy.deepcopy(self._to_json())
 
 	@classmethod
-	def load(cls, filename):
-		filename = Path(filename)
-
-		with filename.open("r", encoding="utf-8") as fp:
-			data = json.load(fp)
-
+	def from_json(cls, data):
 		instance = cls(data["players"])
 		reported_players = set(instance.players)
 		found_players = set()
@@ -866,24 +879,42 @@ class TournamentResults:
 
 		return instance
 
-	def _results_to_json(self):
-		return {
-			"players": self._players,
-			"matchups": [
-				{
-					"red_player": red_player,
-					"blue_player": blue_player,
-					"results": [
-						result.value
-						for result in matchup["results"]
-					],
-					"moves": matchup["moves"],
-					"deterministic": matchup["deterministic"],
-				}
-				for (red_player, blue_player), matchup
-				in self._results.items()
-			],
-		}
+	def _save(self, fp):
+		json.dump(self._to_json(), fp, indent=4)
+
+	def save(self, filename, compressed=None):
+		if hasattr(filename, "write"):
+			self._save(filename)
+			return
+
+		filename = Path(filename)
+
+		if compressed is None:
+			compressed = filename.suffix == ".gz"
+
+		opener = gzip.open if compressed else open
+
+		with opener(filename, "wt", encoding="utf-8") as fp:
+			self._save(fp)
+
+	@classmethod
+	def _load(cls, fp):
+		return cls.from_json(json.load(fp))
+
+	@classmethod
+	def load(cls, filename, compressed=None):
+		if hasattr(filename, "read"):
+			return cls._load(filename)
+
+		filename = Path(filename)
+
+		if compressed is None:
+			compressed = filename.suffix == ".gz"
+
+		opener = gzip.open if compressed else open
+
+		with opener(filename, "rt", encoding="utf-8") as fp:
+			return cls._load(fp)
 
 	def _validate_players(self, *players):
 		for player in players:
