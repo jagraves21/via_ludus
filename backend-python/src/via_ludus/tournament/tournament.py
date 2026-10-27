@@ -2,7 +2,7 @@ import warnings
 import itertools
 from pathlib import Path
 
-from tqdm.auto import tqdm
+from ..utils import tqdm
 
 from ..board import (
 	PlayerColor,
