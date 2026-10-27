@@ -15,10 +15,6 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test = [
-	"pytest",
-]
-
 progress = [
 	"tqdm",
 ]
@@ -47,6 +43,11 @@ webservice = [
 	"fastapi",
 	"uvicorn",
 ]
+
+test = [
+	"pytest",
+]
+
 
 [tool.setuptools.packages.find]
 where = ["src"]
