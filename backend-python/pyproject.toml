@@ -1,4 +1,6 @@
 # pip install -e ".[test,notebooks,webservice]"
+# pip install -e ".[graph-agents]"
+# pip install -e ".[progress,visualization,dataframe]"
 
 [build-system]
 requires = ["setuptools"]
@@ -10,9 +12,6 @@ version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
 	"numpy",
-	"scipy",
-	"networkx",
-	"fastapi",
 ]
 
 [project.optional-dependencies]
@@ -20,14 +19,32 @@ test = [
 	"pytest",
 ]
 
+progress = [
+	"tqdm",
+]
+
+visualization = [
+	"matplotlib",
+]
+
+dataframe = [
+	"pandas",
+]
+
+graph-agents = [
+	"networkx",
+	"scipy",
+]
+
 notebooks = [
+	"jupyter",
 	"tqdm",
 	"matplotlib",
 	"pandas",
-	"jupyter",
 ]
 
 webservice = [
+	"fastapi",
 	"uvicorn",
 ]
 
