@@ -138,6 +138,9 @@ class KatzCentralityAgent(
 ):
 	name = "Leo"
 
+	# sometimes this does not converge and raise an exception
+	# make abstract so it does not get registered
+	@abstractmethod
 	def vertex_centrality(self, graph):
 		return nx.katz_centrality(
 			graph,
