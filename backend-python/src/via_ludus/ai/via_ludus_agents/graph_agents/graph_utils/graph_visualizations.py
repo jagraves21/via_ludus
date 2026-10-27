@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import networkx as nx
 
 from .....visualizations import with_ax
@@ -33,8 +32,8 @@ def _edge_label_position(source_pos, target_pos, rad):
 	mid_x = (x1 + x2) / 2
 	mid_y = (y1 + y2) / 2
 
-	# Offset the label away from the straight line,
-	# onto the outside of the curved edge.
+	# offset the label away from the straight line
+	# onto the outside of the curved edge
 	offset = rad * length * 0.8
 
 	return (
@@ -61,11 +60,11 @@ def plot_graph(
 		if isinstance(node, tuple) and len(node) == 2
 	]
 
-	# Pin grid vertices to their board locations.
+	# pin grid vertices to their board locations
 	for row, col in grid_nodes:
 		pos[(row, col)] = (col, row)
 
-	# Position source and target endpoints.
+	# position source and target endpoints
 	if color == PlayerColor.RED:
 		pos[Endpoint.SOURCE] = (
 			(cols - 1) / 2,
@@ -86,7 +85,7 @@ def plot_graph(
 			(rows - 1) / 2,
 		)
 
-	# Draw edges and label them with weight only.
+	# draw edges and label them with weight only
 	if graph.is_directed():
 		for source, target in graph.edges:
 			has_reverse_edge = graph.has_edge(target, source)
@@ -156,7 +155,7 @@ def plot_graph(
 			},
 		)
 
-	# Color grid-node borders according to cell ownership.
+	# color grid-node borders according to cell ownership
 	node_edgecolors = [
 		"red"
 		if graph.nodes[node]["cell"] == PlayerColor.RED.cell
@@ -176,7 +175,7 @@ def plot_graph(
 		node_size=500,
 	)
 
-	# Draw source and target endpoints.
+	# draw source and target endpoints
 	endpoint_nodes = [
 		node
 		for node in (Endpoint.SOURCE, Endpoint.TARGET)

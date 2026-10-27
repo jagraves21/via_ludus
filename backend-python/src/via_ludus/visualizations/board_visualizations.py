@@ -1,11 +1,11 @@
-from matplotlib import pyplot as plt
-
 from ..board.base import validate_board
 
 from .plotting import with_ax
 
 
 def _draw_board(board, ax, cell_colors=None):
+	import matplotlib.pyplot as plt
+
 	validate_board(board)
 
 	if cell_colors is None:

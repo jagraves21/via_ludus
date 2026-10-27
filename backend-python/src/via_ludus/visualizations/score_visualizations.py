@@ -1,7 +1,3 @@
-from matplotlib import colormaps
-from matplotlib.colors import Normalize, to_rgb, to_hex
-from matplotlib.cm import ScalarMappable
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 import numpy as np
 
 from ..board import (
@@ -15,6 +11,8 @@ from .plotting import with_ax
 
 
 def _blend_with_black(color, a=0.75):
+	from matplotlib.colors import to_rgb, to_hex
+
 	rgb = np.array(to_rgb(color))
 	return to_hex((1 - a) * rgb)
 
@@ -34,6 +32,11 @@ def _plot_agent_scores(
 	cmap,
 	ax,
 ):
+	from matplotlib import colormaps
+	from matplotlib.colors import Normalize
+	from matplotlib.cm import ScalarMappable
+	from mpl_toolkits.axes_grid1 import make_axes_locatable
+
 	validate_player_color(color)
 
 	scores = agent.score_moves(board, color)

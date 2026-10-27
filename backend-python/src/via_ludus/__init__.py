@@ -31,17 +31,12 @@ from .player import (
 )
 
 from . import validation
-
 from . import tournament
 
 from . import ai
 from .ai import (
 	AI_AGENTS,
 	VIA_LUDUS_AGENTS,
-	GRAPH_AGENTS,
-	VERTEX_CUT_AGENTS,
-	VERTEX_CENTRALITY_AGENTS,
-	EDGE_CENTRALITY_AGENTS,
 )
 
 from . import utils
@@ -76,9 +71,20 @@ __all__ = [
 
 	"AI_AGENTS",
 	"VIA_LUDUS_AGENTS",
+]
+
+
+_GRAPH_REGISTRIES = (
 	"GRAPH_AGENTS",
+	"DISTANCE_AGENTS",
+	"PATH_AGENTS",
 	"VERTEX_CUT_AGENTS",
 	"VERTEX_CENTRALITY_AGENTS",
 	"EDGE_CENTRALITY_AGENTS",
-]
+)
+
+for name in _GRAPH_REGISTRIES:
+	if hasattr(ai, name):
+		globals()[name] = getattr(ai, name)
+		__all__.append(name)
 
