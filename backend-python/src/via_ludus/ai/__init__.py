@@ -1,4 +1,3 @@
-
 from .agent import (
 	AgentBase,
 	Agent,
@@ -44,7 +43,7 @@ agent_order = [
 	"Floyd", "Anthonisse", "Goh", "Kwang-Il", "Girvan", "Kermarrec",
 	"Zelen", "Stephenson", "Higham", "Marchiori", "Shaw", "Qi",
 	"Warshall", "Katz", "Rodriguez-Velazquez", "Estrada",
-	"Bonacich", "Random", "Bavelas"
+	"Bonacich", "Bavelas", "Random",
 ]
 
 AI_AGENTS = {
