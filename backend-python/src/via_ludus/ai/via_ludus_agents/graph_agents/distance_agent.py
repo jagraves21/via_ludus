@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-import inspect
 
 import networkx as nx
 
@@ -8,6 +7,8 @@ from ....player import (
 	DeterministicScoringMixin,
 	RandomMinSelectorMixin,
 )
+
+from ..utils import get_concrete_subclasses
 
 from .graph_utils import (
 	Endpoint,
@@ -115,9 +116,5 @@ class CombinedDistanceAgent(
 	name = "Roy"
 
 
-DISTANCE_AGENTS = {
-	agent.get_agent_name(): agent
-	for agent in DistanceAgent.__subclasses__()
-	if not inspect.isabstract(agent)
-}
+DISTANCE_AGENTS = get_concrete_subclasses(DistanceAgent)
 

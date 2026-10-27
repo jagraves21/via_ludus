@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-import inspect
 
 import networkx as nx
 
@@ -7,6 +6,9 @@ from ....player import (
 	MaxSelectorMixin,
 	MinSelectorMixin,
 )
+
+from ..utils import get_concrete_subclasses
+
 from .graph_agent import GraphAgent
 from .graph_builder_mixins import (
 	UndirectedMoveGraphMixin,
@@ -122,9 +124,5 @@ class EdgeLoadCentralityAgent(
 		return nx.edge_load_centrality(graph)
 
 
-EDGE_CENTRALITY_AGENTS = {
-	agent.get_agent_name(): agent
-	for agent in EdgeCentralityAgent.__subclasses__()
-	if not inspect.isabstract(agent)
-}
+EDGE_CENTRALITY_AGENTS = get_concrete_subclasses(EdgeCentralityAgent)
 

@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-import inspect
 
 import networkx as nx
 
@@ -7,6 +6,8 @@ from ....player import (
 	RandomMaxSelectorMixin,
 	RandomMinSelectorMixin,
 )
+
+from ..utils import get_concrete_subclasses
 
 from .graph_builder_mixins import (
 	UndirectedPlayerGraphMixin,
@@ -350,12 +351,5 @@ class LaplacianCentralityAgent(
 		)
 
 
-VERTEX_CENTRALITY_AGENTS = {
-	agent.get_agent_name(): agent
-	for agent in VertexCentralityAgent.__subclasses__()
-	if (
-		not inspect.isabstract(agent)
-		and agent.get_agent_name() not in ["Landau","Leo"]
-	)
-}
+VERTEX_CENTRALITY_AGENTS = get_concrete_subclasses(VertexCentralityAgent)
 

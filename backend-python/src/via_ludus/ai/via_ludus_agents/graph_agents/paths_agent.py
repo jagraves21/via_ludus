@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from collections import Counter
-import inspect
 
 import networkx as nx
 
@@ -9,6 +8,8 @@ from ....player import (
 	DeterministicScoringMixin,
 	RandomMaxSelectorMixin,
 )
+
+from ..utils import get_concrete_subclasses
 
 from .graph_utils import Endpoint
 from .graph_builder_mixins import (
@@ -152,9 +153,5 @@ class CombinedPathsAgent(
 	name = "Bellman-Moore"
 
 
-PATH_AGENTS = {
-	agent.get_agent_name(): agent
-	for agent in PathsAgent.__subclasses__()
-	if not inspect.isabstract(agent)
-}
+PATH_AGENTS = get_concrete_subclasses(PathsAgent)
 
