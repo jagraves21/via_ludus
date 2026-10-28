@@ -3,8 +3,8 @@ from abc import ABC, abstractmethod
 import networkx as nx
 
 from ....player import (
-	MaxSelectorMixin,
-	MinSelectorMixin,
+	RandomMaxSelectorMixin,
+	RandomMinSelectorMixin,
 )
 
 from ..utils import get_concrete_subclasses
@@ -45,7 +45,7 @@ class EdgeCentralityAgent(GraphAgent, ABC):
 # Michelle Girvan
 class EdgeBetweennessCentralityAgent(
 	UndirectedMoveGraphMixin,
-	MaxSelectorMixin,
+	RandomMaxSelectorMixin,
 	EdgeCentralityAgent,
 ):
 	name = "Girvan"
@@ -60,7 +60,7 @@ class EdgeBetweennessCentralityAgent(
 # Ulrik Brandes
 class EdgeBetweennessCentralitySubsetAgent(
 	UndirectedMoveGraphMixin,
-	MaxSelectorMixin,
+	RandomMaxSelectorMixin,
 	EdgeCentralityAgent,
 ):
 	name = "Ulrik"
@@ -77,7 +77,7 @@ class EdgeBetweennessCentralitySubsetAgent(
 # Daniel Fleischer
 class EdgeCurrentFlowBetweennessCentralityAgent(
 	UndirectedMoveGraphMixin,
-	MaxSelectorMixin,
+	RandomMaxSelectorMixin,
 	EdgeCentralityAgent,
 ):
 	name = "Daniel"
@@ -95,7 +95,7 @@ class EdgeCurrentFlowBetweennessCentralityAgent(
 # Mark E. J. Newman
 class EdgeCurrentFlowBetweennessCentralitySubsetAgent(
 	UndirectedMoveGraphMixin,
-	MaxSelectorMixin,
+	RandomMaxSelectorMixin,
 	EdgeCentralityAgent,
 ):
 	name = "Mark"
@@ -115,7 +115,7 @@ class EdgeCurrentFlowBetweennessCentralitySubsetAgent(
 # Kwang-Il Goh
 class EdgeLoadCentralityAgent(
 	UndirectedMoveGraphMixin,
-	MaxSelectorMixin,
+	RandomMaxSelectorMixin,
 	EdgeCentralityAgent,
 ):
 	name = "Kwang-Il"
