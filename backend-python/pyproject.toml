@@ -1,7 +1,3 @@
-# pip install -e ".[test,notebooks,webservice]"
-# pip install -e ".[graph-agents]"
-# pip install -e ".[progress,visualization,dataframe]"
-
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
@@ -46,9 +42,14 @@ webservice = [
 
 test = [
 	"pytest",
+	"pytest-cov",
 ]
-
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"
 
