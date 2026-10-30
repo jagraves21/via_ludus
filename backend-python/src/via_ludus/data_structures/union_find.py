@@ -1,3 +1,5 @@
+from itertools import combinations
+
 class UnionFind:
 	def __init__(self, elements=()):
 		self._parent = {}
@@ -40,6 +42,21 @@ class UnionFind:
 
 	def connected(self, first, second):
 		return self.find(first) == self.find(second)
+
+	def equivalent(self, other):
+		if not isinstance(other, UnionFind):
+			return NotImplemented
+
+		if self._parent.keys() != other._parent.keys():
+			return False
+
+		elements = list(self._parent)
+
+		return all(
+			self.connected(first, second)
+			== other.connected(first, second)
+			for first, second in combinations(self._parent, 2)
+		)
 
 	def copy(self):
 		union_find = self.__class__.__new__(self.__class__)
