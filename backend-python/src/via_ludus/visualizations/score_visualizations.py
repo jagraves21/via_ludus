@@ -2,9 +2,11 @@ import numpy as np
 
 from ..board import (
 	Cell,
+	validate_board,
 	validate_player_color,
 )
 from ..player import validate_scoring_player
+from ..validation import validate_string
 
 from .board_visualizations import _draw_board
 from .plotting import with_ax
@@ -30,6 +32,7 @@ def _plot_agent_scores(
 	agent,
 	color,
 	cmap,
+	title,
 	ax,
 ):
 	from matplotlib import colormaps
@@ -88,11 +91,8 @@ def _plot_agent_scores(
 
 	_draw_board(board, ax, cell_colors=position_colors)
 
-	ax.set_title(
-		f"{agent.get_agent_name()}\n"
-		f"Player: {agent.color.name} | "
-		f"Evaluating: {color.name}"
-	)
+	if title is not None:
+		ax.set_title(title)
 
 	if finite_scores:
 		mappable = ScalarMappable(
@@ -125,8 +125,22 @@ def plot_agent_scores(
 	return_fig=False,
 	show=True,
 	close=False,
+	name=None,
 ):
+	validate_board(board)
 	validate_scoring_player(agent)
+	validate_player_color(color)
+
+	if name is not None:
+		validate_string(name, "name")
+
+	title = (
+		f"Player: {agent.color.name} | "
+		f"Evaluating: {color.name}"
+	)
+
+	if name:
+		title = f"{name}\n{title}"
 
 	if figsize is None and ax is None:
 		figsize = _board_figsize(board)
@@ -136,6 +150,7 @@ def plot_agent_scores(
 		agent,
 		color,
 		cmap=cmap,
+		title=title,
 		ax=ax,
 		figsize=figsize or (2, 2),
 		return_fig=return_fig,

@@ -1,4 +1,5 @@
 from ..utils import tqdm
+from ..validation import validate_positive_integer
 
 from .game import Game
 from .results import TournamentResults
@@ -14,6 +15,8 @@ def play_matchup(
 	red_name=None,
 	blue_name=None,
 ):
+	validate_positive_integer(num_games, "num_games")
+
 	game = Game(
 		red_player=red_player,
 		blue_player=blue_player,
@@ -100,6 +103,8 @@ def play_head_to_head(
 	player_a_name=None,
 	player_b_name=None,
 ):
+	validate_positive_integer(num_games_per_color, "num_games_per_color")
+
 	player_a_name = (
 		player_a.__name__ if player_a_name is None else player_a_name
 	)
@@ -109,11 +114,16 @@ def play_head_to_head(
 
 	results = TournamentResults([player_a_name, player_b_name])
 
+	# A player facing a copy of itself has a single matchup: playing it in
+	# both orientations would just repeat the same games.
+	same_player = player_a_name == player_b_name
+	num_matchups = 1 if same_player else 2
+
 	owns_progress = progress is None
 
 	if owns_progress:
 		progress = tqdm(
-			total=2 * num_games_per_color,
+			total=num_matchups * num_games_per_color,
 			desc="Head-to-head",
 			unit="game",
 			leave=False,
@@ -133,18 +143,19 @@ def play_head_to_head(
 			)
 		)
 
-		results.add_tournament_data(
-			play_matchup(
-				red_player=player_b,
-				blue_player=player_a,
-				num_games=num_games_per_color,
-				board=board,
-				starting_color=starting_color,
-				progress=progress,
-				red_name=player_b_name,
-				blue_name=player_a_name,
+		if not same_player:
+			results.add_tournament_data(
+				play_matchup(
+					red_player=player_b,
+					blue_player=player_a,
+					num_games=num_games_per_color,
+					board=board,
+					starting_color=starting_color,
+					progress=progress,
+					red_name=player_b_name,
+					blue_name=player_a_name,
+				)
 			)
-		)
 	finally:
 		if owns_progress:
 			progress.close()

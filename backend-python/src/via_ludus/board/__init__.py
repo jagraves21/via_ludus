@@ -16,7 +16,9 @@ from .colors import (
 from .base import (
 	Board,
 	is_board,
+	is_board_serialization,
 	validate_board,
+	validate_board_serialization,
 )
 from .search import SearchBoard
 from .union_find import UnionFindBoard
@@ -46,7 +48,9 @@ __all__ = [
 
 	"Board",
 	"is_board",
+	"is_board_serialization",
 	"validate_board",
+	"validate_board_serialization",
 	"resolve_board",
 
 	"SearchBoard",
