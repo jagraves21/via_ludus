@@ -49,6 +49,8 @@ def plot_board(
 	show=True,
 	close=False,
 ):
+	validate_board(board)
+
 	if figsize is None and ax is None:
 		size = max(board.rows, board.cols)
 		side = max(2, min(12, size * 0.2))

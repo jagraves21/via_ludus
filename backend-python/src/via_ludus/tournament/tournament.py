@@ -13,10 +13,12 @@ from ..validation import (
 	resolve_starting_player_color,
 	resolve_board,
 	validate_player_class,
+	validate_positive_integer,
 )
 
 from .matchup import play_matchup
 from .results import TournamentResults
+from .validation import validate_tournament_results
 
 
 class RoundRobinTournament:
@@ -29,7 +31,10 @@ class RoundRobinTournament:
 		results=None,
 	):
 		self._validate_players(players)
-		self._validate_num_games_per_color(num_games_per_color)
+		validate_positive_integer(
+			num_games_per_color,
+			"num_games_per_color",
+		)
 
 		self._players = dict(players)
 		self._board = resolve_board(board, default=ViaLudusBoard())
@@ -179,18 +184,9 @@ class RoundRobinTournament:
 			validate_player_class(player)
 
 	@staticmethod
-	def _validate_num_games_per_color(num_games_per_color):
-		if (
-			not isinstance(num_games_per_color, int)
-			or isinstance(num_games_per_color, bool)
-			or num_games_per_color < 1
-		):
-			raise ValueError(
-				"num_games_per_color must be a positive integer"
-			)
-
-	@staticmethod
 	def _validate_loaded_results(results, players, num_games_per_color):
+		validate_tournament_results(results)
+
 		unknown_players = sorted(set(results.players) - set(players))
 
 		if unknown_players:

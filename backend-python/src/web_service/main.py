@@ -1,3 +1,4 @@
+
 import argparse
 from pathlib import Path
 
@@ -7,6 +8,38 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from .api import agents_router
+
+
+def create_app(cors_origins=None, frontend=None):
+	app = FastAPI(
+		title="Via Ludus API",
+	)
+
+	app.add_middleware(
+		CORSMiddleware,
+		allow_origins=cors_origins or [],
+		allow_methods=["*"],
+		allow_headers=["*"],
+	)
+
+	app.include_router(
+		agents_router,
+		prefix="/api",
+	)
+
+	if frontend is not None:
+		frontend = frontend.resolve()
+
+		app.mount(
+			"/",
+			StaticFiles(
+				directory=frontend,
+				html=True,
+			),
+			name="frontend",
+		)
+
+	return app
 
 
 def parse_args():
@@ -44,35 +77,10 @@ def parse_args():
 
 
 def main(host, port, frontend, cors_origins):
-	app = FastAPI(
-		title="Via Ludus API",
+	app = create_app(
+		cors_origins=cors_origins,
+		frontend=frontend,
 	)
-
-	app.add_middleware(
-		CORSMiddleware,
-		allow_origins=cors_origins,
-		allow_methods=["*"],
-		allow_headers=["*"],
-	)
-
-	app.include_router(
-		agents_router,
-		prefix="/api",
-	)
-
-	if frontend is not None:
-		frontend = frontend.resolve()
-		print(f"Frontend directory: {frontend}")
-		print(f"Directory exists: {frontend.is_dir()}")
-
-		app.mount(
-			"/",
-			StaticFiles(
-				directory=frontend,
-				html=True,
-			),
-			name="frontend",
-		)
 
 	uvicorn.run(
 		app,

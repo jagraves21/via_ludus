@@ -15,6 +15,7 @@ from ..board import (
 	PlayerColor,
 	validate_player_color,
 )
+from ..validation import validate_positive_integer
 
 
 class TournamentResults:
@@ -156,11 +157,12 @@ class TournamentResults:
 				for (red_player, _), matchup in self._results.items()
 				if red_player == player
 			]
+			# Games against oneself count once as red and once as blue,
+			# as if the player had faced a copy of itself.
 			blue_matchups = [
 				matchup
-				for (red_player, blue_player), matchup
-				in self._results.items()
-				if blue_player == player and red_player != player
+				for (_, blue_player), matchup in self._results.items()
+				if blue_player == player
 			]
 
 			red_results = list(itertools.chain.from_iterable(
@@ -397,6 +399,55 @@ class TournamentResults:
 			columns=self._players,
 		)
 
+	def first_move_advantage(self):
+		# Games of a player against itself show how often the side that
+		# moves first wins. This assumes Red moved first, which is the
+		# default starting color.
+		data = []
+
+		for player in self._players:
+			matchup = self._results.get((player, player))
+
+			if matchup is None or not matchup["results"]:
+				continue
+
+			results = matchup["results"]
+			num_games = len(results)
+
+			red_wins = sum(
+				result == PlayerColor.RED for result in results
+			)
+			blue_wins = sum(
+				result == PlayerColor.BLUE for result in results
+			)
+
+			data.append({
+				"player": player,
+				"num_games": num_games,
+				"red_wins": red_wins,
+				"red_win_rate": red_wins / num_games,
+				"blue_wins": blue_wins,
+				"blue_win_rate": blue_wins / num_games,
+			})
+
+		return data
+
+	@requires_extra("pandas", "dataframe")
+	def first_move_advantage_df(self):
+		import pandas as pd
+
+		return pd.DataFrame(
+			self.first_move_advantage(),
+			columns=[
+				"player",
+				"num_games",
+				"red_wins",
+				"red_win_rate",
+				"blue_wins",
+				"blue_win_rate",
+			],
+		)
+
 	def red_win_matrix(self, rates=True):
 		matchup_data = self.head_to_head_summary()
 		column = "red_win_rate" if rates else "red_wins"
@@ -590,14 +641,15 @@ class TournamentResults:
 				)
 				blue_score = 1.0 - red_score
 
-				ratings[red_player] = (
-					red_rating
-					+ k_factor * (red_score - red_expected)
+				red_delta = k_factor * (red_score - red_expected)
+				blue_delta = k_factor * (
+					blue_score - (1 - red_expected)
 				)
-				ratings[blue_player] = (
-					blue_rating
-					+ k_factor * (blue_score - (1 - red_expected))
-				)
+
+				# Adding the deltas (instead of overwriting) means a game
+				# against oneself, where both deltas cancel, changes nothing.
+				ratings[red_player] += red_delta
+				ratings[blue_player] += blue_delta
 
 				games_played[red_player] += 1
 				games_played[blue_player] += 1
@@ -764,12 +816,7 @@ class TournamentResults:
 		if len(players) != len(set(players)):
 			raise ValueError("Players must be unique.")
 
-		if (
-			not isinstance(num_games, int)
-			or isinstance(num_games, bool)
-			or num_games < 1
-		):
-			raise ValueError("num_games must be a positive integer.")
+		validate_positive_integer(num_games, "num_games")
 
 		required_pairs = list(itertools.product(players, repeat=2))
 

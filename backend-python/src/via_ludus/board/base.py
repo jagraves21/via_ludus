@@ -69,6 +69,15 @@ class Board(ABC):
 				"cells has a shorter alternative."
 			)
 
+	@staticmethod
+	def _is_playable_position(row, col, rows, cols):
+		"""True for the cells that start white, the only ones players claim."""
+		return (
+			0 < row < rows - 1
+			and 0 < col < cols - 1
+			and (row + col) % 2 == 0
+		)
+
 	def _generate(self, size):
 		board = np.full(
 			(size, size),
@@ -111,6 +120,13 @@ class Board(ABC):
 	def reset(self, row, col):
 		self._validate_position(row, col)
 		validate_player_cell(self._board[row, col])
+
+		if not self._is_playable_position(row, col, self.rows, self.cols):
+			raise ValueError(
+				f"Cell ({row}, {col}) belongs to the starting position "
+				"and cannot be reset"
+			)
+
 		self._board[row, col] = Cell.WHITE
 
 	def copy(self):
@@ -184,6 +200,8 @@ class Board(ABC):
 
 	@classmethod
 	def deserialize(cls, serialized):
+		validate_board_serialization(serialized)
+
 		try:
 			rows, cols, cells = serialized.split(",", 2)
 			rows = int(rows)
@@ -242,5 +260,17 @@ def validate_board(board):
 	if not is_board(board):
 		raise TypeError(
 			f"Expected a Board, got {type(board).__name__}"
+		)
+
+
+def is_board_serialization(serialized):
+	return isinstance(serialized, str)
+
+
+def validate_board_serialization(serialized):
+	if not is_board_serialization(serialized):
+		raise TypeError(
+			"Expected a serialized board string, "
+			f"got {type(serialized).__name__}"
 		)
 
