@@ -10,6 +10,10 @@ dependencies = [
 	"numpy",
 ]
 
+[tool.via-ludus]
+backend-version = "0.1.0"
+api-version = "0.1.0"
+
 [project.optional-dependencies]
 progress = [
 	"tqdm",
