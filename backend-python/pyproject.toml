@@ -35,7 +35,7 @@ notebooks = [
 	"pandas",
 ]
 
-webservice = [
+web-service = [
 	"fastapi",
 	"uvicorn",
 ]
@@ -43,6 +43,7 @@ webservice = [
 test = [
 	"pytest",
 	"pytest-cov",
+	"httpx2",
 ]
 
 [tool.setuptools.packages.find]
