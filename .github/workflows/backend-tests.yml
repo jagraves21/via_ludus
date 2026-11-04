@@ -1,0 +1,115 @@
+name: Backend Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  detect-changes:
+    name: Detect Backend Changes
+    runs-on: ubuntu-latest
+    outputs:
+      via_ludus: ${{ steps.filter.outputs.via_ludus }}
+      web_service: ${{ steps.filter.outputs.web_service }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect Changed Files
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            via_ludus:
+              - "backend-python/src/via_ludus/**"
+              - "backend-python/tests/via_ludus/**"
+              - "backend-python/pyproject.toml"
+              - "backend-python/tests/conftest.py"
+            web_service:
+              - "backend-python/src/web_service/**"
+              - "backend-python/tests/web_service/**"
+              - "backend-python/pyproject.toml"
+              - "backend-python/tests/conftest.py"
+
+  test-via-ludus:
+    name: Test Via Ludus
+    needs: detect-changes
+    if: needs.detect-changes.outputs.via_ludus == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        working-directory: backend-python
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[progress,visualization,dataframe,graph-agents,test]"
+
+      - name: Run Tests
+        working-directory: backend-python
+        run: python -m pytest tests/via_ludus -v
+
+  test-web-service:
+    name: Test Web Service
+    needs: detect-changes
+    if: needs.detect-changes.outputs.web_service == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        working-directory: backend-python
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[graph-agents,web-service,test]"
+
+      - name: Run Tests
+        working-directory: backend-python
+        run: python -m pytest tests/web_service -v
+
+  test-results:
+    name: Backend Tests
+    if: always()
+    needs:
+      - detect-changes
+      - test-via-ludus
+      - test-web-service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Test Results
+        env:
+          DETECT_RESULT: ${{ needs.detect-changes.result }}
+          ENGINE_RESULT: ${{ needs.test-via-ludus.result }}
+          SERVICE_RESULT: ${{ needs.test-web-service.result }}
+        run: |
+          if [[ "$DETECT_RESULT" != "success" ]]; then
+            echo "Change detection failed."
+            exit 1
+          fi
+
+          if [[ "$ENGINE_RESULT" != "success" && "$ENGINE_RESULT" != "skipped" ]]; then
+            echo "Via Ludus tests failed."
+            exit 1
+          fi
+
+          if [[ "$SERVICE_RESULT" != "success" && "$SERVICE_RESULT" != "skipped" ]]; then
+            echo "Web Service tests failed."
+            exit 1
+          fi
+
+          echo "All applicable backend tests passed."
+
