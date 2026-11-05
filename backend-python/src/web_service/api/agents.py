@@ -75,7 +75,8 @@ def get_agents_endpoint() -> GetAgentsResponse:
 		},
 		422: {
 			"description": (
-				"The board serialization or player color is invalid."
+				"The request contains invalid board dimensions, board "
+				"contents, or player color."
 			),
 			"content": {
 				"application/json": {
