@@ -1,0 +1,197 @@
+openapi: 3.1.0
+info:
+  title: Via Ludus API
+  summary: API for interacting with Via Ludus game agents.
+  description: |
+
+    Via Ludus is a strategy game in which two players compete to connect
+    opposite sides of a board.
+
+    The API provides access to the game's AI agents.
+
+    ## Available functionality
+
+    - Discover the AI agents available in the current installation.
+    - Request a move from a selected AI agent.
+
+    ## Agent discovery
+
+    Use `GET /api/agents` to retrieve the names of the available agents.
+
+    The available agents are determined by the backend installation and
+    may vary between deployments.
+
+    ## Move selection
+
+    Use `POST /api/agents/{agent_name}/move` to request a move from an
+    available agent.
+
+    The request includes the board dimensions, board contents, and the
+    agent's player color.
+  version: 0.1.0
+paths:
+  /api/agents:
+    get:
+      tags:
+        - Agents
+      summary: List available agents
+      description: >-
+        Returns the names of all AI agents currently available in the backend
+        installation.
+      operationId: get_agents
+      responses:
+        '200':
+          description: The available AI agent names.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAgentsResponse'
+  '/api/agents/{agent_name}/move':
+    post:
+      tags:
+        - Agents
+      summary: Request an agent move
+      description: >-
+        Requests a move from the specified AI agent. The agent must be one of
+        the agents returned by GET /api/agents.
+      operationId: get_agent_move
+      parameters:
+        - name: agent_name
+          in: path
+          required: true
+          schema:
+            type: string
+            description: >-
+              Name of the AI agent. Must match a name returned by GET
+              /api/agents.
+            title: Agent Name
+          description: Name of the AI agent. Must match a name returned by GET /api/agents.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetMoveRequest'
+      responses:
+        '200':
+          description: The selected move coordinates.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMoveResponse'
+        '404':
+          description: The specified agent does not exist.
+          content:
+            application/json:
+              example:
+                detail: >-
+                  Agent 'unknown-agent' not found. Available agents: Minimax,
+                  MCTS.
+        '422':
+          description: >-
+            The request contains invalid board dimensions, board contents, or
+            player color.
+          content:
+            application/json:
+              example:
+                detail: 'Invalid player color ''green''. Valid colors: red, blue.'
+        '500':
+          description: >-
+            The agent failed to compute a move, encountered an internal error,
+            or returned invalid coordinates.
+          content:
+            application/json:
+              example:
+                detail: >-
+                  Agent 'Minimax' failed to compute a move: Iterative algorithm
+                  did not converge.
+components:
+  schemas:
+    GetAgentsResponse:
+      properties:
+        agents:
+          items:
+            type: string
+          type: array
+          title: Agents
+          description: Names of the AI agents currently available.
+          examples:
+            - - Minimax
+              - MCTS
+      type: object
+      required:
+        - agents
+      title: GetAgentsResponse
+    GetMoveRequest:
+      properties:
+        rows:
+          type: integer
+          minimum: 5
+          title: Rows
+          description: Number of rows in the board. Must be at least 5.
+          examples:
+            - 7
+        cols:
+          type: integer
+          minimum: 5
+          title: Cols
+          description: Number of columns in the board. Must be at least 5.
+          examples:
+            - 7
+        board:
+          type: string
+          pattern: '^[RBWX]+$'
+          title: Board
+          description: >-
+            Board contents encoded as a row-major string. Each character
+            represents one cell: R (red), B (blue), W (white), or X (wall). The
+            string must contain exactly rows * cols characters.
+          examples:
+            - XRRRRRXBWBWBWBBRWRWRBBWBWBWBBRWRWRBBWBWBWBXRRRRRX
+        color:
+          $ref: '#/components/schemas/PlayerColor'
+          description: Player color for which the agent should select a move.
+          examples:
+            - red
+      type: object
+      required:
+        - rows
+        - cols
+        - board
+        - color
+      title: GetMoveRequest
+    GetMoveResponse:
+      properties:
+        row:
+          type: integer
+          minimum: 1
+          title: Row
+          description: >-
+            Zero-based row index of the selected move. Must exclude the first
+            and last rows.
+          examples:
+            - 4
+        col:
+          type: integer
+          minimum: 1
+          title: Col
+          description: >-
+            Zero-based column index of the selected move. Must exclude the first
+            and last columns.
+          examples:
+            - 3
+      type: object
+      required:
+        - row
+        - col
+      title: GetMoveResponse
+    PlayerColor:
+      type: string
+      enum:
+        - red
+        - blue
+      title: PlayerColor
+tags:
+  - name: Agents
+    description: Discover available AI agents and request moves from a selected agent.
+

@@ -1,5 +1,5 @@
-
 import argparse
+import logging
 from pathlib import Path
 
 import uvicorn
@@ -8,11 +8,20 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from .api import agents_router
+from .openapi import (
+	API_DESCRIPTION,
+	API_VERSION,
+	OPENAPI_TAGS,
+)
 
 
 def create_app(cors_origins=None, frontend=None):
 	app = FastAPI(
 		title="Via Ludus API",
+		summary="API for interacting with Via Ludus game agents.",
+		description=API_DESCRIPTION,
+		version=API_VERSION,
+		openapi_tags=OPENAPI_TAGS,
 	)
 
 	app.add_middleware(
@@ -40,6 +49,27 @@ def create_app(cors_origins=None, frontend=None):
 		)
 
 	return app
+
+
+def main(host, port, frontend, cors_origins):
+	app = create_app(
+		cors_origins=cors_origins,
+		frontend=frontend,
+	)
+
+	logging.basicConfig(
+		level=logging.INFO,
+		format=(
+			"%(asctime)s %(levelname)s "
+			"%(name)s: %(message)s"
+		),
+	)
+
+	uvicorn.run(
+		app,
+		host=host,
+		port=port,
+	)
 
 
 def parse_args():
@@ -74,19 +104,6 @@ def parse_args():
 	)
 
 	return vars(parser.parse_args())
-
-
-def main(host, port, frontend, cors_origins):
-	app = create_app(
-		cors_origins=cors_origins,
-		frontend=frontend,
-	)
-
-	uvicorn.run(
-		app,
-		host=host,
-		port=port,
-	)
 
 
 if __name__ == "__main__":
