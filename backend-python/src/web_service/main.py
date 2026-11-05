@@ -1,4 +1,5 @@
 import argparse
+import logging
 from pathlib import Path
 
 import uvicorn
@@ -54,6 +55,14 @@ def main(host, port, frontend, cors_origins):
 	app = create_app(
 		cors_origins=cors_origins,
 		frontend=frontend,
+	)
+
+	logging.basicConfig(
+		level=logging.INFO,
+		format=(
+			"%(asctime)s %(levelname)s "
+			"%(name)s: %(message)s"
+		),
 	)
 
 	uvicorn.run(

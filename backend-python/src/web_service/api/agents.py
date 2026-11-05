@@ -1,6 +1,12 @@
+import logging
+
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Path
+from fastapi import (
+	APIRouter,
+	HTTPException,
+	Path,
+)
 
 from ..exceptions import AgentComputationError
 
@@ -9,7 +15,14 @@ from ..models import (
 	GetMoveRequest,
 	GetMoveResponse,
 )
-from ..services import get_agents, get_move
+
+from ..services import (
+	get_agents,
+	get_move,
+)
+
+
+logger = logging.getLogger(__name__)
 
 
 router = APIRouter(
@@ -112,21 +125,61 @@ def get_move_endpoint(
 			request.color,
 		)
 	except KeyError as exc:
+		logger.warning(
+			"Unknown agent: agent=%s, rows=%d, cols=%d, "
+			"board=%s, color=%s, error=%s",
+			agent_name,
+			request.rows,
+			request.cols,
+			request.board,
+			request.color,
+			exc,
+		)
 		raise HTTPException(
 			status_code=404,
 			detail=str(exc),
 		) from exc
 	except ValueError as exc:
+		logger.warning(
+			"Invalid move request: agent=%s, rows=%d, cols=%d, "
+			"board=%s, color=%s, error=%s",
+			agent_name,
+			request.rows,
+			request.cols,
+			request.board,
+			request.color,
+			exc,
+		)
 		raise HTTPException(
 			status_code=422,
 			detail=str(exc),
 		) from exc
 	except AgentComputationError as exc:
+		logger.exception(
+			"Agent computation failed: agent=%s, rows=%d, cols=%d, "
+			"board=%s, color=%s, error=%s",
+			agent_name,
+			request.rows,
+			request.cols,
+			request.board,
+			request.color,
+			exc,
+		)
 		raise HTTPException(
 			status_code=500,
 			detail=str(exc),
 		) from exc
 	except Exception as exc:
+		logger.exception(
+			"Unexpected error computing move: agent=%s, rows=%d, "
+			"cols=%d, board=%s, color=%s, error=%s",
+			agent_name,
+			request.rows,
+			request.cols,
+			request.board,
+			request.color,
+			exc,
+		)
 		raise HTTPException(
 			status_code=500,
 			detail="An unexpected error occurred while computing the move.",
@@ -136,6 +189,17 @@ def get_move_endpoint(
 		1 <= row < request.rows - 1
 		and 1 <= col < request.cols - 1
 	):
+		logger.error(
+			"Agent returned invalid coordinates: agent=%s, rows=%d, "
+			"cols=%d, board=%s, color=%s, row=%s, col=%s",
+			agent_name,
+			request.rows,
+			request.cols,
+			request.board,
+			request.color,
+			row,
+			col,
+		)
 		raise HTTPException(
 			status_code=500,
 			detail=(
