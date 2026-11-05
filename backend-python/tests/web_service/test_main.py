@@ -37,14 +37,14 @@ def test_get_agents(monkeypatch):
 
 
 def test_get_move(monkeypatch):
-	expected_move = (2, 3)
+	expected_move = (2, 2)
 
 	def mock_get_move(agent_name, rows, cols, board, color):
 		assert agent_name == "RandomAgent"
-		assert rows == 5
-		assert cols == 5
-		assert board == "........................."
-		assert color == "RED"
+		assert rows == 7
+		assert cols == 7
+		assert board == "XRRRRRXBWBWBWBBRWRWRBBWBWBWBBRWRWRBBWBWBWBXRRRRRX"
+		assert color == "red"
 
 		return expected_move
 
@@ -60,17 +60,17 @@ def test_get_move(monkeypatch):
 	response = client.post(
 		"/api/agents/RandomAgent/move",
 		json={
-			"rows": 5,
-			"cols": 5,
-			"board": ".........................",
-			"color": "RED",
+			"rows": 7,
+			"cols": 7,
+			"board": "XRRRRRXBWBWBWBBRWRWRBBWBWBWBBRWRWRBBWBWBWBXRRRRRX",
+			"color": "red",
 		},
 	)
 
 	assert response.status_code == 200
 	assert response.json() == {
 		"row": 2,
-		"col": 3,
+		"col": 2,
 	}
 
 
