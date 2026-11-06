@@ -2,17 +2,15 @@ from abc import ABC, abstractmethod
 
 import networkx as nx
 
-from ....player import (
-	RandomMaxSelectorMixin,
-	RandomMinSelectorMixin,
-)
+from ....player import	RandomMaxSelectorMixin
 
 from ..utils import get_concrete_subclasses
 
 from .graph_agent import GraphAgent
 from .graph_builder_mixins import (
-	UndirectedMoveGraphMixin,
-	DirectedMoveGraphMixin,
+	#UndirectedMoveGraphMixin,
+	UndirectedPlayerGraphMixin,
+	UndirectedOpponentMoveGraphMixin,
 )
 from .graph_utils import Endpoint
 
@@ -44,7 +42,7 @@ class EdgeCentralityAgent(GraphAgent, ABC):
 
 # Michelle Girvan
 class EdgeBetweennessCentralityAgent(
-	UndirectedMoveGraphMixin,
+	UndirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
 	EdgeCentralityAgent,
 ):
@@ -59,7 +57,7 @@ class EdgeBetweennessCentralityAgent(
 
 # Ulrik Brandes
 class EdgeBetweennessCentralitySubsetAgent(
-	UndirectedMoveGraphMixin,
+	UndirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
 	EdgeCentralityAgent,
 ):
@@ -76,7 +74,7 @@ class EdgeBetweennessCentralitySubsetAgent(
 
 # Daniel Fleischer
 class EdgeCurrentFlowBetweennessCentralityAgent(
-	UndirectedMoveGraphMixin,
+	UndirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
 	EdgeCentralityAgent,
 ):
@@ -94,7 +92,8 @@ class EdgeCurrentFlowBetweennessCentralityAgent(
 
 # Mark E. J. Newman
 class EdgeCurrentFlowBetweennessCentralitySubsetAgent(
-	UndirectedMoveGraphMixin,
+	#UndirectedMoveGraphMixin,
+	UndirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
 	EdgeCentralityAgent,
 ):
@@ -114,7 +113,7 @@ class EdgeCurrentFlowBetweennessCentralitySubsetAgent(
 
 # Kwang-Il Goh
 class EdgeLoadCentralityAgent(
-	UndirectedMoveGraphMixin,
+	UndirectedPlayerGraphMixin,
 	RandomMaxSelectorMixin,
 	EdgeCentralityAgent,
 ):

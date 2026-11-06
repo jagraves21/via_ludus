@@ -12,10 +12,10 @@ from ..utils import get_concrete_subclasses
 from .graph_builder_mixins import (
 	UndirectedPlayerGraphMixin,
 	UndirectedPlayerGraphFilteredMixin,
-	DirectedPlayerGraphMixin,
-	DirectedPlayerGraphFilteredMixin,
 	UndirectedMoveGraphMixin,
-	DirectedMoveGraphMixin,
+	UndirectedOpponentMoveGraphMixin,
+	DirectedOpponentMoveGraphMixin,
+	DirectedOpponentPlayerGraphMixin,
 )
 
 from .graph_utils import Endpoint
@@ -38,8 +38,8 @@ class VertexCentralityAgent(GraphAgent, ABC):
 
 # Marvin E. Shaw
 class DegreeCentralityAgent(
+	DirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
-	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Shaw"
@@ -50,8 +50,8 @@ class DegreeCentralityAgent(
 
 # Jan L. Anthonisse
 class BetweennessCentralityAgent(
-	RandomMaxSelectorMixin,
 	UndirectedMoveGraphMixin,
+	RandomMaxSelectorMixin,
 	VertexCentralityAgent,
 ):
 	name = "Anthonisse"
@@ -65,8 +65,8 @@ class BetweennessCentralityAgent(
 
 # Ulrik Brandes
 class BetweennessCentralitySubsetAgent(
+	UndirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
-	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Brandes"
@@ -82,8 +82,8 @@ class BetweennessCentralitySubsetAgent(
 
 # Alex Bavelas
 class ClosenessCentralityAgent(
-	RandomMinSelectorMixin,
-	UndirectedPlayerGraphMixin,
+	DirectedOpponentPlayerGraphMixin,
+	RandomMaxSelectorMixin,
 	VertexCentralityAgent,
 ):
 	name = "Bavelas"
@@ -97,8 +97,8 @@ class ClosenessCentralityAgent(
 
 # Edmund Landau
 class EigenvectorCentralityAgent(
+	DirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
-	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 	ABC,
 ):
@@ -116,8 +116,8 @@ class EigenvectorCentralityAgent(
 
 # Phillip Bonacich
 class EigenvectorNumpyCentralityAgent(
+	DirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
-	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Bonacich"
@@ -165,8 +165,8 @@ class KatzNumpyCentralityAgent(
 
 # Kwang-Il Goh
 class LoadCentralityAgent(
-	RandomMaxSelectorMixin,
 	UndirectedMoveGraphMixin,
+	RandomMaxSelectorMixin,
 	VertexCentralityAgent,
 ):
 	name = "Goh"
@@ -180,8 +180,8 @@ class LoadCentralityAgent(
 
 # Mark E. J. Newman
 class CurrentFlowBetweennessCentralityAgent(
+	UndirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphFilteredMixin,
 	VertexCentralityAgent,
 ):
 	name = "Newman"
@@ -195,8 +195,8 @@ class CurrentFlowBetweennessCentralityAgent(
 
 # Enrico Bozzo
 class ApproximateCurrentFlowBetweennessCentralityAgent(
+	UndirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphFilteredMixin,
 	VertexCentralityAgent,
 ):
 	name = "Bozzo"
@@ -210,8 +210,8 @@ class ApproximateCurrentFlowBetweennessCentralityAgent(
 
 # Daniel Fleischer
 class CurrentFlowBetweennessCentralitySubsetAgent(
+	UndirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphFilteredMixin,
 	VertexCentralityAgent,
 ):
 	name = "Fleischer"
@@ -227,8 +227,8 @@ class CurrentFlowBetweennessCentralitySubsetAgent(
 
 # Milan Zelen
 class CurrentFlowClosenessCentralityAgent(
+	UndirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
-	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Zelen"
@@ -242,8 +242,8 @@ class CurrentFlowClosenessCentralityAgent(
 
 # Karen Stephenson
 class InformationCentralityAgent(
+	UndirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
-	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Stephenson"
@@ -257,8 +257,8 @@ class InformationCentralityAgent(
 
 # Desmond J. Higham
 class CommunicabilityBetweennessCentralityAgent(
+	UndirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
-	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Higham"
@@ -271,8 +271,8 @@ class CommunicabilityBetweennessCentralityAgent(
 
 # Ernesto Estrada
 class SubgraphCentralityAgent(
+	UndirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
-	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Estrada"
@@ -283,8 +283,8 @@ class SubgraphCentralityAgent(
 
 # Juan A. Rodriguez-Velazquez
 class SubgraphCentralityExpAgent(
+	UndirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
-	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Rodriguez-Velazquez"
@@ -295,8 +295,8 @@ class SubgraphCentralityExpAgent(
 
 # Massimo Marchiori
 class HarmonicCentralityAgent(
+	DirectedOpponentPlayerGraphMixin,
 	RandomMaxSelectorMixin,
-	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Marchiori"
@@ -310,8 +310,8 @@ class HarmonicCentralityAgent(
 
 # Mahendra Piraveenan
 class PercolationCentralityAgent(
+	UndirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
-	UndirectedPlayerGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Piraveenan"
@@ -322,8 +322,8 @@ class PercolationCentralityAgent(
 
 # Anne-Marie Kermarrec
 class SecondOrderCentralityAgent(
+	UndirectedOpponentMoveGraphMixin,
 	RandomMinSelectorMixin,
-	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Kermarrec"
@@ -341,8 +341,8 @@ class SecondOrderCentralityAgent(
 
 # Xingqin Qi
 class LaplacianCentralityAgent(
+	UndirectedOpponentMoveGraphMixin,
 	RandomMaxSelectorMixin,
-	UndirectedMoveGraphMixin,
 	VertexCentralityAgent,
 ):
 	name = "Qi"
