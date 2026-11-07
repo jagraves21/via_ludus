@@ -114,8 +114,8 @@ def play_head_to_head(
 
 	results = TournamentResults([player_a_name, player_b_name])
 
-	# A player facing a copy of itself has a single matchup: playing it in
-	# both orientations would just repeat the same games.
+	# a player facing a copy of itself has a single matchup: playing it in
+	# both orientations would just repeat the same games
 	same_player = player_a_name == player_b_name
 	num_matchups = 1 if same_player else 2
 

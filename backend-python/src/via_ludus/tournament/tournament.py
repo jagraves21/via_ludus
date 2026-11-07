@@ -126,7 +126,7 @@ class RoundRobinTournament:
 			else None
 		)
 
-		# Save the initial checkpoint.
+		# save the initial checkpoint
 		if checkpoint_file is not None:
 			self._results.save(checkpoint_file)
 

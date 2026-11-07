@@ -37,14 +37,15 @@ AI_AGENTS = AgentBase.get_agents()
 __all__.append("AI_AGENTS")
 
 agent_order = [
-	"Mark", "Menger", "Whitney", "Bellman-Moore", "Fleischer",
-	"Newman", "Moore", "Piraveenan", "Ford", "Bozzo", "Brandes",
-	"Bellman", "Ulrik", "Dijkstra", "Roy", "Fulkerson", "Daniel",
-	"Floyd", "Anthonisse", "Goh", "Kwang-Il", "Girvan", "Kermarrec",
-	"Zelen", "Stephenson", "Higham", "Marchiori", "Shaw", "Qi",
-	"Warshall", "Katz", "Rodriguez-Velazquez", "Estrada",
-	"Bonacich", "Bavelas", "Random",
+	"Mark", "Piraveenan", "Bellman-Moore", "Girvan", "Brandes",
+	"Marchiori", "Fleischer", "Bonacich", "Newman", "Moore",
+	"Whitney", "Menger", "Daniel", "Higham", "Stephenson", "Zelen",
+	"Kermarrec", "Bozzo", "Shaw", "Ulrik", "Bavelas", "Kwang-Il",
+	"Qi", "Ford", "Estrada", "Rodriguez-Velazquez", "Bellman",
+	"Anthonisse", "Goh", "Dijkstra", "Fulkerson", "Roy", "Floyd",
+	"Katz", "Warshall", "Random"
 ]
+
 
 AI_AGENTS = {
 	name: AI_AGENTS[name]
