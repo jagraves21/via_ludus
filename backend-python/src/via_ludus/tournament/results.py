@@ -2,8 +2,11 @@ from collections import defaultdict
 import copy
 import gzip
 import itertools
+import io
 import json
+import os
 from pathlib import Path
+import tempfile
 import warnings
 
 import numpy as np
@@ -157,8 +160,8 @@ class TournamentResults:
 				for (red_player, _), matchup in self._results.items()
 				if red_player == player
 			]
-			# Games against oneself count once as red and once as blue,
-			# as if the player had faced a copy of itself.
+			# games against oneself count once as red and once as blue,
+			# as if the player had faced a copy of itself
 			blue_matchups = [
 				matchup
 				for (_, blue_player), matchup in self._results.items()
@@ -646,8 +649,8 @@ class TournamentResults:
 					blue_score - (1 - red_expected)
 				)
 
-				# Adding the deltas (instead of overwriting) means a game
-				# against oneself, where both deltas cancel, changes nothing.
+				# adding the deltas (instead of overwriting) means a game
+				# against oneself, where both deltas cancel, changes nothing
 				ratings[red_player] += red_delta
 				ratings[blue_player] += blue_delta
 
@@ -810,6 +813,67 @@ class TournamentResults:
 			cmap=cmap,
 		)
 
+	def _build_filtered_tournament(self, players, matchups):
+		new_tournament = TournamentResults(players)
+
+		for (red_player, blue_player), matchup in matchups:
+			new_tournament.add_matchup_data(
+				red_player,
+				blue_player,
+				matchup["results"],
+				matchup["moves"],
+				matchup["deterministic"],
+			)
+
+		return new_tournament
+
+	def _filter_players(self, players, retain):
+		players = list(players)
+
+		if len(players) != len(set(players)):
+			raise ValueError("Players must be unique.")
+
+		unknown_players = set(players) - set(self._players)
+
+		if unknown_players:
+			message = (
+				"Players not found: "
+				+ ", ".join(sorted(map(str, unknown_players)))
+			)
+
+			if retain:
+				raise ValueError(message)
+
+			warnings.warn(
+				message,
+				UserWarning,
+				stacklevel=2,
+			)
+
+		players = set(players)
+
+		new_players = [
+			player for player in self._players
+			if (player in players) == retain
+		]
+
+		matchups = [
+			(pair, matchup)
+			for pair, matchup in self._results.items()
+			if all(player in new_players for player in pair)
+		]
+
+		return self._build_filtered_tournament(
+			new_players,
+			matchups,
+		)
+
+	def remove_players(self, players):
+		return self._filter_players(players, retain=False)
+
+	def retain_players(self, players):
+		return self._filter_players(players, retain=True)
+
 	def filter_and_truncate(self, players, num_games):
 		players = list(players)
 
@@ -849,19 +913,21 @@ class TournamentResults:
 					f"Pairing {pair} has inconsistent record lengths."
 				)
 
-		new_tournament = TournamentResults(players)
+		matchups = [
+			(pair, {
+				"results": self._results[pair]["results"][:num_games],
+				"moves": self._results[pair]["moves"][:num_games],
+				"deterministic": (
+					self._results[pair]["deterministic"][:num_games]
+				),
+			})
+			for pair in required_pairs
+		]
 
-		for pair in required_pairs:
-			matchup = self._results[pair]
-
-			new_tournament.add_matchup_data(
-				*pair,
-				matchup["results"][:num_games],
-				matchup["moves"][:num_games],
-				matchup["deterministic"][:num_games],
-			)
-
-		return new_tournament
+		return self._build_filtered_tournament(
+			players,
+			matchups,
+		)
 
 	def _to_json(self):
 		return {
@@ -939,10 +1005,45 @@ class TournamentResults:
 		if compressed is None:
 			compressed = filename.suffix == ".gz"
 
-		opener = gzip.open if compressed else open
+		fd, temp_filename = tempfile.mkstemp(
+			dir=filename.parent,
+			prefix=f".{filename.name}.",
+			suffix=".tmp",
+		)
 
-		with opener(filename, "wt", encoding="utf-8") as fp:
-			self._save(fp)
+		try:
+			with os.fdopen(fd, "wb") as raw_fp:
+				if compressed:
+					with gzip.GzipFile(
+						fileobj=raw_fp,
+						mode="wb",
+					) as gzip_fp:
+						with io.TextIOWrapper(
+							gzip_fp,
+							encoding="utf-8",
+						) as text_fp:
+							self._save(text_fp)
+				else:
+					with io.TextIOWrapper(
+						raw_fp,
+						encoding="utf-8",
+					) as text_fp:
+						self._save(text_fp)
+
+			# flush file contents to disk
+			with open(temp_filename, "rb") as fp:
+				os.fsync(fp.fileno())
+
+			# atomically replace the file
+			os.replace(temp_filename, filename)
+
+		except BaseException:
+			try:
+				os.unlink(temp_filename)
+			except FileNotFoundError:
+				pass
+
+			raise
 
 	@classmethod
 	def _load(cls, fp):
