@@ -23,5 +23,5 @@ If you have not read the rules yet, start with the root [README.md](../../../../
 
 1. Set up the backend (Python 3.11+, a virtual environment, and `pip install -e ".[web-service,graph-agents]"`). See the [`README.md`](../../../README.md#setup) in [`backend-python/`](../../../).
 2. Make sure you can run the game. See the [`README.md`](../../../../scripts/README.md) in [`scripts/`](../../../../scripts/).
-3. Skim the built-in agents in [`backend-python/src/via_ludus/ai/via_ludus_agents/`](./via_ludus_agents/). Reading [`random_agent.py`](/via_ludus_agents/random_agent.py) and [`shortest_path_agent.py`](/via_ludus_agents/shortest_path_agent.py) takes five minutes and shows you the shape of an agent.
+3. Skim the built-in agents in [`backend-python/src/via_ludus/ai/via_ludus_agents/`](./via_ludus_agents/). Reading [`random_agent.py`](./via_ludus_agents/random_agent.py) and [`shortest_path_agent.py`](./via_ludus_agents/shortest_path_agent.py) takes five minutes and shows you the shape of an agent.
 
