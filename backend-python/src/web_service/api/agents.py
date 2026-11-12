@@ -118,7 +118,7 @@ def get_move_endpoint(
 	request: GetMoveRequest,
 ) -> GetMoveResponse:
 	try:
-		row, col = get_move(
+		result = get_move(
 			agent_name,
 			request.rows,
 			request.cols,
@@ -138,7 +138,7 @@ def get_move_endpoint(
 		)
 		raise HTTPException(
 			status_code=404,
-			detail=str(exc),
+			detail=exc.args[0],
 		) from exc
 	except ValueError as exc:
 		logger.warning(
@@ -184,6 +184,19 @@ def get_move_endpoint(
 		raise HTTPException(
 			status_code=500,
 			detail="An unexpected error occurred while computing the move.",
+		) from exc
+
+	try:
+		row, col = result
+	except (TypeError, ValueError) as exc:
+		logger.error(
+			"Agent returned a malformed move: agent=%s, result=%r",
+			agent_name,
+			result,
+		)
+		raise HTTPException(
+			status_code=500,
+			detail="Agent returned a malformed move.",
 		) from exc
 
 	if not (

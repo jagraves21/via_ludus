@@ -85,7 +85,9 @@ class ShortestPathAgent(
 
 		while row != -1:
 			if board.get(row, col) == Cell.WHITE:
-				scores[(row, col)] = 1
+				scores[
+					(int(row), int(col))
+				] = 1
 
 			row, col = parents[row, col]
 
