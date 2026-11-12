@@ -33,7 +33,7 @@ pip install -e ".[web-service,graph-agents,test]"
 
 The core library only needs `numpy`. Everything else is installed on demand with an *extra*, for example `pip install -e ".[graph-agents]"`. Combine extras with commas.
 
-| Extra | Installs | What it enables |
+| Extra | Installs | What it Enables |
 | --- | --- | --- |
 | `web-service` | `fastapi`, `uvicorn` | Running the web service and the browser app. |
 | `graph-agents` | `networkx`, `scipy` | Most of the built-in agents (distance, paths, cuts and centrality). |
