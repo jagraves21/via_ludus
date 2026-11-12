@@ -137,16 +137,16 @@ via_ludus/
 
 | Directory | What's In It |
 | --- | --- |
-| [`frontend/`](frontend/README.md) | The web app: play, rules and about pages. |
-| [`backend-python/`](backend-python/README.md) | Python backend: setup, packages, and how to run the tests. |
-| [`backend-python/src/via_ludus/board/`](backend-python/src/via_ludus/board/README.md) | The board, cells, and player colors. |
-| [`backend-python/src/via_ludus/player/`](backend-python/src/via_ludus/player/README.md) | Players, move selectors, and the mixins that configure them. |
-| [`backend-python/src/via_ludus/ai/`](backend-python/src/via_ludus/ai/README.md) | **Where student agents go.** Start here to write an agent. |
-| [`backend-python/src/via_ludus/ai/via_ludus_agents/`](backend-python/src/via_ludus/ai/via_ludus_agents/README.md) | The built-in agents, which are good examples to read. |
-| [`backend-python/src/via_ludus/tournament/`](backend-python/src/via_ludus/tournament/README.md) | Playing games and tournaments to compare agents. |
-| [`backend-python/src/web_service/`](backend-python/src/web_service/README.md) | The HTTP API that connects the browser to the agents. |
-| [`backend-python/tests/`](backend-python/tests/README.md) | How the tests are organised and run. |
-| [`scripts/`](scripts/README.md) | Scripts that start the web server. |
+| [`frontend/`](frontend/) | The web app: play, rules and about pages. |
+| [`backend-python/`](backend-python/) | Python backend: setup, packages, and how to run the tests. |
+| [`backend-python/src/via_ludus/board/`](backend-python/src/via_ludus/board/) | The board, cells, and player colors. |
+| [`backend-python/src/via_ludus/player/`](backend-python/src/via_ludus/player/) | Players, move selectors, and the mixins that configure them. |
+| [`backend-python/src/via_ludus/ai/`](backend-python/src/via_ludus/ai/) | **Where student agents go.** Start here to write an agent. |
+| [`backend-python/src/via_ludus/ai/via_ludus_agents/`](backend-python/src/via_ludus/ai/via_ludus_agents/) | The built-in agents, which are good examples to read. |
+| [`backend-python/src/via_ludus/tournament/`](backend-python/src/via_ludus/tournament/) | Playing games and tournaments to compare agents. |
+| [`backend-python/src/web_service/`](backend-python/src/web_service/) | The HTTP API that connects the browser to the agents. |
+| [`backend-python/tests/`](backend-python/tests/) | How the tests are organised and run. |
+| [`scripts/`](scripts/) | Scripts that start the web server. |
 
 ## License
 
