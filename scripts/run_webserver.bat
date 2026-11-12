@@ -14,6 +14,6 @@ if not defined PYTHONPATH set "PYTHONPATH=src"
 
 python -m web_service.main ^
 	--frontend "%REPO_ROOT%\frontend" ^
-	--host 0.0.0.0 ^
+	--host 127.0.0.1 ^
 	--cors-origins http://localhost:8080 http://127.0.0.1:8080 ^
 	%*
