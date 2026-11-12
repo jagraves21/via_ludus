@@ -49,7 +49,12 @@ class AgentBase(ABC):
 
 
 class Agent(AgentBase, Player, ABC):
-	pass
+	def choose_move(self, board):
+		return self.get_move(board)
+
+	@abstractmethod 
+	def get_move(self, board):
+		pass
 
 
 class ScoringAgent(AgentBase, ScoringPlayer, ABC):
