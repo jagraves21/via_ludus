@@ -53,7 +53,7 @@ Windows:
 scripts\run_webserver.bat
 ```
 
-Then open **<http://localhost:8080>** in your browser. Stop the server with `Ctrl+C`.
+Then open <http://localhost:8080> in your browser. Stop the server with `Ctrl+C`.
 
 You can run the scripts from any directory. They find the repository on their own.
 
