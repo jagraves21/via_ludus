@@ -1,6 +1,6 @@
 # Players, Move Selectors, and Mixins
 
-This package defines what a *player* is, and the building blocks that agents are made from. If you are writing an agent, the [README.md](../ai/README.md) in [backend-python/src/via_ludus/ai](../ai/) covers everything you need. This page is the reference behind it.
+This package defines what a *player* is, and the building blocks that agents are made from. If you are writing an agent, the [README.md](../ai/README.md) in [backend-python/src/via_ludus/ai/](../ai/) covers everything you need. This page is the reference behind it.
 
 ## Classes
 
