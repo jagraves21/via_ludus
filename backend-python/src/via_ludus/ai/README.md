@@ -339,7 +339,7 @@ if trial.winner == color:
 	...  # that move wins the game
 ```
 
-See the [`README.md`](../board/README.md) in [backend-python/src/via_ludus/board/](../board/) for the full board API.
+See the [`README.md`](../board/README.md) in [`backend-python/src/via_ludus/board/`](../board/) for the full board API.
 
 > Your agent must work with *any* board, because the web service and the tournament tools use different board classes behind the same interface.
 
