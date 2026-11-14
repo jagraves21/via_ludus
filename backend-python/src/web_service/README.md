@@ -92,5 +92,5 @@ PYTHONPATH=src python -m web_service.main --frontend ../frontend
 | `exceptions.py` | `AgentComputationError`, raised when an agent fails. |
 | `openapi.py` | Title, description and tags for the API documentation. |
 
-The tests mirror this layout under [`tests/web_service/`](../../tests/README.md).
+The tests mirror this layout under [`backend-python/tests/web_service/`](../../tests/README.md).
 
