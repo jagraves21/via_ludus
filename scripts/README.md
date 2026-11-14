@@ -80,7 +80,7 @@ By default, the scripts listen only on your local computer (127.0.0.1), so the g
 
 1. Find the repository root, relative to the script's own location.
 2. Add `backend-python/src` to `PYTHONPATH`, so `via_ludus` and `web_service` can be imported.
-3. Run `python -m web_service.main`, which starts the FastAPI web service (see [`web_service`](../backend-python/src/web_service/README.md)).
+3. Run `python -m web_service.main`, which starts the FastAPI web service (see the [`README.md`](../backend-python/src/web_service/README.md) in [backend-python/src/web_service/](../backend-python/src/web_service/)).
 4. Serve the [`frontend/`](../frontend/README.md) directory at `/` and the API under `/api`.
 
 Besides the game, the running server provides:
