@@ -92,11 +92,11 @@ Besides the game, the running server provides:
 
 | Problem | What to try |
 | --- | --- |
-| `ModuleNotFoundError: No module named 'fastapi'` (or `uvicorn`, `numpy`) | The dependencies are not installed in the Python you are running. Activate the virtual environment and run the `pip install` command above. |
-| `Address already in use` | Something is already using port 8080. Stop it, or use `--port 9000`. |
-| `Permission denied` running the `.sh` script | Run it with `bash scripts/run_webserver.sh`, or make it executable with `chmod +x scripts/run_webserver.sh`. |
-| `'python' is not recognized` (Windows) | Install Python 3.11+ from python.org and tick **Add Python to PATH**, or activate your virtual environment first. |
-| The player drop-downs only list **Human**, or are empty | The page cannot reach the API. Make sure you opened the page through the server (`http://localhost:8080`) and not by double-clicking `index.html`. |
-| Only `Random` and `Dijkstra` are available | The `graph-agents` extra is not installed. Run `pip install -e ".[graph-agents]"` from `backend-python`. |
-| I changed my agent but the game does not behave differently | The server does not reload your code. Stop it with `Ctrl+C` and start it again. |
+| `ModuleNotFoundError: No module named 'fastapi'` (or `uvicorn`, `numpy`). | The dependencies are not installed in the Python you are running. Activate the virtual environment and run the `pip install` command above. |
+| `Address already in use`. | Something is already using port 8080. Stop it, or use `--port 9000`. |
+| `Permission denied` running the `.sh` script. | Run it with `bash scripts/run_webserver.sh`, or make it executable with `chmod +x scripts/run_webserver.sh`. |
+| `'python' is not recognized` (Windows). | Install Python 3.11+ from python.org and tick **Add Python to PATH**, or activate your virtual environment first. |
+| The player drop-downs only list **Human**, or are empty. | The page cannot reach the API. Make sure you opened the page through the server (`http://localhost:8080`) and not by double-clicking `index.html`. |
+| Only `Random` and `Dijkstra` are available. | The `graph-agents` extra is not installed. Run `pip install -e ".[graph-agents]"` from `backend-python`. |
+| I changed my agent but the game does not behave differently. | The server does not reload your code. Stop it with `Ctrl+C` and start it again. |
 
