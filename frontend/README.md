@@ -39,7 +39,7 @@ Opening `index.html` directly from disk will not work. Browsers refuse to load E
 
 ## Settings
 
-The [`config.js`](js/config.js) in [`via_ludus/frontend/js/`](js/) holds two settings:
+The [`config.js`](js/config.js) in [`frontend/js/`](js/) holds two settings:
 
 - `API_URL`: where the API lives. On `localhost` or `127.0.0.1` the app uses the same server that served the page (`/api`). On any other host it uses the hosted API.
 - `AI_MOVE_DELAY`: the minimum time (in milliseconds) an agent's turn takes. If the agent answers faster than this, the page waits for the remainder before showing the move, so that moves are easy to follow when two agents play each other.
