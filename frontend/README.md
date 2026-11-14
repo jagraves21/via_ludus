@@ -46,7 +46,7 @@ The [`config.js`](js/config.js) in [`via_ludus/frontend/js/`](js/) holds two set
 
 ## How the App Uses Your Agents
 
-When it loads, the Play page asks `GET /api/agents` for the available agents and fills the **Red Player** and **Blue Player** menus with them. When it is an agent's turn, the page sends the current board to `POST /api/agents/{name}/move` and plays the cell that comes back. The details are in the [`README.md`](../backend-python/src/web_service/README.md) in [backend-python/src/web_service/](../backend-python/src/web_service/).
+When it loads, the Play page asks `GET /api/agents` for the available agents and fills the **Red Player** and **Blue Player** menus with them. When it is an agent's turn, the page sends the current board to `POST /api/agents/{name}/move` and plays the cell that comes back. The details are in the [`README.md`](../backend-python/src/web_service/README.md) in [`backend-python/src/web_service/`](../backend-python/src/web_service/).
 
 The rules are implemented twice: in Python for the agents and in `js/game/` for the browser. If you change the rules, change both.
 
