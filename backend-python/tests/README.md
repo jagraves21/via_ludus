@@ -22,7 +22,7 @@ The tests mirror the structure of the code they test, and each test file is name
 | `src/web_service/services/agents.py` | `tests/web_service/services/test_agents.py` |
 | `src/web_service/api/__init__.py` | `tests/web_service/api/test___init__.py` |
 
-Shared fixtures for the game library live in [`conftest.py`](conftest.py).
+Shared fixtures for the game library live in [`tests/conftest.py`](conftest.py).
 
 ### Why `__init__.py` Files?
 
