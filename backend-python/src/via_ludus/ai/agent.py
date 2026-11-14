@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 import inspect
 import warnings
 
-from ..board import validate_player_color
 from ..player import Player, ScoringPlayer
 
 
@@ -54,8 +53,6 @@ class Agent(AgentBase, Player, ABC):
 
 class ScoringAgent(AgentBase, ScoringPlayer, ABC):
 	def score_moves(self, board, color):
-		validate_player_color(color)
-
 		scores = self.evaluate_move_options(board, color)
 		available = board.available
 
