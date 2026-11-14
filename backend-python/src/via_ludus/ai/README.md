@@ -73,7 +73,7 @@ class MyRandomAgent(Agent):
 
 Inside `select_move` you can use:
 
-- `board`: the current position. See [What your agent receives](#what-your-agent-receives).
+- `board`: the current position. See [What Your Agent Receives](#what-your-agent-receives).
 - `color`: the color to choose a move for (`PlayerColor.RED` or `PlayerColor.BLUE`). Assume it is this color's turn. Use `color` rather than assuming you are Red or Blue, and use `color.opponent` for the other side.
 - `self.color`: the color this agent plays. When the agent is playing a game it is the same as `color`.
 - `self.opponent_color`: the other color (`self.color.opponent`).
@@ -198,7 +198,7 @@ class CautiousSoftmaxAgent(ScoringAgent):
 
 The selector classes are `MaxSelector`, `MinSelector`, `RandomMaxSelector`, `RandomMinSelector`, `SoftmaxSelector` and `SoftminSelector`. The random ones accept a `seed`, and the soft ones also accept a `temperature`. When you create an agent yourself (in a notebook or a test), you can also pass one in directly: `CenterAgent(PlayerColor.RED, selector=SoftmaxSelector(temperature=0.5))`. The browser always creates agents with their defaults, so use `create_selector` for anything the browser should see.
 
-More detail is in the player [README.md](../player/README.md) found at [backend-python/src/via_ludus/player/](../player/).
+More detail is in the player [`README.md`](../player/README.md) found at [`backend-python/src/via_ludus/player/`](../player/).
 
 #### Declaring Determinism
 
@@ -297,7 +297,7 @@ for row in results.summary():
 	print(f"{row['player']:8} won {row['total_win_rate']:.0%} of {row['total_games']} games")
 ```
 
-A good agent should beat `Random` almost every time. `Dijkstra` is a much stronger baseline to measure yourself against, and `RoundRobinTournament` compares many agents at once. See the tournament [README.md](../tournament/README.md) in [backend-python/src/via_ludus/tournament/](../tournament/).
+A good agent should beat `Random` almost every time. `Dijkstra` is a much stronger baseline to measure yourself against, and `RoundRobinTournament` compares many agents at once. See the tournament [`README.md`](../tournament/README.md) in [`backend-python/src/via_ludus/tournament/`](../tournament/).
 
 ### Write a Test
 
@@ -305,7 +305,7 @@ To make sure your agent always returns a legal move, see [Writing Tests for Your
 
 ## Step 5: Play Against It in the Browser
 
-1. Stop the web server (`Ctrl+C`) and start it again with `scripts/run_webserver.sh` (or `run_webserver.bat` on Windows). See [`scripts/README.md`](../../../../scripts/README.md).
+1. Stop the web server (`Ctrl+C`) and start it again with `scripts/run_webserver.sh` (or `run_webserver.bat` on Windows). See the [`README.md`](../../../../scripts/README.md) in [`scripts/`](../../../../scripts/).
 2. Open <http://localhost:8080>.
 3. Choose your agent from the **Red Player** or **Blue Player** menu, and set the other player to **Human** to play against it, or to another agent to watch them play.
 
@@ -339,7 +339,9 @@ if trial.winner == color:
 	...  # that move wins the game
 ```
 
-See  [backend-python/src/via_ludus/board/README.md](../board/README.md) for the full board API. Your agent must work with *any* board, because the web service and the tournament tools use different board classes behind the same interface.
+See the [`README.md`](../board/README.md) in [backend-python/src/via_ludus/board/](../board/) for the full board API.
+
+> Your agent must work with *any* board, because the web service and the tournament tools use different board classes behind the same interface.
 
 ## Rules Your Agent Must Follow
 
@@ -350,7 +352,7 @@ See  [backend-python/src/via_ludus/board/README.md](../board/README.md) for the 
 - **Do not rely on memory between moves.** In the browser a *new* agent object is created for every move request, so anything stored on `self` is gone by the next turn. Work everything out from the board you are given.
 - **Give every agent a unique `name`.**
 - **Keep each move quick.** There is no built-in time limit. A slow agent just makes the browser wait, and large boards (up to $19 \times19$) have many more cells to consider.
-- **Declare extra libraries.** If your agent needs a package that is not already installed, add it to [`pyproject.toml`](../../../pyproject.toml). An error while importing your file stops the *whole* game library from loading (see below).
+- **Declare extra libraries.** If your agent needs a package that is not already installed, add it to [`pyproject.toml`](../../../pyproject.toml) in [`backend-python/`](../../../). An error while importing your file stops the *whole* game library from loading (see below).
 
 ## Troubleshooting
 
@@ -367,9 +369,9 @@ See  [backend-python/src/via_ludus/board/README.md](../board/README.md) for the 
 | A selector mixin has no effect. | The mixin is listed *after* `ScoringAgent` in the class definition. Move it before. |
 | My changes have no effect in the browser. | The server was not restarted. |
 
-## Examples to study
+## Examples to Study
 
-The built-in agents are in [`via_ludus_agents/`](via_ludus_agents/README.md):
+The built-in agents are in `via_ludus_agents/` (see the [`README.md`](via_ludus_agents/README.md) in [`backend-python/src/via_ludus/ai/via_ludus_agents/`](via_ludus_agents/)):
 
 - [`random_agent.py`](via_ludus_agents/random_agent.py) is the simplest possible agent, and the example to read for extending `Agent`. It picks a random available move and returns it as a pair of plain Python integers. Its docstring explains why the cast matters: moves computed with NumPy are NumPy integers, not Python ones.
 - [`shortest_path_agent.py`](via_ludus_agents/shortest_path_agent.py) is the example to read for extending `ScoringAgent`, and it is a real heuristic. It finds the shortest route for the player and scores the cells along it. It uses deterministic scoring together with a random tie-breaking selector, exactly the combination described above, and its docstring walks through the mixins and the rules for the scores dictionary.
