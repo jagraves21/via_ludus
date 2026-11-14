@@ -2,7 +2,7 @@
 
 The game state.
 
-Rules of the game can be found in the root [README.md](../../../../README.md#the-game); this page describes how they are represented in code.
+Rules of the game can be found in the root [`README.md`](../../../../README.md#the-game); this page describes how they are represented in code.
 
 ## `Cell` and `PlayerColor`
 
