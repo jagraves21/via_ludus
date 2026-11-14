@@ -4,7 +4,7 @@ The browser app for Via Ludus; it is plain HTML, CSS and JavaScript (ES modules)
 
 ## Running It
 
-Run it through the web service, which serves these files and the API they talk to. See [`scripts/README.md`](../scripts/README.md):
+Run it through the web service, which serves these files and the API they talk to (see the [`README.md`](../scripts/README.md) in [`scripts/`](../scripts/)):
 
 ```bash
 ./scripts/run_webserver.sh      # macOS / Linux
@@ -39,14 +39,14 @@ Opening `index.html` directly from disk will not work. Browsers refuse to load E
 
 ## Settings
 
-[`js/config.js`](js/config.js) holds two settings:
+The [`config.js`](js/config.js) in [`via_ludus/frontend/js/`](js/) holds two settings:
 
 - `API_URL`: where the API lives. On `localhost` or `127.0.0.1` the app uses the same server that served the page (`/api`). On any other host it uses the hosted API.
 - `AI_MOVE_DELAY`: the minimum time (in milliseconds) an agent's turn takes. If the agent answers faster than this, the page waits for the remainder before showing the move, so that moves are easy to follow when two agents play each other.
 
 ## How the App Uses Your Agents
 
-When it loads, the Play page asks `GET /api/agents` for the available agents and fills the **Red Player** and **Blue Player** menus with them. When it is an agent's turn, the page sends the current board to `POST /api/agents/{name}/move` and plays the cell that comes back. The details are in the [web service README](../backend-python/src/web_service/README.md).
+When it loads, the Play page asks `GET /api/agents` for the available agents and fills the **Red Player** and **Blue Player** menus with them. When it is an agent's turn, the page sends the current board to `POST /api/agents/{name}/move` and plays the cell that comes back. The details are in the [`README.md`](../backend-python/src/web_service/README.md) in [backend-python/src/web_service/](../backend-python/src/web_service/).
 
 The rules are implemented twice: in Python for the agents and in `js/game/` for the browser. If you change the rules, change both.
 
