@@ -19,7 +19,7 @@ Two players, **Red** and **Blue**, take turns claiming cells on a square board. 
 
 The first player to complete their connection wins immediately.
 
-### The board
+### The Board
 
 Every cell on the board is one of four types:
 
