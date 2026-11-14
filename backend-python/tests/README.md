@@ -1,6 +1,6 @@
 # Tests
 
-The test suite uses [pytest](https://docs.pytest.org/). Install the dependencies with the `test` extra (see the [backend README](../README.md#setup)), then run these commands from `backend-python/`.
+The test suite uses [pytest](https://docs.pytest.org/). Install the dependencies with the `test` extra (see the [`README.md`](../README.md#setup) in [backend-python/](../)), then run these commands from `backend-python/`.
 
 ```bash
 pytest                      # everything
