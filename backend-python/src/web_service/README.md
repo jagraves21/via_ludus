@@ -2,7 +2,7 @@
 
 A small [FastAPI](https://fastapi.tiangolo.com/) application that lets the browser app (or anything else that speaks HTTP) ask Via Ludus's agents for moves.
 
-You normally start it with `scripts/run_webserver.sh` (or `scripts/run_webserver.bat` on Windows). See  [`scripts/README.md`](../../../scripts/README.md) for details.
+You normally start it with `scripts/run_webserver.sh` (or `scripts/run_webserver.bat` on Windows). See the [`README.md`](../../../scripts/README.md) in [`scripts/README.md`](../../../scripts/) for details.
 
 ## How it connects to the agents
 
@@ -15,7 +15,7 @@ flowchart LR
 
 - The list of agents comes straight from `via_ludus.AI_AGENTS`. If you [register a new agent](../via_ludus/ai/README.md#step-3-register-the-agent), it appears in the game's player drop-downs after the server is restarted.
 - **A new agent object is created for every move request.** An agent cannot remember anything between moves, so compute everything from the board you are given.
-- The web service always hands agents a `SearchBoard` (see [via_ludus/backend-python/src/via_ludus/board/README.md](../via_ludus/board/README.md)).
+- The web service always hands agents a `SearchBoard` (see the [`README.md`](../via_ludus/board/README.md) in [`via_ludus/backend-python/src/via_ludus/board/`](../via_ludus/board/)).
 
 ## API
 
@@ -92,5 +92,4 @@ PYTHONPATH=src python -m web_service.main --frontend ../frontend
 | `exceptions.py` | `AgentComputationError`, raised when an agent fails. |
 | `openapi.py` | Title, description and tags for the API documentation. |
 
-The tests mirror this layout under [`backend-python/tests/web_service/`](../../tests/README.md).
 
