@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from via_ludus.board import PlayerColor
+from via_ludus.board import Cell, PlayerColor
 from via_ludus.player import (
 	BestSelector,
 	DeterministicScoringMixin,
@@ -12,6 +12,7 @@ from via_ludus.player import (
 	RandomMaxSelector,
 	ScoringPlayer,
 	SoftmaxSelector,
+	scoring,
 )
 
 
@@ -195,6 +196,82 @@ class TestChooseMove:
 
 		assert move != best
 		assert move in board.available
+
+
+class TestSelectMove:
+	def test_scores_moves_with_the_given_color(self, index_scoring_player_class, board, player_color):
+		player = index_scoring_player_class(player_color)
+
+		player.select_move(board, player_color.opponent)
+
+		assert player.scored_colors == [player_color.opponent]
+
+	def test_selects_from_the_scores_of_the_given_color(self, index_scoring_player_class, board, player_color):
+		player = index_scoring_player_class(player_color)
+
+		assert player.select_move(board, player_color.opponent) == max(board.available)
+
+	def test_choose_move_selects_for_the_players_own_color(self, index_scoring_player_class, board, player_color):
+		class RecordingPlayer(index_scoring_player_class):
+			def select_move(self, board, color):
+				self.selected_for = color
+
+				return super().select_move(board, color)
+
+		player = RecordingPlayer(player_color)
+
+		move = player.choose_move(board)
+
+		assert player.selected_for is player_color
+		assert move == max(board.available)
+
+	@pytest.mark.parametrize("color", ["red", Cell.RED, None, 1], ids=["str", "cell", "none", "int"])
+	def test_rejects_a_color_that_is_not_a_player_color(self, index_scoring_player_class, board, color):
+		player = index_scoring_player_class(PlayerColor.RED)
+
+		with pytest.raises(TypeError, match="color must be a PlayerColor"):
+			player.select_move(board, color)
+
+		assert player.scored_colors == []
+
+
+class TestColorValidation:
+	"""A color is validated once, and only when it comes from outside."""
+
+	@pytest.fixture
+	def validated(self, monkeypatch):
+		colors = []
+		validate = scoring.validate_player_color
+
+		def spy(color):
+			colors.append(color)
+			validate(color)
+
+		monkeypatch.setattr(scoring, "validate_player_color", spy)
+
+		return colors
+
+	def test_the_players_own_color_is_not_validated_again(self, index_scoring_player_class, board, player_color, validated):
+		index_scoring_player_class(player_color).choose_move(board)
+
+		assert validated == []
+
+	def test_choose_move_with_determinism_does_not_validate(self, index_scoring_player_class, board, player_color, validated):
+		index_scoring_player_class(player_color).choose_move_with_determinism(board)
+
+		assert validated == []
+
+	def test_selecting_the_players_own_color_explicitly_is_not_validated(self, index_scoring_player_class, board, player_color, validated):
+		index_scoring_player_class(player_color).select_move(board, player_color)
+
+		assert validated == []
+
+	def test_another_color_is_validated_exactly_once(self, index_scoring_player_class, board, player_color, validated):
+		player = index_scoring_player_class(player_color)
+
+		player.select_move(board, player_color.opponent)
+
+		assert validated == [player_color.opponent]
 
 
 class TestChooseMoveWithDeterminism:
