@@ -367,13 +367,11 @@ See  [backend-python/src/via_ludus/board/README.md](../board/README.md) for the 
 | A selector mixin has no effect. | The mixin is listed *after* `ScoringAgent` in the class definition. Move it before. |
 | My changes have no effect in the browser. | The server was not restarted. |
 
-## Examples to Study
+## Examples to study
 
 The built-in agents are in [`via_ludus_agents/`](via_ludus_agents/README.md):
 
-- [`random_agent.py`](via_ludus_agents/random_agent.py) is the smallest possible `ScoringAgent`: every available move gets the same score, and a random one is chosen.
-- [`shortest_path_agent.py`](via_ludus_agents/shortest_path_agent.py) is a real heuristic. It finds the shortest route for the player and scores the cells along it. It uses deterministic scoring together with a random tie-breaking selector, exactly the combination described above.
+- [`random_agent.py`](via_ludus_agents/random_agent.py) is the simplest possible agent, and the example to read for extending `Agent`. It picks a random available move and returns it as a pair of plain Python integers. Its docstring explains why the cast matters: moves computed with NumPy are NumPy integers, not Python ones.
+- [`shortest_path_agent.py`](via_ludus_agents/shortest_path_agent.py) is the example to read for extending `ScoringAgent`, and it is a real heuristic. It finds the shortest route for the player and scores the cells along it. It uses deterministic scoring together with a random tie-breaking selector, exactly the combination described above, and its docstring walks through the mixins and the rules for the scores dictionary.
 - [`graph_agents/`](via_ludus_agents/graph_agents) turns the board into a graph and scores cells with graph measures from `networkx`. A good place to look once you want something more advanced.
-
-There is no built-in example of a plain `Agent`. The [template above](#option-a-extend-agent) is a complete one.
 
