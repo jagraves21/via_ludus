@@ -47,7 +47,7 @@ If you use a library of your own in an agent, add it to `dependencies` (or an ex
 
 ## Running the Game
 
-The easiest way is the script in the repository's `scripts/` directory, which starts the web service and serves the browser app. See [`scripts/README.md`](../scripts/README.md).
+The easiest way is the script in the repository's `scripts/` directory, which starts the web service and serves the browser app. See [`README.md`](../scripts/README.md) in [`scripts/`](../scripts/).
 
 To start the web service by hand instead, from this directory:
 
@@ -59,8 +59,8 @@ python -m web_service.main --frontend ../frontend
 
 ## Writing and Testing Agents
 
-- To write your own agent, start with the **[agent guide](src/via_ludus/ai/README.md)**.
-- To see how well it plays, read the **[tournament guide](src/via_ludus/tournament/README.md)**.
+- To write your own agent, start with the [agent guide](src/via_ludus/ai/README.md).
+- To see how well it plays, read the [tournament guide](src/via_ludus/tournament/README.md).
 
 ## Layout of `via_ludus`
 
@@ -80,5 +80,5 @@ python -m web_service.main --frontend ../frontend
 pytest
 ```
 
-See [`tests/README.md`](tests/README.md) for how the tests are organized and how to run a subset.
+See [`README.md`](tests/README.md) in  [`backend-python/tests/`](tests/) for how the tests are organized and how to run a subset.
 
