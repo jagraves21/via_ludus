@@ -2,7 +2,7 @@
 
 This directory is where student agents live. An **agent** is a Python class that plays Via Ludus: it is given the current board and the color it is playing, and it decides which cell to claim. The game takes care of everything else: turns, rules, detecting a winner, the browser app and tournaments.
 
-If you have not read the rules yet, start with the root [README.md](../../../../README.md#the-game).
+If you have not read the rules yet, start with the root [`README.md`](../../../../README.md#the-game).
 
 **Contents**
 
