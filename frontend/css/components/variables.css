@@ -173,6 +173,15 @@ components/variables.css
 	--loading-indicator: var(--blue);
 	--loading-animation-duration: 700ms;
 
+	/* Loading State - Notice */
+	--loading-notice-padding: 0.75rem 1rem;
+	--loading-notice-spacing: 1rem;
+	--loading-notice-background: var(--blue-pale);
+	--loading-notice-border: var(--blue-light);
+	--loading-notice-radius: 0.5rem;
+	--loading-notice-unavailable-background: var(--yellow-pale);
+	--loading-notice-unavailable-border: var(--yellow-light);
+
 	/* Empty State */
 	--empty-min-height: 12rem;
 	--empty-padding: 2rem;

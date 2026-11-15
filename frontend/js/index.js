@@ -17,6 +17,11 @@ import {
 } from "./ui/status.js";
 import { setGameActive } from "./ui/controls.js";
 import { loadPlayers } from "./ui/players.js";
+import {
+	initBackendNotice,
+	setAgentsUnavailable,
+} from "./ui/wake-notice.js";
+import { watchBackendIdle } from "./api/idle.js";
 import { getAgentMove } from "./api/moves.js";
 
 const boardContainerElement =
@@ -27,6 +32,8 @@ let boardElement = null;
 const boardSizeElement = document.getElementById("board-size");
 const redPlayerElement = document.getElementById("red-player");
 const bluePlayerElement = document.getElementById("blue-player");
+const backendNoticeElement =
+	document.getElementById("backend-notice");
 const gameActionElement = document.getElementById("game-action");
 const gameStatusElement = document.getElementById("game-status");
 const gameStatusTitleElement =
@@ -313,6 +320,27 @@ function endGame() {
 	renderGame();
 }
 
+// Loads the agents into the player menus. The page keeps working without
+// them: the menus start with Human, so Human vs Human never waits for the
+// backend, and a failure only leaves a notice.
+async function refreshPlayers() {
+	try {
+		await loadPlayers(
+			redPlayerElement,
+			bluePlayerElement,
+		);
+
+		setAgentsUnavailable(false);
+	} catch (error) {
+		console.error(
+			"Failed to load players:",
+			error,
+		);
+
+		setAgentsUnavailable(true);
+	}
+}
+
 async function initializeBoard() {
 	const size = Number.parseInt(
 		boardSizeElement.value,
@@ -334,17 +362,10 @@ async function initializeBoard() {
 
 	renderGame();
 
-	try {
-		await loadPlayers(
-			redPlayerElement,
-			bluePlayerElement,
-		);
-	} catch (error) {
-		console.error(
-			"Failed to load players:",
-			error,
-		);
-	}
+	initBackendNotice(backendNoticeElement);
+	watchBackendIdle(refreshPlayers);
+
+	await refreshPlayers();
 }
 
 gameActionElement.addEventListener(
