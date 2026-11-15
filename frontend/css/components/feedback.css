@@ -36,6 +36,8 @@ Consumes variables exclusively from components/variables.css.
 }
 
 .loading__spinner {
+	flex-shrink: 0;
+
 	width: var(--loading-spinner-size);
 	height: var(--loading-spinner-size);
 
