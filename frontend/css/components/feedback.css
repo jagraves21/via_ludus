@@ -70,6 +70,24 @@ Consumes variables exclusively from components/variables.css.
 	height: 1em;
 }
 
+/* Notice Loading State */
+.loading--notice {
+	padding: var(--loading-notice-padding);
+	margin-bottom: var(--loading-notice-spacing);
+
+	background: var(--loading-notice-background);
+	border:
+		var(--feedback-border-width)
+		solid
+		var(--loading-notice-border);
+	border-radius: var(--loading-notice-radius);
+}
+
+.loading--unavailable {
+	background: var(--loading-notice-unavailable-background);
+	border-color: var(--loading-notice-unavailable-border);
+}
+
 /* Spinner Animation */
 @keyframes loading-spin {
 	to {
