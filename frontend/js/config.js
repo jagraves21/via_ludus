@@ -11,7 +11,7 @@ export const AI_MOVE_DELAY = 250;
 // The hosted backend runs on a free tier that puts it to sleep when nobody
 // is using it. A local backend never sleeps, so the "waking up" notice is
 // only used when the backend is hosted.
-export const BACKEND_MAY_SLEEP = !isLocal;
+export const BACKEND_MAY_SLEEP = true;//!isLocal;
 
 // A request that has waited longer than this (in milliseconds) shows the
 // "waking up the AI agents" notice, if the backend plausibly went to sleep.
@@ -35,4 +35,4 @@ export const REFRESH_COOLDOWN_MS = 30 * 1000;
 
 // How often (in milliseconds) the "waking up" notice moves on to its next
 // message.
-export const WAKE_MESSAGE_INTERVAL_MS = 8 * 1000;
+export const WAKE_MESSAGE_INTERVAL_MS = 10 * 1000;
