@@ -1,5 +1,6 @@
 from abc import abstractmethod
 
+from ..board import validate_player_color
 from .base import Player
 from .move_selector import BestSelector
 
@@ -28,8 +29,11 @@ class ScoringPlayer(Player):
 			and not self.is_stochastic
 		)
 
-	def choose_move(self, board):
-		scores = self.score_moves(board, self.color)
+	def select_move(self, board, color):
+		if color is not self.color:
+			validate_player_color(color)
+
+		scores = self.score_moves(board, color)
 		return self._selector.select(scores)
 
 	def choose_move_with_determinism(self, board):
@@ -66,4 +70,3 @@ class DeterministicScoringMixin:
 	@property
 	def has_deterministic_scoring(self):
 		return True
-

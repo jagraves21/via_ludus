@@ -339,19 +339,36 @@ class TestFigureAndAxes:
 
 
 class TestRealAgents:
-	def test_the_random_agent_is_plotted_with_a_flat_color_scale(self, drawn_scores, same_color, colormap, board):
-		from via_ludus.ai.via_ludus_agents import RandomAgent
+	def test_the_shortest_path_agent_is_plotted_with_a_flat_color_scale(self, drawn_scores, same_color, colormap, board):
+		from via_ludus.ai.via_ludus_agents import ShortestPathAgent
 
-		ax, fig, colors = drawn_scores(board, RandomAgent(R), name="Random")
+		agent = ShortestPathAgent(R)
+		scored = set(agent.score_moves(board, R))
 
-		assert ax.get_title() == "Random\nPlayer: RED | Evaluating: RED"
-		assert all(same_color(colors[position], colormap()(0.5)) for position in board.available)
-		assert fig.axes[1].get_ylim() == pytest.approx((-0.5, 0.5))
+		ax, fig, colors = drawn_scores(board, agent, name="Dijkstra")
+
+		assert ax.get_title() == "Dijkstra\nPlayer: RED | Evaluating: RED"
+		assert scored
+		assert all(same_color(colors[position], colormap()(0.5)) for position in scored)
+		assert fig.axes[1].get_ylim() == pytest.approx((0.5, 1.5))
+
+	def test_cells_the_agent_did_not_score_are_not_colored_by_the_scale(self, drawn_scores, same_color, colormap, board):
+		from via_ludus.ai.via_ludus_agents import ShortestPathAgent
+
+		agent = ShortestPathAgent(R)
+		scored = set(agent.score_moves(board, R))
+
+		_, _, colors = drawn_scores(board, agent)
+
+		unscored = board.available - scored
+
+		assert unscored
+		assert not any(same_color(colors[position], colormap()(0.5)) for position in unscored)
 
 	def test_agents_can_evaluate_the_other_player(self, drawn_scores, board):
-		from via_ludus.ai.via_ludus_agents import RandomAgent
+		from via_ludus.ai.via_ludus_agents import ShortestPathAgent
 
-		ax, fig, _ = drawn_scores(board, RandomAgent(R), B)
+		ax, fig, _ = drawn_scores(board, ShortestPathAgent(R), B)
 
 		assert ax.get_title() == "Player: RED | Evaluating: BLUE"
 		assert fig.axes[1].get_ylabel() == "Move Score (BLUE)"

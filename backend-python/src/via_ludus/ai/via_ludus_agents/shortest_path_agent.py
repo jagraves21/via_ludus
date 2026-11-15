@@ -1,3 +1,41 @@
+"""
+This module demonstrates how to implement an agent that returns multiple
+possible moves, allowing the selection mixins to determine which move is
+ultimately chosen based on their selection strategy.
+
+The agent must inherit from the ScoringAgent class and implement the
+evaluate_move_options(self, board, color) method. This method returns a
+dictionary mapping possible moves (row, column) to their respective scores
+for `color`. It may assume that it is `color`'s turn.
+
+A score does not need to be provided for every possible move. Moves omitted
+from the dictionary are simply excluded from consideration. However, the
+dictionary must contain at least one valid move with a finite score.
+
+The agent is responsible for evaluating the board and assigning scores to
+the moves it considers viable. The selector created by the selection mixin
+then uses those scores to determine which move the agent will return. Mixins
+must be listed before ScoringAgent in the class definition, otherwise they
+have no effect.
+
+This example combines two mixins:
+
+- DeterministicScoringMixin declares that the scores are always the same for
+  the same board and color. This is a promise to the tournament code, and it
+  is not checked.
+- RandomMaxSelectorMixin selects randomly among the highest-scoring moves.
+  Every cell on the path receives the same score, so the agent plays a random
+  cell on its shortest path.
+
+This example finds the lowest-cost path toward the opposite side of the board
+with a shortest-path search in the style of Dijkstra's algorithm. Stepping onto
+an empty cell costs 1 and stepping onto a cell the agent already owns costs 0,
+so the search can use a double-ended queue instead of a priority queue (a 0-1
+breadth-first search) and still find the same shortest path. Empty cells along
+the path are assigned a score of 1. Cells already occupied by the agent add no
+cost and are not scored, because they cannot be played.
+"""
+
 from collections import deque
 
 import numpy as np

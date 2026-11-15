@@ -780,7 +780,7 @@ def player_cell(request):
 class FirstMovePlayer(Player):
 	"""Chooses the first available move in row-major order."""
 
-	def choose_move(self, board):
+	def select_move(self, board, color):
 		return min(board.available)
 
 
@@ -852,7 +852,7 @@ class DeterministicFirstMovePlayer(DeterministicMoveSelectionMixin, FirstMovePla
 class DeterministicLastMovePlayer(DeterministicMoveSelectionMixin, Player):
 	"""Always plays the last available move (a deterministic policy)."""
 
-	def choose_move(self, board):
+	def select_move(self, board, color):
 		return max(board.available)
 
 
@@ -863,7 +863,7 @@ class RandomMovePlayer(Player):
 		super().__init__(color)
 		self._random = random.Random()
 
-	def choose_move(self, board):
+	def select_move(self, board, color):
 		return self._random.choice(sorted(board.available))
 
 

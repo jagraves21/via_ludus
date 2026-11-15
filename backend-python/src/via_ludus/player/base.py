@@ -26,9 +26,24 @@ class Player(ABC):
 	def cell(self):
 		return self.color.cell
 
-	@abstractmethod
 	def choose_move(self, board):
-		pass
+		return self.select_move(board, self.color)
+
+	@abstractmethod
+	def select_move(self, board, color):
+		"""Return the move this player would select for color.
+
+		Assumes it is color's turn; color need not be this player's
+		color. This lets a player ask what it would play for its
+		opponent, for example to model the opponent during a search.
+
+		color must be a PlayerColor. This is not checked here, because
+		the color argument comes from the caller; choose_move always
+		passes this player's own color, which is validated when the
+		player is created.
+
+		choose_move is the method that plays this player's own move.
+		"""
 
 	def make_move(self, board):
 		row, col = self.choose_move(board)
@@ -52,10 +67,12 @@ class DeterministicMoveSelectionMixin:
 	equivalent board states, regardless of the history that produced
 	the board or previous calls to the player.
 
+	This contract applies to choose_move only; select_move called with
+	another color makes no promise.
+
 	This contract is declarative and is not enforced at runtime.
 	"""
 
 	@property
 	def is_deterministic(self):
 		return True
-

@@ -9,12 +9,20 @@ class TestPlayerConstruction:
 		with pytest.raises(TypeError):
 			Player(PlayerColor.RED)
 
-	def test_subclass_must_implement_choose_move(self):
+	def test_subclass_must_implement_select_move(self):
 		class Incomplete(Player):
 			pass
 
-		with pytest.raises(TypeError):
+		with pytest.raises(TypeError, match="select_move"):
 			Incomplete(PlayerColor.RED)
+
+	def test_implementing_only_choose_move_is_not_enough(self):
+		class OldStyle(Player):
+			def choose_move(self, board):
+				return (1, 1)
+
+		with pytest.raises(TypeError, match="select_move"):
+			OldStyle(PlayerColor.RED)
 
 	def test_accepts_a_player_color(self, first_move_player_class, player_color):
 		player = first_move_player_class(player_color)
@@ -25,6 +33,72 @@ class TestPlayerConstruction:
 	def test_rejects_invalid_colors(self, first_move_player_class, color):
 		with pytest.raises(TypeError, match="Invalid player color"):
 			first_move_player_class(color)
+
+
+class RecordingPlayer(Player):
+	"""Plays the first available move and records every select_move call."""
+
+	def __init__(self, color):
+		super().__init__(color)
+		self.calls = []
+
+	def select_move(self, board, color):
+		self.calls.append((board, color))
+
+		return min(board.available)
+
+
+class ColorAwarePlayer(Player):
+	"""Plays a different cell depending on the color it is asked about."""
+
+	def select_move(self, board, color):
+		return (1, 1) if color is PlayerColor.RED else (1, 3)
+
+
+class TestChooseMove:
+	def test_selects_a_move_for_the_players_own_color(self, board, player_color):
+		player = RecordingPlayer(player_color)
+
+		player.choose_move(board)
+
+		assert player.calls == [(board, player_color)]
+		assert player.calls[0][1] is player_color
+
+	def test_returns_the_move_that_select_move_returned(self, board, player_color):
+		class ConstantPlayer(Player):
+			def select_move(self, board, color):
+				return (3, 3)
+
+		assert ConstantPlayer(player_color).choose_move(board) == (3, 3)
+
+	def test_never_asks_for_the_opponents_move(self, board, player_color):
+		player = RecordingPlayer(player_color)
+
+		player.choose_move(board)
+		player.choose_move(board)
+
+		assert [color for _, color in player.calls] == [player_color] * 2
+
+
+class TestSelectMove:
+	def test_can_be_asked_for_either_color(self, board):
+		player = ColorAwarePlayer(PlayerColor.RED)
+
+		assert player.select_move(board, PlayerColor.RED) == (1, 1)
+		assert player.select_move(board, PlayerColor.BLUE) == (1, 3)
+
+	def test_choose_move_always_uses_the_players_own_color(self, board, player_color):
+		player = ColorAwarePlayer(player_color)
+		expected = (1, 1) if player_color is PlayerColor.RED else (1, 3)
+
+		assert player.choose_move(board) == expected
+
+	def test_asking_for_the_opponent_does_not_change_the_players_color(self, board, player_color):
+		player = ColorAwarePlayer(player_color)
+
+		player.select_move(board, player_color.opponent)
+
+		assert player.color is player_color
 
 
 class TestPlayerProperties:
@@ -66,6 +140,13 @@ class TestMakeMove:
 
 		assert move == expected
 		assert board.get(*move) is player_color.cell
+
+	def test_plays_the_players_own_color(self, board, player_color):
+		player = RecordingPlayer(player_color)
+
+		player.make_move(board)
+
+		assert [color for _, color in player.calls] == [player_color]
 
 	def test_returns_the_chosen_move(self, first_move_player_class, board):
 		player = first_move_player_class(PlayerColor.RED)
