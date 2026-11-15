@@ -4,10 +4,10 @@ import { WAKE_MESSAGE_INTERVAL_MS } from "../config.js";
 // Shown one after another while the backend is waking up. The last one stays
 // until the backend answers.
 const WAKING_MESSAGES = [
-	"Zzz... the AI agents were napping. Waking them up!",
-	"Still groggy... this can take up to a minute.",
-	"Pouring the agents a cup of coffee...",
-	"Almost there! The agents are stretching their legs.",
+	"😪 The AI agents have fallen asleep...",
+	"⏰ Waking up the AI agents...",
+	"☕ Brewing some coffee to get the agents moving...",
+	"🥱 Almost there! Just a few more seconds...",
 ];
 
 const UNAVAILABLE_MESSAGE =
