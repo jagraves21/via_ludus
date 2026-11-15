@@ -82,6 +82,17 @@
 				<h2 id="game-setup-title">Configure Game</h2>
 			</header>
 			
+			<div
+				id="backend-notice"
+				class="loading loading--notice"
+				role="status"
+				aria-live="polite"
+				hidden
+			>
+				<span class="loading__spinner" aria-hidden="true"></span>
+				<span data-notice-message></span>
+			</div>
+
 			<div id="game-settings" class="card">
 				<div class="card__body">
 					<div class="game-controls">
@@ -151,17 +162,6 @@
 				<p id="turn-indicator">
 					Start a new game to begin playing.
 				</p>
-			</div>
-
-			<div
-				id="backend-notice"
-				class="loading loading--notice"
-				role="status"
-				aria-live="polite"
-				hidden
-			>
-				<span class="loading__spinner" aria-hidden="true"></span>
-				<span data-notice-message></span>
 			</div>
 
 			<div id="game-board-container">
