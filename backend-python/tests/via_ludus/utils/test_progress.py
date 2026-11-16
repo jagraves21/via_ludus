@@ -4,7 +4,7 @@ The fallback is exercised in-process: ``block_imports`` makes tqdm look
 missing and ``via_ludus/utils/progress.py`` is executed afresh, so the tests
 behave the same whether or not tqdm is installed on the developer's machine.
 The same module is also tested in a separate process in
-``tests/via_ludus/test_optional_dependencies.py``.
+``tests/via_ludus/utils/test_optional_dependencies.py``.
 """
 
 import importlib.util

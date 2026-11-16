@@ -34,7 +34,6 @@ for name in _GRAPH_REGISTRIES:
 		__all__.append(name)
 
 AI_AGENTS = AgentBase.get_agents()
-__all__.append("AI_AGENTS")
 
 agent_order = [
 	"Mark", "Piraveenan", "Bellman-Moore", "Girvan", "Brandes",
